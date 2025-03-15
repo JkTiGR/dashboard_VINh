@@ -31,7 +31,7 @@
       overflow-x: hidden;
     }
 
-    
+
     /* Стили для бокового меню (Sidebar) в стиле Glassmorphism */
     .sidebar {
       position: fixed;
@@ -311,67 +311,64 @@
     </ul>
   </div>
 
-  <!-- Кнопка-триггер для бокового меню -->
-  <div class="menu-toggle">
-    <button id="menuButton">
-      <img src="{{ url_for('static', filename='img/menu_icon.png') }}" alt="Menu">
-    </button>
-  </div>
-
-  <!-- Основное содержимое страницы (Dashboard) -->
-  <div class="container" style="padding-top: 60px;">
-    <!-- Форма, отправляющая данные методом POST на ваш эндпоинт submit_order -->
-    <form action="{{ url_for('submit_order') }}" method="POST" style="width:100%;">
-      <div class="order">
-        <!-- Шапка, логотип, данные клиента -->
-        <div id="vinh-container" style="margin:0px;">
-          <div class="container-glass">
-            <div class="header">
-              <h1 class="title">VINh AUTOSERVICE</h1>
-              <img src="img/logo.png" alt="Logo" class="logo">
+        <!-- Новый блок шапки с логотипом и кнопкой бургер-меню -->
+        <div class="header" style="display: flex; justify-content: space-between; align-items: center; padding: 20px 20px 0; margin-bottom: 10px;">
+            <img src="img/logo.png" alt="Logo" class="logo">
+            <button id="menuButton" style="background: transparent; border: none; cursor: pointer;">
+            <img src="img/menu_icon.png" alt="Menu" style="width: 30px; height: 30px;">
+            </button>
+        </div>
+        
+        <!-- Основное содержимое страницы (Dashboard) -->
+        <div class="container" style="padding: 10px 20px;">
+            <!-- Форма с данными клиента -->
+            <form action="{{ url_for('submit_order') }}" method="POST" style="width:100%;">
+            <div class="order">
+                <!-- Данные клиента размещены сразу под шапкой -->
+                <div class="row">
+                <div class="col-md-6 col-12">
+                    <label for="clientName">Имя клиента:</label>
+                    <input type="text" id="clientName" name="clientName" class="form-control">
+                </div>
+                <div class="col-md-6 col-12">
+                    <label for="phone">Телефон:</label>
+                    <input type="text" id="phone" name="phone" class="form-control" pattern="[0-9]*" inputmode="numeric">
+                </div>
+                </div>
+            <div class="row" style="margin-top:10px;">
+                <div class="col-12">
+                <label for="vin">VIN номер:</label>
+                <input type="text" id="vin" name="vin" class="form-control" style="text-transform: uppercase;"
+                        pattern="[A-Z]+" oninput="this.value = this.value.toUpperCase(); updateDuplicates();">
+                </div>
             </div>
-          </div>
-          <!-- Поля клиента -->
-          <div class="row">
-            <div class="col-md-6 col-12">
-              <label for="clientName">Имя клиента:</label>
-              <input type="text" id="clientName" name="clientName" class="form-control">
+            <div class="row" style="margin-top:10px;">
+                <div class="col-md-6 col-6">
+                <label for="carModel">Модель авто:</label>
+                <input type="text" id="carModel" name="carModel" class="form-control" style="text-transform: uppercase;"
+                        pattern="[A-Z]+" oninput="updateDuplicates();">
+                </div>
+                <div class="col-md-6 col-6">
+                <label for="year">Год выпуска:</label>
+                <input type="text" id="year" name="year" class="form-control"
+                        pattern="[0-9]+" inputmode="numeric" oninput="updateDuplicates();">
+                </div>
             </div>
-            <div class="col-md-6 col-12">
-              <label for="phone">Телефон:</label>
-              <input type="text" id="phone" name="phone" class="form-control">
+            <div class="row" style="margin-top:10px;">
+                <div class="col-md-6 col-6">
+                <label for="plate">Номерной знак:</label>
+                <input type="text" id="plate" name="plate" class="form-control"
+                        style="text-transform: uppercase;"
+                        oninput="this.value = this.value.replace(/\s+/g, '').toUpperCase(); updateDuplicates();"
+                        value="">
+                </div>
+                <div class="col-md-6 col-6">
+                <label for="mileage">Пробег (км):</label>
+                <input type="text" id="mileage" name="mileage" class="form-control"
+                        pattern="[0-9]+" inputmode="numeric">
+                </div>
             </div>
-          </div>
-          <div class="row" style="margin-top:10px;">
-            <div class="col-12">
-              <label for="vin">VIN номер:</label>
-              <input type="text" id="vin" name="vin" class="form-control" style="text-transform: uppercase;"
-                     oninput="this.value = this.value.toUpperCase(); updateDuplicates();">
-            </div>
-          </div>
-          <div class="row" style="margin-top:10px;">
-            <div class="col-md-6 col-6">
-              <label for="carModel">Модель авто:</label>
-              <input type="text" id="carModel" name="carModel" class="form-control" oninput="updateDuplicates();">
-            </div>
-            <div class="col-md-6 col-6">
-              <label for="year">Год выпуска:</label>
-              <input type="text" id="year" name="year" class="form-control" oninput="updateDuplicates();">
-            </div>
-          </div>
-          <div class="row" style="margin-top:10px;">
-            <div class="col-md-6 col-6">
-              <label for="plate">Номерной знак:</label>
-              <input type="text" id="plate" name="plate" class="form-control"
-                     style="text-transform: uppercase;"
-                     oninput="this.value = this.value.replace(/\s+/g, '').toUpperCase(); updateDuplicates();"
-                     value="{{ plate }}">
-            </div>
-            <div class="col-md-6 col-6">
-              <label for="mileage">Пробег (км):</label>
-              <input type="text" id="mileage" name="mileage" class="form-control">
-            </div>
-          </div>
+  
           <!-- Перечень желаемых работ -->
           <div style="margin-top:0px;">
             <label for="workList">Перечень желаемых работ:</label>
