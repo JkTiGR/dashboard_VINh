@@ -10,29 +10,134 @@
 
   <style>
     @font-face { font-family: 'Passager'; src: url('passager.ttf') format('truetype'); font-weight: normal; font-style: normal; }
-    :root { --bg-dark: #0B0E14; --neon-cyan: #c300ff63; --neon-turquoise: #ff0000; --neon-blue: #6257ff; --neon-pink: #0011ff; --white: #FFFFFF; --glass-bg: rgba(11, 14, 20, 0.3); --glass-blur: 10px; --glass-border: rgba(255, 255, 255, 0.1); --btn-gradient: linear-gradient(45deg, var(--neon-cyan), var(--neon-pink)); --prism-colors: linear-gradient(45deg, #a1c4fd, #c2e9fb, #fbc2eb, #a6c1ee); --prism-opacity: 0.8; --prism-blur: 8px; --animation-duration: 10s; }
-    html, body { margin: 0; padding: 0; min-height: 100vh; background: linear-gradient(135deg, rgba(11, 14, 20, 0.7), rgba(11, 14, 20, 0.9)), url("img/image.png") no-repeat center center fixed; background-size: cover; font-family: 'Share Tech Mono', monospace; color: var(--white); overflow-x: hidden; }
-    h1, h2, h3, h4 { text-shadow: 0 0 5px var(--neon-cyan), 0 0 10px var(--neon-cyan), 0 0 20px var(--neon-cyan); letter-spacing: 1px; }
-    .sidebar { position: fixed; top: 0; right: -300px; width: 300px; height: 100vh; background: var(--glass-bg); border-radius: 1px; border-top-left-radius: 0px; border-top-right-radius: 1px; border-bottom-right-radius: 1px; border-bottom-left-radius: 10px; backdrop-filter: blur(var(--glass-blur)); box-shadow: 0 8px 32px rgba(0, 247, 255, 0.3); border: 1px solid var(--glass-border); padding: 20px; transition: right 0.3s ease; z-index: 1100; }
+    :root { 
+      --bg-dark: #0B0E14; 
+      --neon-cyan: #c300ff63; 
+      --neon-turquoise: #ff0000; 
+      --neon-blue: #6257ff; 
+      --neon-pink: #0011ff; 
+      --white: #FFFFFF; 
+      --glass-bg: rgba(11, 14, 20, 0.3); 
+      --glass-blur: 10px; 
+      --glass-border: rgba(255, 255, 255, 0.1); 
+      --btn-gradient: linear-gradient(45deg, var(--neon-cyan), var(--neon-pink)); 
+      --prism-colors: linear-gradient(45deg, #a1c4fd, #c2e9fb, #fbc2eb, #a6c1ee); 
+      --prism-opacity: 0.8; 
+      --prism-blur: 8px; 
+      --animation-duration: 10s; 
+    }
+    html, body { 
+      margin: 0; 
+      padding: 0; 
+      min-height: 100vh; 
+      background: linear-gradient(135deg, rgba(11, 14, 20, 0.7), rgba(11, 14, 20, 0.9)), url("img/image.png") no-repeat center center fixed; 
+      background-size: cover; 
+      font-family: 'Share Tech Mono', monospace; 
+      color: var(--white); 
+      overflow-x: hidden; 
+    }
+    h1, h2, h3, h4 { 
+      text-shadow: 0 0 5px var(--neon-cyan), 0 0 10px var(--neon-cyan), 0 0 20px var(--neon-cyan); 
+      letter-spacing: 1px; 
+      margin: 0; 
+    }
+    .sidebar { 
+      position: fixed; 
+      top: 0; 
+      right: -300px; 
+      width: 300px; 
+      height: 100vh; 
+      background: var(--glass-bg); 
+      border-radius: 0 0 0 10px; 
+      backdrop-filter: blur(var(--glass-blur)); 
+      box-shadow: 0 8px 32px rgba(0, 247, 255, 0.3); 
+      border: 1px solid var(--glass-border); 
+      padding: 20px; 
+      transition: right 0.3s ease; 
+      z-index: 1100; 
+    }
     .sidebar.active { right: 0; animation: fadeIn 0.3s; }
     @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
     .sidebar ul { list-style: none; padding: 0; margin: 0; }
     .sidebar ul li { margin: 15px 0; }
-    .sidebar ul li a { color: var(--whiteHonda Civic); text-decoration: none; font-size: 18px; transition: color 0.3s; }
+    .sidebar ul li a { color: var(--white); text-decoration: none; font-size: 18px; transition: color 0.3s; }
     .sidebar ul li a:hover { color: var(--neon-turquoise); }
-    .close-sidebar { position: absolute; top: 10px; left: 10px; background: transparent; border: none; font-size: 24px; color: var(--white); cursor: pointer; }
-    .menu-toggle { position: fixed; top: 10px; right: 10px; z-index: 1200; display: flex; align-items: center; transition: transform 0.3s ease; }
+    .close-sidebar { 
+      position: absolute; 
+      top: 10px; 
+      left: 10px; 
+      background: transparent; 
+      border: none; 
+      font-size: 24px; 
+      color: var(--white); 
+      cursor: pointer; 
+    }
+    .menu-toggle { 
+      position: fixed; 
+      top: 10px; 
+      right: 10px; 
+      z-index: 1200; 
+      display: flex; 
+      align-items: center; 
+      transition: transform 0.3s ease; 
+    }
     .menu-toggle button { background: transparent; border: none; cursor: pointer; }
     .menu-toggle img { width: 24px; height: 24px; margin-right: 10px; transition: all 0.3s ease; }
-    .vinh-menu-text { font-family: 'Passager', sans-serif; font-size: 24px; color: var(--white); text-shadow: 0 0 5px var(--neon-blue); transition: font-size 0.3s ease; }
-    .logo-container { position: fixed; top: 0px; left: -400px; display: flex; align-items: center; background: var(--glass-bg); border-radius: 0px; border-bottom-right-radius: 10px; padding: 5px 10px; backdrop-filter: blur(var(--glass-blur)); border: 1px solid var(--glass-border); box-shadow: 0 1px 2px rgba(174, 0, 255, 0.3); transition: left 0.3s ease; z-index: 1200; }
+    .vinh-menu-text { 
+      font-family: 'Passager', sans-serif; 
+      font-size: 24px; 
+      color: var(--white); 
+      text-shadow: 0 0 5px var(--neon-blue); 
+      transition: font-size 0.3s ease; 
+      display: flex; 
+      flex-direction: column; 
+      align-items: flex-end; 
+    }
+    .vinh-menu-text .date-time { 
+      font-size: 0.6em; 
+      color: rgba(255, 255, 255, 0.7); 
+      margin-top: 2px; 
+    }
+    .logo-container { 
+      position: fixed; 
+      top: 0px; 
+      left: -400px; 
+      display: flex; 
+      align-items: center; 
+      background: var(--glass-bg); 
+      border-radius: 0 0 10px 0; 
+      padding: 5px 10px; 
+      backdrop-filter: blur(var(--glass-blur)); 
+      border: 1px solid var(--glass-border); 
+      box-shadow: 0 1px 2px rgba(174, 0, 255, 0.3); 
+      transition: left 0.3s ease; 
+      z-index: 1200; 
+    }
     .logo-container.scrolled { left: 0px; }
     .logo-container img { width: 24px; height: 24px; margin-right: 5px; }
     .logo-container .vinh-menu-text { font-size: 20px; }
     .btn-small { font-size: 14px !important; padding: 5px 10px !important; }
-    .square-checkbox { -webkit-appearance: none; appearance: none; width: 18px; height: 18px; border: 1px solid var(--neon-blue); border-radius: 3px; margin-right: 5px; vertical-align: middle; cursor: pointer; background: rgba(255, 255, 255, 0.1); }
+    .square-checkbox { 
+      -webkit-appearance: none; 
+      appearance: none; 
+      width: 18px; 
+      height: 18px; 
+      border: 1px solid var(--neon-blue); 
+      border-radius: 3px; 
+      margin-right: 5px; 
+      vertical-align: middle; 
+      cursor: pointer; 
+      background: rgba(255, 255, 255, 0.1); 
+    }
     .square-checkbox:checked { background-color: var(--neon-blue); }
-    .legend-square { display: inline-block; width: 16px; height: 16px; vertical-align: middle; margin-right: 5px; border: 1px solid var(--white); }
+    .legend-square { 
+      display: inline-block; 
+      width: 16px; 
+      height: 16px; 
+      vertical-align: middle; 
+      margin-right: 5px; 
+      border: 1px solid var(--white); 
+    }
     .legend-green { background-color: green; }
     .legend-black { background-color: black; }
     .legend-yellow { background-color: yellow; }
@@ -42,31 +147,215 @@
     .checkbox-black:checked { accent-color: black; }
     .checkbox-yellow:checked { accent-color: yellow; }
     .checkbox-red:checked { accent-color: red; }
-    .glass-card { background: var(--glass-bg); border-radius: 20px; padding: 15px; backdrop-filter: blur(var(--glass-blur)); border: 1px solid var(--glass-border); margin: 20px; box-shadow: 0 8px 32px rgba(0, 247, 255, 0.2); }
+    .glass-card { 
+      background: var(--glass-bg); 
+      border-radius: 20px; 
+      padding: 15px; 
+      backdrop-filter: blur(var(--glass-blur)); 
+      border: 1px solid var(--glass-border); 
+      margin: 20px 10px; 
+      box-shadow: 0 8px 32px rgba(0, 247, 255, 0.2); 
+    }
     .rainbow-text { animation: rainbowText 20s linear infinite; }
-    @keyframes rainbowText { 0% { text-shadow: 0 0 5px #a1c4fd; } 25% { text-shadow: 0 0 5px #c2e9fb; } 50% { text-shadow: 0 0 5px #fbc2eb; } 75% { text-shadow: 0 0 5px #a6c1ee; } 100% { text-shadow: 0 0 5px #a1c4fd; } }
-    .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
-    .form-control { background: rgba(0, 0, 0, 0.3); backdrop-filter: blur(5px); color: #fff; border: 1px solid rgba(255, 255, 255, 0.3); border-radius: 10px; }
-    .form-control:focus { background: rgba(0, 0, 0, 0.3); border-color: var(--neon-cyan); box-shadow: 0 0 5px var(--neon-cyan); animation: rainbowGlow 3s infinite; }
-    @keyframes rainbowGlow { 0% { box-shadow: 0 0 2px #edffd8, 0 0 3px #ff0000, 0 0 4px #0011ff, 0 0 5px #005eff; } 50% { box-shadow: 0 0 2px #ff0000, 0 0 3px #0011ff, 0 0 4px #005eff, 0 0 5px #edffd8; } 100% { box-shadow: 0 0 2px #edffd8, 0 0 3px #ff0000, 0 0 4px #0011ff, 0 0 5px #005eff; } }
-    .btn-primary { background: var(--btn-gradient); border: none; font-weight: bold; color: #fff; padding: 10px 20px; font-size: 18px; border-radius: 12px; cursor: pointer; transition: background 0.3s, box-shadow 0.3s, transform 0.3s; box-shadow: 0 0 12px rgba(0, 247, 255, 0.3); }
-    .btn-primary:hover { box-shadow: 0 0 20px rgba(0, 247, 255, 0.6); transform: scale(1.02); }
-    .btn-danger { background: linear-gradient(45deg, #ff3000, #cc0000); border: none; font-weight: bold; color: #fff; padding: 8px 16px; font-size: 16px; border-radius: 12px; cursor: pointer; transition: background 0.3s, box-shadow 0.3s, transform 0.3s; box-shadow: 0 0 10px rgba(255, 0, 0, 0.4); }
-    .btn-danger:hover { background: linear-gradient(45deg, #d60000, #7f0000); box-shadow: 0 0 16px rgba(255, 0, 0, 0.6); transform: scale(1.02); }
+    @keyframes rainbowText { 
+      0% { text-shadow: 0 0 5px #a1c4fd; } 
+      25% { text-shadow: 0 0 5px #c2e9fb; } 
+      50% { text-shadow: 0 0 5px #fbc2eb; } 
+      75% { text-shadow: 0 0 5px #a6c1ee; } 
+      100% { text-shadow: 0 0 5px #a1c4fd; } 
+    }
+    .form-control { 
+      background: rgba(0, 0, 0, 0.3); 
+      backdrop-filter: blur(5px); 
+      color: #fff; 
+      border: 1px solid rgba(255, 255, 255, 0.3); 
+      border-radius: 10px; 
+      font-size: 14px; 
+      padding: 8px; 
+    }
+    .form-control:focus { 
+      background: rgba(0, 0, 0, 0.3); 
+      border-color: var(--neon-cyan); 
+      box-shadow: 0 0 5px var(--neon-cyan); 
+      animation: rainbowGlow 3s infinite; 
+    }
+    @keyframes rainbowGlow { 
+      0% { box-shadow: 0 0 2px #edffd8, 0 0 3px #ff0000, 0 0 4px #0011ff, 0 0 5px #005eff; } 
+      50% { box-shadow: 0 0 2px #ff0000, 0 0 3px #0011ff, 0 0 4px #005eff, 0 0 5px #edffd8; } 
+      100% { box-shadow: 0 0 2px #edffd8, 0 0 3px #ff0000, 0 0 4px #0011ff, 0 0 5px #005eff; } 
+    }
+    .btn-primary { 
+      background: var(--btn-gradient); 
+      border: none; 
+      font-weight: bold; 
+      color: #fff; 
+      padding: 8px 16px; 
+      font-size: 16px; 
+      border-radius: 12px; 
+      cursor: pointer; 
+      transition: background 0.3s, box-shadow 0.3s, transform 0.3s; 
+      box-shadow: 0 0 12px rgba(0, 247, 255, 0.3); 
+    }
+    .btn-primary:hover { 
+      box-shadow: 0 0 20px rgba(0, 247, 255, 0.6); 
+      transform: scale(1.02); 
+    }
+    .btn-danger { 
+      background: linear-gradient(45deg, #ff3000, #cc0000); 
+      border: none; 
+      font-weight: bold; 
+      color: #fff; 
+      padding: 6px 12px; 
+      font-size: 14px; 
+      border-radius: 12px; 
+      cursor: pointer; 
+      transition: background 0.3s, box-shadow 0.3s, transform 0.3s; 
+      box-shadow: 0 0 10px rgba(255, 0, 0, 0.4); 
+    }
+    .btn-danger:hover { 
+      background: linear-gradient(45deg, #d60000, #7f0000); 
+      box-shadow: 0 0 16px rgba(255, 0, 0, 0.6); 
+      transform: scale(1.02); 
+    }
     .btn-neon { position: relative; overflow: hidden; outline: none; }
-    .btn-neon::before { content: ""; position: absolute; top: -2px; left: -2px; width: calc(100% + 4px); height: calc(100% + 4px); border-radius: 12px; z-index: -1; background: var(--prism-colors); background-size: 400%; filter: blur(var(--prism-blur)); opacity: var(--prism-opacity); animation: prismGlow var(--animation-duration) infinite linear; }
-    @keyframes prismGlow { 0% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } 100% { background-position: 0% 50%; } }
-    .work-table, .details-table { width: 100%; border: none; border-radius: 8px; overflow: hidden; box-shadow: 0 0 8px rgba(0, 247, 255, 0.5); background: rgba(0, 0, 0, 0.2); margin-bottom: 20px; }
-    .work-table th, .work-table td, .details-table th, .details-table td { border: none; padding: 5px; text-align: center; }
+    .btn-neon::before { 
+      content: ""; 
+      position: absolute; 
+      top: -2px; 
+      left: -2px; 
+      width: calc(100% + 4px); 
+      height: calc(100% + 4px); 
+      border-radius: 12px; 
+      z-index: -1; 
+      background: var(--prism-colors); 
+      background-size: 400%; 
+      filter: blur(var(--prism-blur)); 
+      opacity: var(--prism-opacity); 
+      animation: prismGlow var(--animation-duration) infinite linear; 
+    }
+    @keyframes prismGlow { 
+      0% { background-position: 0% 50%; } 
+      50% { background-position: 100% 50%; } 
+      100% { background-position: 0% 50%; } 
+    }
+    .work-table, .details-table { 
+      width: 100%; 
+      border: none; 
+      border-radius: 8px; 
+      overflow: hidden; 
+      box-shadow: 0 0 8px rgba(0, 247, 255, 0.5); 
+      background: rgba(0, 0, 0, 0.2); 
+      margin-bottom: 15px; 
+    }
+    .work-table th, .work-table td, .details-table th, .details-table td { 
+      border: none; 
+      padding: 5px; 
+      text-align: center; 
+      font-size: 14px; 
+    }
     .work-table th, .details-table th { background-color: rgba(50, 50, 50, 0.7); }
-    .indicators { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+    .indicators { 
+      display: grid; 
+      grid-template-columns: repeat(auto-fit, minmax(100px, 1fr)); 
+      gap: 10px; 
+    }
     hr { border: 1px solid var(--neon-blue); margin: 10px 0; }
-    @media (max-width: 768px) { 
-      .sidebar { width: 220px; right: -220px; } 
-      .sidebar.active { right: 0; } 
-      .menu-toggle img { width: 50px; height: 50px; } 
-      .vinh-menu-text { font-size: 20px; } 
-      .logo-container img { width: 50px; height: 50px; }
+    .section-header { 
+      display: flex; 
+      justify-content: flex-end; 
+      align-items: center; 
+      margin-bottom: 10px; 
+      flex-wrap: wrap; 
+    }
+    .section-header .duplicate-info { 
+      font-size: 0.9em; 
+      margin-left: 10px; 
+    }
+    .row { margin-top: 10px; }
+    .button-group { 
+      display: grid; 
+      grid-template-columns: 1fr 1fr; 
+      gap: 10px; 
+      margin-top: 10px; 
+      align-items: center; 
+    }
+    .button-group button { width: 100%; }
+
+    /* Адаптивный дизайн для iPad A1460 (2048x1536, 9.7", Retina) */
+    @media only screen and (min-device-width: 768px) and (max-device-width: 1024px) and (min-device-height: 1024px) and (max-device-height: 1536px) and (-webkit-min-device-pixel-ratio: 2) {
+      .container { padding: 20px; }
+      .sidebar { width: 250px; right: -250px; }
+      .sidebar.active { right: 0; }
+      .sidebar ul li a { font-size: 16px; }
+      .menu-toggle { top: 15px; right: 15px; }
+      .menu-toggle img { width: 30px; height: 30px; }
+      .vinh-menu-text { font-size: 22px; }
+      .logo-container img { width: 30px; height: 30px; }
+      .logo-container .vinh-menu-text { font-size: 18px; }
+      h2 { font-size: 1.5rem; }
+      h4 { font-size: 1.2rem; }
+      .form-control { font-size: 14px; padding: 10px; }
+      .btn-primary { padding: 8px 16px; font-size: 16px; }
+      .btn-danger { padding: 6px 12px; font-size: 14px; }
+      .glass-card { margin: 15px 5px; padding: 12px; }
+      .indicators { grid-template-columns: repeat(3, 1fr); gap: 15px; }
+      .form-check-label img { width: 28px; height: 28px; }
+      .work-table th, .work-table td, .details-table th, .details-table td { font-size: 13px; padding: 6px; }
+      .row { margin-top: 15px; }
+      .section-header { justify-content: flex-end; }
+      .section-header .duplicate-info { font-size: 0.85em; }
+      .button-group { grid-template-columns: 1fr 1fr; gap: 15px; }
+    }
+
+    /* Адаптивный дизайн для всех iPhone (общие настройки) */
+    @media only screen and (max-device-width: 767px) and (-webkit-min-device-pixel-ratio: 2) {
+      .container { padding: 10px; padding-top: 40px; }
+      .sidebar { width: 100%; right: -100%; }
+      .sidebar.active { right: 0; }
+      .sidebar ul li a { font-size: 14px; }
+      .menu-toggle { top: 5px; right: 5px; }
+      .menu-toggle img { width: 30px; height: 30px; }
+      .vinh-menu-text { font-size: 16px; }
+      .logo-container { padding: 3px 5px; }
+      .logo-container img { width: 40px; height: 40px; }
+      .logo-container .vinh-menu-text { font-size: 14px; }
+      h2 { font-size: 1.2rem; }
+      h4 { font-size: 1rem; }
+      .form-control { font-size: 12px; padding: 6px; }
+      .btn-primary, .btn-danger { font-size: 12px; padding: 6px 12px; }
+      .glass-card { margin: 10px 0; padding: 8px; }
+      .indicators { grid-template-columns: repeat(auto-fit, minmax(70px, 1fr)); gap: 5px; }
+      .form-check-label img { width: 20px; height: 20px; }
+      .work-table, .details-table { font-size: 10px; }
+      .work-table th, .work-table td, .details-table th, .details-table td { padding: 3px; }
+      .row { margin-top: 8px; }
+      .section-header { flex-direction: column; align-items: flex-end; text-align: right; }
+      .section-header .duplicate-info { margin-left: 0; margin-top: 5px; font-size: 0.8em; }
+      .table-legend { font-size: 10px; }
+      .legend-square { width: 12px; height: 12px; }
+      .button-group { grid-template-columns: 1fr 1fr; gap: 8px; }
+    }
+
+    /* iPhone 5/5S/SE (1136x640) */
+    @media only screen and (max-device-width: 640px) and (max-device-height: 1136px) and (-webkit-min-device-pixel-ratio: 2) {
+      .container { padding-top: 30px; }
+      .form-control { font-size: 10px; }
+      .btn-primary, .btn-danger { font-size: 10px; padding: 5px 10px; }
+      .work-table th, .work-table td, .details-table th, .details-table td { font-size: 8px; }
+      .indicators { grid-template-columns: repeat(auto-fit, minmax(60px, 1fr)); }
+      .form-check-label img { width: 16px; height: 16px; }
+      .button-group { grid-template-columns: 1fr 1fr; gap: 5px; }
+    }
+
+    /* iPhone 14 Pro и другие современные модели (более высокое разрешение) */
+    @media only screen and (min-device-width: 375px) and (max-device-width: 430px) and (min-device-height: 812px) and (-webkit-min-device-pixel-ratio: 3) {
+      .container { padding-top: 50px; }
+      .form-control { font-size: 13px; padding: 8px; }
+      .btn-primary, .btn-danger { font-size: 13px; padding: 7px 14px; }
+      .work-table th, .work-table td, .details-table th, .details-table td { font-size: 11px; padding: 4px; }
+      .indicators { grid-template-columns: repeat(auto-fit, minmax(80px, 1fr)); }
+      .form-check-label img { width: 22px; height: 22px; }
+      .button-group { grid-template-columns: 1fr 1fr; gap: 10px; }
     }
   </style>
 </head>
@@ -93,12 +382,20 @@
 
   <div class="menu-toggle">
     <img src="img/logo.png" alt="Logo" class="logo" />
-    <button id="menuButton"><span class="vinh-menu-text">VINHSERVICE</span></button>
+    <button id="menuButton">
+      <span class="vinh-menu-text">
+        VINHSERVICE
+        <div id="dateTimeAct" class="date-time"></div>
+      </span>
+    </button>
   </div>
 
   <div class="logo-container">
     <img src="img/logo.png" alt="Logo" class="logo" />
-    <span class="vinh-menu-text">VINHSERVICE</span>
+    <span class="vinh-menu-text">
+      VINHSERVICE
+      <div id="dateTimeActClone" class="date-time"></div>
+    </span>
   </div>
 
   <div class="container" style="padding-top: 60px;">
@@ -110,7 +407,7 @@
             <div class="col-md-6 col-12"><label for="clientName">Имя клиента:</label><input type="text" id="clientName" class="form-control" /></div>
             <div class="col-md-6 col-12"><label for="phone">Телефон:</label><input type="text" id="phone" class="form-control" pattern="[0-9]*" inputmode="numeric" /></div>
           </div>
-          <div class="row" style="margin-top: 10px">
+          <div class="row">
             <div class="col-10">
               <label for="vin">VIN номер:</label>
               <div class="position-relative" style="display: inline-block; width: 100%;">
@@ -120,23 +417,23 @@
                 </a>
               </div>
             </div>
-            <div class="col-1 d-flex align-items-end">
+            <div class="col-2 d-flex align-items-end">
               <button type="button" style="border: none; background: none; cursor: pointer; padding: 0;" onclick="document.getElementById('techPassportPhotoInput').click()" title="Прикрепить фото техпаспорта">
                 <img src="img/paper_clips.png" alt="Прикрепить фото" style="width: 32px; height: 32px;" />
               </button>
               <input type="file" id="techPassportPhotoInput" accept="image/*" capture="environment" style="display: none;" onchange="handleTechPassportFileSelected(this)" />
-              <div id="selectedTechFileName" style="margin-left: 10px; font-size: 0.9em; color: #ccc;"></div>
+              <div id="selectedTechFileName" style="margin-left: 5px; font-size: 0.9em; color: #ccc;"></div>
             </div>
           </div>
-          <div class="row" style="margin-top: 10px">
+          <div class="row">
             <div class="col-md-6 col-6"><label for="carModel">Модель авто:</label><input type="text" id="carModel" class="form-control" pattern="[A-Z]+" style="text-transform: uppercase" oninput="this.value = this.value.toUpperCase();" /></div>
             <div class="col-md-6 col-6"><label for="year">Год выпуска:</label><input type="text" id="year" class="form-control" pattern="[0-9]*" inputmode="numeric" /></div>
           </div>
-          <div class="row" style="margin-top: 10px">
+          <div class="row">
             <div class="col-md-6 col-6"><label for="plate">Номерной знак:</label><input type="text" id="plate" class="form-control" style="text-transform: uppercase" oninput="this.value = this.value.replace(/\s+/g, '').toUpperCase();" /></div>
             <div class="col-md-6 col-6"><label for="mileage">Пробег (км):</label><input type="text" id="mileage" class="form-control" pattern="[0-9]*" inputmode="numeric" /></div>
           </div>
-          <div style="margin-top: 0px"><label for="workList">Перечень желаемых работ:</label><textarea class="form-control" id="workList" rows="3" oninput="autoGrow(this)"></textarea></div>
+          <div><label for="workList">Перечень желаемых работ:</label><textarea class="form-control" id="workList" rows="3" oninput="autoGrow(this)"></textarea></div>
         </div>
 
         <div id="indicators-container" class="glass-card">
@@ -156,22 +453,23 @@
 
         <div id="defects-container" class="section" style="margin: 0px">
           <hr />
-          <h4 class="rainbow-text">Акт дефектів автомобіля</h4>
-          <div class="duplicate-info" style="font-size: 0.9em; margin-bottom: 10px"><strong>|</strong> <span id="vin_defects"></span><strong>|</strong> <span id="carModel_defects"></span><strong>|</strong> <span id="year_defects"></span><strong>|</strong> <span id="plate_defects"></span></div>
-          <div id="dateTimeAct" style="font-size: 0.9em; margin-bottom: 5px"></div>
+          <div class="section-header">
+            <h4 class="rainbow-text">Акт дефектів автомобіля</h4>
+            <div class="duplicate-info"><strong>|</strong> <span id="vin_defects"></span><strong>|</strong> <span id="carModel_defects"></span><strong>|</strong> <span id="year_defects"></span><strong>|</strong> <span id="plate_defects"></span></div>
+          </div>
           <div class="row">
             <div class="col-md-6 col-6"><label for="ptk_percent">передний тормоз. колодки (%):</label><input type="text" id="ptk_percent" class="form-control" pattern="[0-9]*" inputmode="numeric" /></div>
             <div class="col-md-6 col-6"><label for="ztk_percent">задний тормоз. колодки (%):</label><input type="text" id="ztk_percent" class="form-control" pattern="[0-9]*" inputmode="numeric" /></div>
           </div>
-          <div class="row" style="margin-top: 10px">
+          <div class="row">
             <div class="col-md-6 col-6"><label for="ptd_mm">передний тормоз. диски (мм):</label><input type="text" id="ptd_mm" class="form-control" pattern="[0-9]*" inputmode="numeric" /></div>
             <div class="col-md-6 col-6"><label for="ztd_mm">задний тормоз. диски (мм):</label><input type="text" id="ztd_mm" class="form-control" pattern="[0-9]*" inputmode="numeric" /></div>
           </div>
-          <div class="row" style="margin-top: 10px">
+          <div class="row">
             <div class="col-md-6 col-6"><label for="brakeFluid">тормозная жидкость:</label><input type="text" id="brakeFluid" class="form-control" /></div>
             <div class="col-md-6 col-6"><label for="antifreeze">охлаждающая жидкость:</label><input type="text" id="antifreeze" class="form-control" /></div>
           </div>
-          <div class="row" style="margin-top: 10px">
+          <div class="row">
             <div class="col-md-6 col-6"><label for="engineOil">моторное масло:</label><input type="text" id="engineOil" class="form-control" /></div>
             <div class="col-md-6 col-6"><label for="transmissionOil">масло в трансмиссии:</label><input type="text" id="transmissionOil" class="form-control" /></div>
           </div>
@@ -180,24 +478,29 @@
             <tbody><tr><td>1</td><td><textarea class="form-control" name="part1" oninput="autoGrow(this)" style="overflow:hidden; resize:none;" rows="1"></textarea></td><td><input type="checkbox" class="checkbox-green" /></td><td><input type="checkbox" class="checkbox-black" /></td><td><input type="checkbox" class="checkbox-yellow" /></td><td><input type="checkbox" class="checkbox-red" /></td></tr></tbody>
           </table>
           <div class="table-legend" style="text-align: right; margin-top: 5px"><span class="legend-square legend-green"></span>Знос<span class="legend-square legend-black" style="margin-left: 10px"></span>Люфт<span class="legend-square legend-yellow" style="margin-left: 10px"></span>Рек. замена<span class="legend-square legend-red" style="margin-left: 10px"></span>Критический замена</div>
-          <div style="margin-top: 10px; display: flex; justify-content: space-between; align-items: center;">
+          <div class="button-group">
             <button type="button" class="btn btn-primary btn-small add-row-btn">Додати рядок</button>
             <button type="button" class="btn btn-danger btn-small btn-neon remove-row-btn">Удалить строку</button>
           </div>
-          <div style="margin-top: 0px"><label for="notes">Дополнительные примечания:</label><textarea class="form-control" id="notes" rows="3" oninput="autoGrow(this)"></textarea></div>
-          <div style="margin-top: 10px; text-align: right"><p style="margin: 0; font-size: 0.9em">Администрация сервиса.</p><button type="button" class="btn btn-primary btn-small" id="sendPartsBtn" style="margin-top: 5px">send parts</button></div>
+          <div><label for="notes">Дополнительные примечания:</label><textarea class="form-control" id="notes" rows="3" oninput="autoGrow(this)"></textarea></div>
+          <div style="margin-top: 10px; text-align: right">
+            <p style="margin: 0; font-size: 0.9em">Администрация сервиса.</p>
+            <button type="button" class="btn btn-primary btn-small" id="sendPartsBtn" style="margin-top: 5px">send parts</button>
+          </div>
         </div>
 
         <div id="work-container" class="section" style="margin: 0px">
           <hr />
-          <h2 class="rainbow-text">ЗАЯВКА НА ВИКОНАННЯ РОБІТ</h2>
-          <div class="duplicate-info" style="font-size: 0.9em; margin-bottom: 10px"><strong>|</strong> <span id="vin_work"></span><strong>|</strong> <span id="carModel_work"></span><strong>|</strong> <span id="year_work"></span><strong>|</strong> <span id="plate_work"></span></div>
+          <div class="section-header">
+            <h2 class="rainbow-text">ЗАЯВКА НА ВИКОНАННЯ РОБІТ</h2>
+            <div class="duplicate-info"><strong>|</strong> <span id="vin_work"></span><strong>|</strong> <span id="carModel_work"></span><strong>|</strong> <span id="year_work"></span><strong>|</strong> <span id="plate_work"></span></div>
+          </div>
           <table class="work-table" style="margin-top: 0px">
             <thead><tr><th style="width: 45%">Назва запчастини або вузла</th><th style="width: 20%">ціна запчастини</th><th style="width: 20%">ціна работы</th></tr></thead>
             <tbody><tr><td><textarea class="form-control" rows="1" oninput="autoGrow(this)" style="overflow:hidden; resize:none;"></textarea></td><td><input type="number" class="form-control part-price" /></td><td><input type="number" class="form-control work-price" /></td></tr></tbody>
           </table>
           <div class="work-total" style="margin-top: 10px; text-align: right">Общая сумма: 0</div>
-          <div style="margin-top: 10px; display: flex; justify-content: space-between; align-items: center;">
+          <div class="button-group">
             <button type="button" class="btn btn-primary btn-small add-work-row-btn">Додати рядок</button>
             <button type="button" class="btn btn-danger btn-small btn-neon remove-work-row-btn">Удалить строку</button>
           </div>
@@ -206,12 +509,12 @@
         <div id="control-signatures-container" class="glass-card">
           <h4>Контрольные отметки и подписи</h4>
           <div><input type="checkbox" class="square-checkbox" id="checkParts" /><label for="checkParts">Контрольна обтяжка встановлених запчастин</label></div>
-          <div style="margin-top: 0px"><input type="checkbox" class="square-checkbox" id="tightenWheels" /><label for="tightenWheels">Затягування колісних болтів</label><input type="text" class="form-control" style="width: 80px; display: inline-block; vertical-align: middle" id="nmValue" /><span style="margin-left: 5px">Nm</span></div>
+          <div style="margin-top: 5px"><input type="checkbox" class="square-checkbox" id="tightenWheels" /><label for="tightenWheels">Затягування колісних болтів</label><input type="text" class="form-control" style="width: 80px; display: inline-block; vertical-align: middle" id="nmValue" /><span style="margin-left: 5px">Nm</span></div>
           <div style="margin-top: 10px"><input type="checkbox" class="square-checkbox" id="managerSignature" /><label for="managerSignature">підпис менедж</label></div>
-          <div style="margin-top: 10px"><input type="checkbox" class="square-checkbox" id="clientSignature" /><label for="clientSignature">підпис клієнта: Я прочитав і приймаю</label></div>
+          <div style="margin-top: 10px"><input type="checkbox" class="square-checkbox" id="clientSignature" /><label for="clientSignature">підпис клієнта: Я прочитав і прийняю</label></div>
         </div>
 
-        <div style="display: flex; justify-content: space-between; margin: 10px;">
+        <div class="button-group" style="margin: 10px;">
           <button id="sendAdminBtn" type="button" class="btn btn-primary btn-neon">Сохранить</button>
           <button type="button" class="btn btn-primary btn-small" id="addOrderBtn">добавить НАРЯД-ЗАМОВЛЕННЯ</button>
         </div>
@@ -246,12 +549,12 @@
       const logoContainer = document.querySelector('.logo-container');
       
       if (window.scrollY > 300) {
-        menuText.textContent = 'E';
+        menuText.innerHTML = 'E<br><div ';
         menuText.style.fontSize = '35px';
         logo.style.opacity = '0';
         logoContainer.classList.add('scrolled');
       } else {
-        menuText.textContent = 'VINHSERVICE';
+        menuText.innerHTML = 'VINHSERVICE<br><div " class="date-time"></div>';
         menuText.style.fontSize = '24px';
         logo.style.opacity = '1';
         logoContainer.classList.remove('scrolled');
@@ -280,7 +583,9 @@
         const now = new Date();
         const formatted = now.toLocaleString();
         const dtAct = document.getElementById("dateTimeAct");
+        const dtActClone = document.getElementById("dateTimeActClone");
         if (dtAct) dtAct.textContent = formatted;
+        if (dtActClone) dtActClone.textContent = formatted;
       }
       setInterval(updateDateTime, 1000);
       updateDateTime();
@@ -393,8 +698,7 @@
           }
         });
         const orderButtons = document.createElement("div");
-        orderButtons.style.display = "flex";
-        orderButtons.style.justifyContent = "space-between";
+        orderButtons.className = "button-group";
         orderButtons.style.margin = "10px";
         const saveBtn = document.createElement("button");
         saveBtn.type = "button";
@@ -442,7 +746,7 @@
         if (data.checkParts) checks.push("Контрольна обтяжка встановлених запчастин");
         if (data.tightenWheels) checks.push(`Затягування колісних болтів ${data.nmValue || ""} Nm`);
         if (data.managerSignature) checks.push("підпис менедж");
-        if (data.clientSignature) checks.push("підпис клієнта: Я прочитав і приймаю");
+        if (data.clientSignature) checks.push("підпис клієнта: Я прочитав і прийняю");
 
         let message = mode === "save" ? `
 Сохранено (кнопка "Сохранить"):
