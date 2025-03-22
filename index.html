@@ -8,6 +8,7 @@
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" />
   <script src="https://cdn.jsdelivr.net/npm/tesseract.js@v2.1.5/dist/tesseract.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/hammer.js/2.0.8/hammer.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 
   <style>
     @font-face { font-family: 'Passager'; src: url('passager.ttf') format('truetype'); font-weight: normal; font-style: normal; }
@@ -305,36 +306,20 @@
     }
     .generated-link-container { margin: 10px; text-align: center; display: none; }
 
-    /* Адаптивный дизайн для iPad A1460 (2048x1536, 9.7", Retina) */
+    /* Адаптивный дизайн для iPad */
     @media only screen and (min-device-width: 768px) and (max-device-width: 1024px) and (min-device-height: 1024px) and (max-device-height: 1536px) and (-webkit-min-device-pixel-ratio: 2) {
       .container { padding: 20px; padding-top: 60px; }
       .sidebar { width: 280px; right: -280px; }
       .sidebar.active { right: 0; }
-      .sidebar ul li a { font-size: 18px; }
       .menu-toggle { top: 15px; right: 15px; }
       .menu-toggle img { width: 32px; height: 32px; }
       .vinh-menu-text { font-size: 24px; }
-      .vinh-menu-text .address { font-size: 0.5em; }
-      .vinh-menu-text .date-time { font-size: 0.6em; }
-      .logo-container img { width: 32px; height: 32px; }
-      .logo-container .vinh-menu-text { font-size: 20px; }
-      h2 { font-size: 1.6rem; }
-      h4 { font-size: 1.3rem; }
       .form-control { font-size: 16px; padding: 10px; }
       .btn-primary { padding: 12px 24px; font-size: 16px; min-width: 100px; }
-      .btn-danger { padding: 10px 20px; font-size: 14px; min-width: 100px; }
       .btn-small { font-size: 14px !important; padding: 10px 15px !important; min-width: 90px; }
       .glass-card { margin: 15px 5px; padding: 15px; }
       .indicators { grid-template-columns: repeat(4, 1fr); gap: 15px; }
-      .form-check-label img { width: 30px; height: 30px; }
       .work-table th, .work-table td, .details-table th, .details-table td { font-size: 14px; padding: 8px; }
-      .row { margin-top: 15px; }
-      .section-header { justify-content: flex-end; }
-      .section-header .duplicate-info { font-size: 0.9em; }
-      .button-group { gap: 15px; }
-      .button-group button { padding: 10px; font-size: 14px; }
-      .table-legend { font-size: 12px; }
-      .legend-square { width: 14px; height: 14px; }
     }
   </style>
 </head>
@@ -342,6 +327,7 @@
   <script>
     const BOT_TOKEN = '8099553216:AAEE3Ctou3yY4ddwVbXiUfHgfT7PeZyUyhA';
     const ADMIN_CHAT_ID = '-1002239976197';
+    const ADMIN_PARTS_CHAT_ID = '-1002393963726';
   </script>
 
   <div id="sidebar" class="sidebar">
@@ -363,7 +349,7 @@
     <img src="img/logo.png" alt="Logo" class="logo" />
     <button id="menuButton">
       <span class="vinh-menu-text">
-        VINHSERVICE
+        AVALON SERVICE
         <div id="dateTimeAct" class="date-time"></div>
         <div class="address">Дальницькая 45</div>
       </span>
@@ -373,7 +359,7 @@
   <div class="logo-container">
     <img src="img/logo.png" alt="Logo" class="logo" />
     <span class="vinh-menu-text">
-      VINHSERVICE
+      AVALON SERVICE
       <div id="dateTimeActClone" class="date-time"></div>
       <div class="address">Дальницькая 45</div>
     </span>
@@ -454,10 +440,33 @@
             <div class="col-md-6 col-6"><label for="transmissionOil">масло в трансмиссии:</label><input type="text" id="transmissionOil" class="form-control" /></div>
           </div>
           <table class="details-table" style="margin-top: 10px; width: 100%">
-            <thead><tr><th style="width: 5%">#</th><th style="width: 60%">Назва запчастини або вузла</th><th style="width: 10%"><span class="legend-square legend-green"></span></th><th style="width: 10%"><span class="legend-square legend-black"></span></th><th style="width: 10%"><span class="legend-square legend-yellow"></span></th><th style="width: 10%"><span class="legend-square legend-red"></span></th></tr></thead>
-            <tbody><tr><td>1</td><td><textarea class="form-control" name="part1" oninput="autoGrow(this)" style="overflow:hidden; resize:none;" rows="1"></textarea></td><td><input type="checkbox" class="checkbox-green" /></td><td><input type="checkbox" class="checkbox-black" /></td><td><input type="checkbox" class="checkbox-yellow" /></td><td><input type="checkbox" class="checkbox-red" /></td></tr></tbody>
+            <thead>
+              <tr>
+                <th style="width: 5%">#</th>
+                <th style="width: 60%">Назва запчастини або вузла</th>
+                <th style="width: 10%"><span class="legend-square legend-green"></span></th>
+                <th style="width: 10%"><span class="legend-square legend-black"></span></th>
+                <th style="width: 10%"><span class="legend-square legend-yellow"></span></th>
+                <th style="width: 10%"><span class="legend-square legend-red"></span></th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>1</td>
+                <td><textarea class="form-control" name="part1" oninput="autoGrow(this)" style="overflow:hidden; resize:none;" rows="1"></textarea></td>
+                <td><input type="checkbox" class="checkbox-green" /></td>
+                <td><input type="checkbox" class="checkbox-black" /></td>
+                <td><input type="checkbox" class="checkbox-yellow" /></td>
+                <td><input type="checkbox" class="checkbox-red" /></td>
+              </tr>
+            </tbody>
           </table>
-          <div class="table-legend" style="text-align: right; margin-top: 5px"><span class="legend-square legend-green"></span>Знос<span class="legend-square legend-black" style="margin-left: 10px"></span>Люфт<span class="legend-square legend-yellow" style="margin-left: 10px"></span>Рек. замена<span class="legend-square legend-red" style="margin-left: 10px"></span>Критический замена</div>
+          <div class="table-legend" style="text-align: right; margin-top: 5px">
+            <span class="legend-square legend-green"></span>Знос
+            <span class="legend-square legend-black" style="margin-left: 10px"></span>Люфт
+            <span class="legend-square legend-yellow" style="margin-left: 10px"></span>Рек. замена
+            <span class="legend-square legend-red" style="margin-left: 10px"></span>Критический замена
+          </div>
           <div class="button-group">
             <button type="button" class="btn btn-primary btn-small add-row-btn">Додати рядок</button>
             <button type="button" class="btn btn-danger btn-small btn-neon remove-row-btn">Удалить строку</button>
@@ -491,13 +500,14 @@
           <div><input type="checkbox" class="square-checkbox" id="checkParts" /><label for="checkParts">Контрольна обтяжка встановлених запчастин</label></div>
           <div style="margin-top: 5px"><input type="checkbox" class="square-checkbox" id="tightenWheels" /><label for="tightenWheels">Затягування колісних болтів</label><input type="text" class="form-control" style="width: 80px; display: inline-block; vertical-align: middle" id="nmValue" /><span style="margin-left: 5px">Nm</span></div>
           <div style="margin-top: 10px"><input type="checkbox" class="square-checkbox" id="managerSignature" /><label for="managerSignature">підпис менедж</label></div>
-          <div style="margin-top: 10px"><input type="checkbox" class="square-checkbox" id="clientSignature" /><label for="clientSignature">підпис клієнта: Я прочитав і прийняю</label></div>
+          <div style="margin-top: 10px"><input type="checkbox" class="square-checkbox" id="clientSignature" /><label for="clientSignature">підпис клієнта: Я прочитав і приймаю</label></div>
         </div>
 
         <div class="button-group" style="margin: 10px;">
           <button id="sendAdminBtn" type="button" class="btn btn-primary btn-neon">Сохранить</button>
           <button type="button" class="btn btn-primary btn-small" id="addOrderBtn">добавить НАРЯД-ЗАМОВЛЕННЯ</button>
           <button type="button" class="btn btn-primary btn-small" id="createLinkBtn">Создать ссылку</button>
+          <button type="button" class="btn btn-primary btn-small" id="screenshotBtn">Full Screenshot</button>
         </div>
         <div class="generated-link-container">
           <label for="generatedLink">Сгенерированная ссылка:</label>
@@ -538,7 +548,7 @@
         logo.style.opacity = '0';
         logoContainer.classList.add('scrolled');
       } else {
-        menuText.innerHTML = 'VINHSERVICE<br><div id="dateTimeAct" class="date-time"></div><div class="address">Дальницькая 45</div>';
+        menuText.innerHTML = 'AVALON SERVICE<br><div id="dateTimeAct" class="date-time"></div><div class="address">Дальницькая 45</div>';
         menuText.style.fontSize = '24px';
         logo.style.opacity = '1';
         logoContainer.classList.remove('scrolled');
@@ -622,7 +632,6 @@
           };
           const hammerBtn = new Hammer(btn);
           hammerBtn.on("tap", addRow);
-          btn.addEventListener("click", addRow);
         });
 
         container.querySelectorAll(".remove-row-btn").forEach((btn) => {
@@ -632,7 +641,6 @@
           };
           const hammerBtn = new Hammer(btn);
           hammerBtn.on("tap", removeRow);
-          btn.addEventListener("click", removeRow);
         });
 
         container.querySelectorAll(".add-work-row-btn").forEach((btn) => {
@@ -652,7 +660,6 @@
           };
           const hammerBtn = new Hammer(btn);
           hammerBtn.on("tap", addWorkRow);
-          btn.addEventListener("click", addWorkRow);
         });
 
         container.querySelectorAll(".remove-work-row-btn").forEach((btn) => {
@@ -665,21 +672,18 @@
           };
           const hammerBtn = new Hammer(btn);
           hammerBtn.on("tap", removeWorkRow);
-          btn.addEventListener("click", removeWorkRow);
         });
 
         const sendAdminBtn = container.querySelector("#sendAdminBtn");
         if (sendAdminBtn) {
           const hammerBtn = new Hammer(sendAdminBtn);
           hammerBtn.on("tap", () => collectAllDataAndSendToTelegram("save", container));
-          sendAdminBtn.addEventListener("click", () => collectAllDataAndSendToTelegram("save", container));
         }
 
         const sendPartsBtn = container.querySelector("#sendPartsBtn");
         if (sendPartsBtn) {
           const hammerBtn = new Hammer(sendPartsBtn);
           hammerBtn.on("tap", () => collectAllDataAndSendToTelegram("parts", container));
-          sendPartsBtn.addEventListener("click", () => collectAllDataAndSendToTelegram("parts", container));
         }
 
         const addOrderBtn = container.querySelector("#addOrderBtn");
@@ -708,6 +712,7 @@
               <button id="sendAdminBtn" type="button" class="btn btn-primary btn-neon">Сохранить</button>
               <button type="button" class="btn btn-primary btn-small" id="addOrderBtn">добавить НАРЯД-ЗАМОВЛЕННЯ</button>
               <button type="button" class="btn btn-primary btn-small" id="createLinkBtn">Создать ссылку</button>
+              <button type="button" class="btn btn-primary btn-small" id="screenshotBtn">Full Screenshot</button>
             `;
             const linkContainer = document.createElement("div");
             linkContainer.className = "generated-link-container";
@@ -723,14 +728,12 @@
           };
           const hammerBtn = new Hammer(addOrderBtn);
           hammerBtn.on("tap", addOrder);
-          addOrderBtn.addEventListener("click", addOrder);
         }
 
         const createLinkBtn = container.querySelector("#createLinkBtn");
         if (createLinkBtn) {
           const hammerBtn = new Hammer(createLinkBtn);
           hammerBtn.on("tap", () => createShareableLink(container));
-          createLinkBtn.addEventListener("click", () => createShareableLink(container));
         }
 
         const copyLinkBtn = container.querySelector("#copyLinkBtn");
@@ -745,7 +748,55 @@
           };
           const hammerBtn = new Hammer(copyLinkBtn);
           hammerBtn.on("tap", copyLink);
-          copyLinkBtn.addEventListener("click", copyLink);
+        }
+
+        const screenshotBtn = container.querySelector("#screenshotBtn");
+        if (screenshotBtn) {
+          const takeScreenshot = async () => {
+            try {
+              const canvas = await html2canvas(document.body, {
+                scale: 1,
+                useCORS: true,
+                scrollX: 0,
+                scrollY: 0,
+                windowWidth: document.documentElement.scrollWidth,
+                windowHeight: document.documentElement.scrollHeight
+              });
+              const imageData = canvas.toDataURL("image/png");
+              const blob = await (await fetch(imageData)).blob();
+              const formData = new FormData();
+              formData.append("chat_id", ADMIN_CHAT_ID);
+              formData.append("photo", blob, "screenshot.png");
+
+              const data = collectFormData(container);
+              const caption = `
+Имя клиента: ${data.clientName || ""}
+Телефон: ${data.phone || ""}
+VIN номер: ${data.vin || ""}
+Модель авто: ${data.carModel || ""}
+Год выпуска: ${data.year || ""}
+Номерной знак: ${data.plate || ""}
+Пробег (км): ${data.mileage || ""}
+              `.trim();
+              formData.append("caption", caption);
+
+              const response = await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendPhoto`, {
+                method: "POST",
+                body: formData
+              });
+              const result = await response.json();
+              if (result.ok) {
+                alert("Скриншот отправлен в Telegram!");
+              } else {
+                throw new Error(result.description);
+              }
+            } catch (error) {
+              console.error("Ошибка:", error);
+              alert("Ошибка при отправке скриншота: " + error.message);
+            }
+          };
+          const hammerBtn = new Hammer(screenshotBtn);
+          hammerBtn.on("tap", takeScreenshot);
         }
       }
 
@@ -849,7 +900,9 @@
         if (data.managerSignature) checks.push("підпис менедж");
         if (data.clientSignature) checks.push("підпис клієнта: Я прочитав і прийняю");
 
-        let message = mode === "save" ? `
+        let message;
+        if (mode === "save") {
+          message = `
 Сохранено:
 Имя клиента: ${data.clientName || ""}
 Телефон: ${data.phone || ""}
@@ -876,31 +929,38 @@ ${data.details.map((d) => `#${d.idx + 1} ${d.partName} [${[d.wear ? "Знос" :
 ${data.works.map((w) => `- ${w.partName} | запчасть: ${w.partPrice} | работа: ${w.workPrice}`).join("\n") || "(нет)"}
 ${totalText}
 Контрольные отметки: ${checks.join(", ") || "(нет)"}
-        `.trim() : `
-Кнопка "send parts":
-Имя клиента: ${data.clientName || ""}
-Телефон: ${data.phone || ""}
-VIN: ${data.vin || ""}
-Модель: ${data.carModel || ""}
-Год: ${data.year || ""}
-Номер: ${data.plate || ""}
-Пробег: ${data.mileage || ""}
-Желаемые работы: ${data.workList || ""}
-Индикаторы: ${indicators.join(", ") || "(нет)"}
-        `.trim();
+          `.trim();
+        } else if (mode === "parts") {
+          const partNames = data.details
+            .map(d => d.partName)
+            .filter(name => name.trim() !== "");
+          message = `
+Модель авто: ${data.carModel || "(не указано)"}
+Год: ${data.year || "(не указано)"}
+VIN: ${data.vin || "(не указано)"}
+- передние колодки(%): ${data.ptk_percent || "(не указано)"}
+- задние колодки(%): ${data.ztk_percent || "(не указано)"}
+- передние диски(мм): ${data.ptd_mm || "(не указано)"}
+- задние диски(мм): ${data.ztd_mm || "(не указано)"}
+- масло в трансмиссии: ${data.transmissionOil || "(не указано)"}
+Назва запчастини або вузла:
+${partNames.length > 0 ? partNames.map((name, index) => `${index + 1}: ${name}`).join("\n") : "Нет запчастей"}
+          `.trim();
+        }
 
         try {
+          const chatId = mode === "parts" ? ADMIN_PARTS_CHAT_ID : ADMIN_CHAT_ID;
           const textResponse = await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ chat_id: ADMIN_CHAT_ID, text: message })
+            body: JSON.stringify({ chat_id: chatId, text: message })
           });
           const textResult = await textResponse.json();
           if (!textResult.ok) throw new Error("Ошибка отправки текста: " + textResult.description);
 
           if (selectedTechPassportFile) {
             const formData = new FormData();
-            formData.append("chat_id", ADMIN_CHAT_ID);
+            formData.append("chat_id", chatId);
             formData.append("photo", selectedTechPassportFile);
             formData.append("caption", "Фото техпаспорта для: " + (data.clientName || "Неизвестный клиент"));
             const photoResponse = await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendPhoto`, { method: "POST", body: formData });
@@ -913,6 +973,109 @@ VIN: ${data.vin || ""}
           alert("Ошибка при отправке: " + err.message);
         }
       }
+
+      // Збереження даних у LocalStorage та обробка параметрів URL
+      function saveToLocalStorage() {
+        const data = collectFormData(document.querySelector(".order"));
+        localStorage.setItem('formData', JSON.stringify(data));
+      }
+
+      function restoreFromLocalStorage() {
+        const savedData = localStorage.getItem('formData');
+        if (savedData) {
+          const data = JSON.parse(savedData);
+          const container = document.querySelector(".order");
+          container.querySelectorAll("input, textarea").forEach((el) => {
+            if (el.id && data[el.id] !== undefined) {
+              if (el.type === "checkbox") el.checked = data[el.id];
+              else el.value = data[el.id];
+              if (el.tagName === "TEXTAREA") autoGrow(el);
+            }
+          });
+          const detailsTable = container.querySelector(".details-table tbody");
+          if (detailsTable && data.details) {
+            detailsTable.innerHTML = "";
+            data.details.forEach((item, idx) => {
+              const newRow = detailsTable.insertRow();
+              newRow.innerHTML = `
+                <td>${idx + 1}</td>
+                <td><textarea class="form-control" oninput="autoGrow(this)" style="overflow:hidden; resize:none;" rows="1">${item.partName}</textarea></td>
+                <td><input type="checkbox" class="checkbox-green" ${item.wear ? "checked" : ""} /></td>
+                <td><input type="checkbox" class="checkbox-black" ${item.looseness ? "checked" : ""} /></td>
+                <td><input type="checkbox" class="checkbox-yellow" ${item.recReplace ? "checked" : ""} /></td>
+                <td><input type="checkbox" class="checkbox-red" ${item.critReplace ? "checked" : ""} /></td>
+              `;
+            });
+          }
+          const worksTable = container.querySelector(".work-table tbody");
+          if (worksTable && data.works) {
+            worksTable.innerHTML = "";
+            data.works.forEach((item) => {
+              const newRow = worksTable.insertRow();
+              newRow.innerHTML = `
+                <td><textarea class="form-control" rows="1" oninput="autoGrow(this)" style="overflow:hidden; resize:none;">${item.partName}</textarea></td>
+                <td><input type="number" class="form-control part-price" value="${item.partPrice}" /></td>
+                <td><input type="number" class="form-control work-price" value="${item.workPrice}" /></td>
+              `;
+            });
+            recalcWorkTableForContainer(container);
+          }
+          updateDuplicates();
+        }
+      }
+
+      // Відновлення даних при завантаженні сторінки
+      document.addEventListener('DOMContentLoaded', function() {
+        const urlParams = new URLSearchParams(window.location.search);
+        const formData = urlParams.get('formData');
+        if (formData) {
+          const data = JSON.parse(decodeURIComponent(formData));
+          const container = document.querySelector(".order");
+          container.querySelectorAll("input, textarea").forEach((el) => {
+            if (el.id && data[el.id] !== undefined) {
+              if (el.type === "checkbox") el.checked = data[el.id];
+              else el.value = data[el.id];
+              if (el.tagName === "TEXTAREA") autoGrow(el);
+            }
+          });
+          const detailsTable = container.querySelector(".details-table tbody");
+          if (detailsTable && data.details) {
+            detailsTable.innerHTML = "";
+            data.details.forEach((item, idx) => {
+              const newRow = detailsTable.insertRow();
+              newRow.innerHTML = `
+                <td>${idx + 1}</td>
+                <td><textarea class="form-control" oninput="autoGrow(this)" style="overflow:hidden; resize:none;" rows="1">${item.partName}</textarea></td>
+                <td><input type="checkbox" class="checkbox-green" ${item.wear ? "checked" : ""} /></td>
+                <td><input type="checkbox" class="checkbox-black" ${item.looseness ? "checked" : ""} /></td>
+                <td><input type="checkbox" class="checkbox-yellow" ${item.recReplace ? "checked" : ""} /></td>
+                <td><input type="checkbox" class="checkbox-red" ${item.critReplace ? "checked" : ""} /></td>
+              `;
+            });
+          }
+          const worksTable = container.querySelector(".work-table tbody");
+          if (worksTable && data.works) {
+            worksTable.innerHTML = "";
+            data.works.forEach((item) => {
+              const newRow = worksTable.insertRow();
+              newRow.innerHTML = `
+                <td><textarea class="form-control" rows="1" oninput="autoGrow(this)" style="overflow:hidden; resize:none;">${item.partName}</textarea></td>
+                <td><input type="number" class="form-control part-price" value="${item.partPrice}" /></td>
+                <td><input type="number" class="form-control work-price" value="${item.workPrice}" /></td>
+              `;
+            });
+            recalcWorkTableForContainer(container);
+          }
+          updateDuplicates();
+        } else {
+          restoreFromLocalStorage();
+        }
+      });
+
+      // Збереження даних у LocalStorage при змінах форми
+      document.querySelectorAll("input, textarea").forEach((el) => {
+        el.addEventListener("input", saveToLocalStorage);
+      });
     });
   </script>
 </body>
