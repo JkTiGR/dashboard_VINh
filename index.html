@@ -32,13 +32,19 @@
       margin: 0; 
       padding: 0; 
       min-height: 100vh; 
-      background: linear-gradient(135deg, rgba(11, 14, 20, 0.7), rgba(11, 14, 20, 0.9)), url("img/image.png") no-repeat center center fixed; 
-      background-size: cover; 
+      background: linear-gradient(135deg, #0B0E14, #1F252E, #2A3244, #0B0E14); 
+      background-size: 200% 200%; 
+      animation: gradientAnimation 15s ease infinite; 
       font-family: 'Share Tech Mono', monospace; 
       color: var(--white); 
       overflow-x: hidden; 
       -webkit-user-select: none; 
       user-select: none; 
+    }
+    @keyframes gradientAnimation {
+      0% { background-position: 0% 0%; }
+      50% { background-position: 100% 100%; }
+      100% { background-position: 0% 0%; }
     }
     h1, h2, h3, h4 { 
       text-shadow: 0 0 5px var(--neon-cyan), 0 0 10px var(--neon-cyan), 0 0 20px var(--neon-cyan); 
@@ -613,6 +619,9 @@
       }
 
       function reinitializeOrderEventsForContainer(container) {
+        if (container.dataset.initialized) return;
+        container.dataset.initialized = "true";
+
         container.querySelectorAll(".part-price, .work-price").forEach((input) => {
           input.addEventListener("input", () => recalcWorkTableForContainer(container));
           const hammerInput = new Hammer(input);
@@ -631,6 +640,7 @@
             }
           };
           const hammerBtn = new Hammer(btn);
+          hammerBtn.off("tap");
           hammerBtn.on("tap", addRow);
         });
 
@@ -640,6 +650,7 @@
             if (tableBody && tableBody.rows.length > 1) tableBody.removeChild(tableBody.lastElementChild);
           };
           const hammerBtn = new Hammer(btn);
+          hammerBtn.off("tap");
           hammerBtn.on("tap", removeRow);
         });
 
@@ -659,6 +670,7 @@
             }
           };
           const hammerBtn = new Hammer(btn);
+          hammerBtn.off("tap");
           hammerBtn.on("tap", addWorkRow);
         });
 
@@ -671,18 +683,21 @@
             }
           };
           const hammerBtn = new Hammer(btn);
+          hammerBtn.off("tap");
           hammerBtn.on("tap", removeWorkRow);
         });
 
         const sendAdminBtn = container.querySelector("#sendAdminBtn");
         if (sendAdminBtn) {
           const hammerBtn = new Hammer(sendAdminBtn);
+          hammerBtn.off("tap");
           hammerBtn.on("tap", () => collectAllDataAndSendToTelegram("save", container));
         }
 
         const sendPartsBtn = container.querySelector("#sendPartsBtn");
         if (sendPartsBtn) {
           const hammerBtn = new Hammer(sendPartsBtn);
+          hammerBtn.off("tap");
           hammerBtn.on("tap", () => collectAllDataAndSendToTelegram("parts", container));
         }
 
@@ -727,12 +742,14 @@
             reinitializeOrderEventsForContainer(newOrder);
           };
           const hammerBtn = new Hammer(addOrderBtn);
+          hammerBtn.off("tap");
           hammerBtn.on("tap", addOrder);
         }
 
         const createLinkBtn = container.querySelector("#createLinkBtn");
         if (createLinkBtn) {
           const hammerBtn = new Hammer(createLinkBtn);
+          hammerBtn.off("tap");
           hammerBtn.on("tap", () => createShareableLink(container));
         }
 
@@ -747,12 +764,16 @@
             }
           };
           const hammerBtn = new Hammer(copyLinkBtn);
+          hammerBtn.off("tap");
           hammerBtn.on("tap", copyLink);
         }
 
         const screenshotBtn = container.querySelector("#screenshotBtn");
         if (screenshotBtn) {
+          let isProcessing = false;
           const takeScreenshot = async () => {
+            if (isProcessing) return;
+            isProcessing = true;
             try {
               const canvas = await html2canvas(document.body, {
                 scale: 1,
@@ -793,9 +814,12 @@ VIN номер: ${data.vin || ""}
             } catch (error) {
               console.error("Ошибка:", error);
               alert("Ошибка при отправке скриншота: " + error.message);
+            } finally {
+              isProcessing = false;
             }
           };
           const hammerBtn = new Hammer(screenshotBtn);
+          hammerBtn.off("tap");
           hammerBtn.on("tap", takeScreenshot);
         }
       }
@@ -898,7 +922,7 @@ VIN номер: ${data.vin || ""}
         if (data.checkParts) checks.push("Контрольна обтяжка встановлених запчастин");
         if (data.tightenWheels) checks.push(`Затягування колісних болтів ${data.nmValue || ""} Nm`);
         if (data.managerSignature) checks.push("підпис менедж");
-        if (data.clientSignature) checks.push("підпис клієнта: Я прочитав і прийняю");
+        if (data.clientSignature) checks.push("підпис клієнта: Я прочитав і приймаю");
 
         let message;
         if (mode === "save") {
@@ -974,7 +998,6 @@ ${partNames.length > 0 ? partNames.map((name, index) => `${index + 1}: ${name}`)
         }
       }
 
-      // Збереження даних у LocalStorage та обробка параметрів URL
       function saveToLocalStorage() {
         const data = collectFormData(document.querySelector(".order"));
         localStorage.setItem('formData', JSON.stringify(data));
@@ -1024,7 +1047,6 @@ ${partNames.length > 0 ? partNames.map((name, index) => `${index + 1}: ${name}`)
         }
       }
 
-      // Відновлення даних при завантаженні сторінки
       document.addEventListener('DOMContentLoaded', function() {
         const urlParams = new URLSearchParams(window.location.search);
         const formData = urlParams.get('formData');
@@ -1072,7 +1094,6 @@ ${partNames.length > 0 ? partNames.map((name, index) => `${index + 1}: ${name}`)
         }
       });
 
-      // Збереження даних у LocalStorage при змінах форми
       document.querySelectorAll("input, textarea").forEach((el) => {
         el.addEventListener("input", saveToLocalStorage);
       });
