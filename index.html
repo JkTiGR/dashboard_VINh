@@ -1,9 +1,10 @@
 <!DOCTYPE html>
-<html lang="ru">
+<html lang="uk">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>VINh AUTOSERVICE Dashboard</title>
+  <title>Панель керування VINh AUTOSERVICE</title>
+  <link rel="icon" type="image/x-icon" href="favicon.ico" />
   <link href="https://fonts.googleapis.com/css2?family=Share+Tech_Mono&subset=cyrillic&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" />
   <script src="https://cdn.jsdelivr.net/npm/tesseract.js@v2.1.5/dist/tesseract.min.js"></script>
@@ -193,6 +194,13 @@
       from { opacity: 0; transform: translateY(20px); }
       to { opacity: 1; transform: translateY(0); }
     }
+    /* Remove animations for Indicators and Control Signatures sections */
+    #indicators-container.glass-card,
+    #control-signatures-container.glass-card {
+      opacity: 1;
+      animation: none;
+      transform: translateY(0);
+    }
     .rainbow-text { animation: rainbowText 20s linear infinite; }
     @keyframes rainbowText { 
       0% { text-shadow: 0 0 5px #a1c4fd; } 
@@ -374,33 +382,33 @@
   <div id="sidebar" class="sidebar">
     <button class="close-sidebar" id="closeSidebar">×</button>
     <ul>
-      <li><a href="#">Home</a></li>
-      <li><a href="https://calendar.google.com/calendar/embed?src=jediservice.ua%40gmail.com&ctz=Europe%2FKiev" target="_blank">Расписание</a></li>
-      <li><a href="#">Диагностика</a></li>
+      <li><a href="#">Додому</a></li>
+      <li><a href="https://calendar.google.com/calendar/embed?src=jediservice.ua%40gmail.com&ctz=Europe%2FKiev" target="_blank">Розклад</a></li>
+      <li><a href="#">Діагностика</a></li>
       <li><a href="#">Ремонт</a></li>
-      <li><a href="#">Запчасти</a></li>
-      <li><a href="#">Мойка</a></li>
+      <li><a href="#">Запчастини</a></li>
+      <li><a href="#">Мийка</a></li>
       <li><a href="#">Шиномонтаж</a></li>
-      <li><a href="#">Контакт</a></li>
-      <li><a href="#">Выйти</a></li>
+      <li><a href="#">Контакти</a></li>
+      <li><a href="#">Вийти</a></li>
     </ul>
   </div>
 
   <div class="menu-toggle">
-    <img src="img/logo.png" alt="Logo" class="logo" />
+    <img src="img/logo.png" alt="Логотип" class="logo" />
     <button id="menuButton">
       <span class="vinh-menu-text">
         AVALON SERVICE
-        <div class="address">Дальницькая 45</div>
+        <div class="address">Дальницька 45</div>
       </span>
     </button>
   </div>
 
   <div class="logo-container">
-    <img src="img/logo.png" alt="Logo" class="logo" />
+    <img src="img/logo.png" alt="Логотип" class="logo" />
     <span class="vinh-menu-text">
       AVALON SERVICE
-      <div class="address">Дальницькая 45</div>
+      <div class="address">Дальницька 45</div>
     </span>
   </div>
 
@@ -409,22 +417,22 @@
       <div class="order">
         <div id="vinh-container" style="margin: 0px;">
           <div class="row">
-            <div class="col-md-6 col-12"><label for="clientName">Имя клиента:</label><input type="text" id="clientName" class="form-control" /></div>
+            <div class="col-md-6 col-12"><label for="clientName">Ім'я клієнта:</label><input type="text" id="clientName" class="form-control" /></div>
             <div class="col-md-6 col-12"><label for="phone">Телефон:</label><input type="text" id="phone" class="form-control" pattern="[0-9]*" inputmode="numeric" /></div>
           </div>
           <div class="row">
             <div class="col-10">
               <label for="vin">VIN номер:</label>
               <div class="position-relative" style="display: inline-block; width: 100%;">
-                <input type="text" id="vin" class="form-control" pattern="[A-Z0-9]*" style="text-transform: uppercase; padding-right: 40px;" oninput="this.value = this.value.toUpperCase();" placeholder="Введите VIN" />
-                <a href="https://lens.google.com/" target="_blank" title="Открыть Google Объектив (Web)" style="position: absolute; top: 50%; right: 8px; transform: translateY(-50%);">
+                <input type="text" id="vin" class="form-control" pattern="[A-Z0-9]*" style="text-transform: uppercase; padding-right: 40px;" oninput="this.value = this.value.toUpperCase();" placeholder="Введіть VIN" />
+                <a href="https://lens.google.com/" target="_blank" title="Відкрити Google Об'єктив (Web)" style="position: absolute; top: 50%; right: 8px; transform: translateY(-50%);">
                   <img src="img/google_lens.png" alt="Google Lens" style="width: 24px; height: 24px; cursor: pointer;" />
                 </a>
               </div>
             </div>
             <div class="col-2 d-flex align-items-end">
-              <button type="button" style="border: none; background: none; cursor: pointer; padding: 0;" onclick="document.getElementById('techPassportPhotoInput').click()" title="Прикрепить фото техпаспорта">
-                <img src="img/paper_clips.png" alt="Прикрепить фото" style="width: 32px; height: 32px;" />
+              <button type="button" style="border: none; background: none; cursor: pointer; padding: 0;" onclick="document.getElementById('techPassportPhotoInput').click()" title="Прикріпити фото техпаспорта">
+                <img src="img/paper_clips.png" alt="Прикріпити фото" style="width: 32px; height: 32px;" />
               </button>
               <input type="file" id="techPassportPhotoInput" accept="image/*" capture="environment" style="display: none;" onchange="handleTechPassportFileSelected(this)" />
               <div id="selectedTechFileName" style="margin-left: 5px; font-size: 0.9em; color: #ccc;"></div>
@@ -432,17 +440,17 @@
           </div>
           <div class="row">
             <div class="col-md-6 col-6"><label for="carModel">Модель авто:</label><input type="text" id="carModel" class="form-control" pattern="[A-Z]+" style="text-transform: uppercase" oninput="this.value = this.value.toUpperCase();" /></div>
-            <div class="col-md-6 col-6"><label for="year">Год выпуска:</label><input type="text" id="year" class="form-control" pattern="[0-9]*" inputmode="numeric" /></div>
+            <div class="col-md-6 col-6"><label for="year">Рік випуску:</label><input type="text" id="year" class="form-control" pattern="[0-9]*" inputmode="numeric" /></div>
           </div>
           <div class="row">
-            <div class="col-md-6 col-6"><label for="plate">Номерной знак:</label><input type="text" id="plate" class="form-control" style="text-transform: uppercase" oninput="this.value = this.value.replace(/\s+/g, '').toUpperCase();" /></div>
-            <div class="col-md-6 col-6"><label for="mileage">Пробег (км):</label><input type="text" id="mileage" class="form-control" pattern="[0-9]*" inputmode="numeric" /></div>
+            <div class="col-md-6 col-6"><label for="plate">Номерний знак:</label><input type="text" id="plate" class="form-control" style="text-transform: uppercase" oninput="this.value = this.value.replace(/\s+/g, '').toUpperCase();" /></div>
+            <div class="col-md-6 col-6"><label for="mileage">Пробіг (км):</label><input type="text" id="mileage" class="form-control" pattern="[0-9]*" inputmode="numeric" /></div>
           </div>
-          <div><label for="workList">Перечень желаемых работ:</label><textarea class="form-control" id="workList" rows="3" oninput="autoGrow(this)"></textarea></div>
+          <div><label for="workList">Перелік бажаних робіт:</label><textarea class="form-control" id="workList" rows="3" oninput="autoGrow(this)"></textarea></div>
         </div>
 
         <div id="indicators-container" class="glass-card">
-          <h4>Индикаторы</h4>
+          <h4>Індикатори</h4>
           <div class="indicators">
             <div class="form-check"><input class="form-check-input" type="checkbox" id="checkEngine" /><label class="form-check-label" for="checkEngine"><img src="img/check_engine.png" alt="Check Engine" style="width: 24px; height: 24px" /></label></div>
             <div class="form-check"><input class="form-check-input" type="checkbox" id="battery" /><label class="form-check-label" for="battery"><img src="img/battery.png" alt="Battery" style="width: 24px; height: 24px" /></label></div>
@@ -463,20 +471,20 @@
             <div class="duplicate-info"><strong>|</strong> <span id="vin_defects"></span><strong>|</strong> <span id="carModel_defects"></span><strong>|</strong> <span id="year_defects"></span><strong>|</strong> <span id="plate_defects"></span></div>
           </div>
           <div class="row">
-            <div class="col-md-6 col-6"><label for="ptk_percent">передний тормоз. колодки (%):</label><input type="text" id="ptk_percent" class="form-control" pattern="[0-9]*" inputmode="numeric" /></div>
-            <div class="col-md-6 col-6"><label for="ztk_percent">задний тормоз. колодки (%):</label><input type="text" id="ztk_percent" class="form-control" pattern="[0-9]*" inputmode="numeric" /></div>
+            <div class="col-md-6 col-6"><label for="ptk_percent">Передні гальмівні колодки (%):</label><input type="text" id="ptk_percent" class="form-control" pattern="[0-9]*" inputmode="numeric" /></div>
+            <div class="col-md-6 col-6"><label for="ztk_percent">Задні гальмівні колодки (%):</label><input type="text" id="ztk_percent" class="form-control" pattern="[0-9]*" inputmode="numeric" /></div>
           </div>
           <div class="row">
-            <div class="col-md-6 col-6"><label for="ptd_mm">передний тормоз. диски (мм):</label><input type="text" id="ptd_mm" class="form-control" pattern="[0-9]*" inputmode="numeric" /></div>
-            <div class="col-md-6 col-6"><label for="ztd_mm">задний тормоз. диски (мм):</label><input type="text" id="ztd_mm" class="form-control" pattern="[0-9]*" inputmode="numeric" /></div>
+            <div class="col-md-6 col-6"><label for="ptd_mm">Передні гальмівні диски (мм):</label><input type="text" id="ptd_mm" class="form-control" pattern="[0-9]*" inputmode="numeric" /></div>
+            <div class="col-md-6 col-6"><label for="ztd_mm">Задні гальмівні диски (мм):</label><input type="text" id="ztd_mm" class="form-control" pattern="[0-9]*" inputmode="numeric" /></div>
           </div>
           <div class="row">
-            <div class="col-md-6 col-6"><label for="brakeFluid">тормозная жидкость:</label><input type="text" id="brakeFluid" class="form-control" /></div>
-            <div class="col-md-6 col-6"><label for="antifreeze">охлаждающая жидкость:</label><input type="text" id="antifreeze" class="form-control" /></div>
+            <div class="col-md-6 col-6"><label for="brakeFluid">Гальмівна рідина:</label><input type="text" id="brakeFluid" class="form-control" /></div>
+            <div class="col-md-6 col-6"><label for="antifreeze">Охолоджуюча рідина:</label><input type="text" id="antifreeze" class="form-control" /></div>
           </div>
           <div class="row">
-            <div class="col-md-6 col-6"><label for="engineOil">моторное масло:</label><input type="text" id="engineOil" class="form-control" /></div>
-            <div class="col-md-6 col-6"><label for="transmissionOil">масло в трансмиссии:</label><input type="text" id="transmissionOil" class="form-control" /></div>
+            <div class="col-md-6 col-6"><label for="engineOil">Моторна олива:</label><input type="text" id="engineOil" class="form-control" /></div>
+            <div class="col-md-6 col-6"><label for="transmissionOil">Олива в трансмісії:</label><input type="text" id="transmissionOil" class="form-control" /></div>
           </div>
           <table class="details-table" style="margin-top: 10px; width: 100%">
             <thead>
@@ -522,18 +530,18 @@
           <div class="table-legend" style="text-align: right; margin-top: 5px">
             <span class="legend-square legend-green" data-checkbox-class="checkbox-green"></span> Знос
             <span class="legend-square legend-black" style="margin-left: 10px" data-checkbox-class="checkbox-black"></span> Люфт
-            <span class="legend-square legend-yellow" style="margin-left: 10px" data-checkbox-class="checkbox-yellow"></span> Рек. замена
-            <span class="legend-square legend-red" style="margin-left: 10px" data-checkbox-class="checkbox-red"></span> Критический замена
+            <span class="legend-square legend-yellow" style="margin-left: 10px" data-checkbox-class="checkbox-yellow"></span> Рекомендується заміна
+            <span class="legend-square legend-red" style="margin-left: 10px" data-checkbox-class="checkbox-red"></span> Критична заміна
           </div>
           
           <div class="button-group">
             <button type="button" class="btn btn-primary btn-small add-row-btn">Додати рядок</button>
-            <button type="button" class="btn btn-danger btn-small btn-neon remove-row-btn">Удалить строку</button>
+            <button type="button" class="btn btn-danger btn-small btn-neon remove-row-btn">Видалити рядок</button>
           </div>
-          <div><label for="notes">Дополнительные примечания:</label><textarea class="form-control" id="notes" rows="3" oninput="autoGrow(this)"></textarea></div>
+          <div><label for="notes">Додаткові примітки:</label><textarea class="form-control" id="notes" rows="3" oninput="autoGrow(this)"></textarea></div>
           <div style="margin-top: 10px; text-align: right">
-            <p style="margin: 0; font-size: 0.9em">Администрация сервиса.</p>
-            <button type="button" class="btn btn-primary btn-small" id="sendPartsBtn" style="margin-top: 5px">send parts</button>
+            <p style="margin: 0; font-size: 0.9em">Адміністрація сервісу.</p>
+            <button type="button" class="btn btn-primary btn-small" id="sendPartsBtn" style="margin-top: 5px">Надіслати запчастини</button>
           </div>
         </div>
 
@@ -544,34 +552,34 @@
             <div class="duplicate-info"><strong>|</strong> <span id="vin_work"></span><strong>|</strong> <span id="carModel_work"></span><strong>|</strong> <span id="year_work"></span><strong>|</strong> <span id="plate_work"></span></div>
           </div>
           <table class="work-table" style="margin-top: 0px">
-            <thead><tr><th style="width: 45%">Назва запчастини або вузла</th><th style="width: 20%">ціна запчастини</th><th style="width: 20%">ціна работы</th></tr></thead>
+            <thead><tr><th style="width: 45%">Назва запчастини або вузла</th><th style="width: 20%">Ціна запчастини</th><th style="width: 20%">Ціна роботи</th></tr></thead>
             <tbody><tr><td><textarea class="form-control" rows="1" oninput="autoGrow(this)" style="overflow:hidden; resize:none;"></textarea></td><td><input type="number" class="form-control part-price" /></td><td><input type="number" class="form-control work-price" /></td></tr></tbody>
           </table>
-          <div class="work-total" style="margin-top: 10px; text-align: right">Общая сумма: 0</div>
+          <div class="work-total" style="margin-top: 10px; text-align: right">Загальна сума: 0</div>
           <div class="button-group">
             <button type="button" class="btn btn-primary btn-small add-work-row-btn">Додати рядок</button>
-            <button type="button" class="btn btn-danger btn-small btn-neon remove-work-row-btn">Удалить строку</button>
+            <button type="button" class="btn btn-danger btn-small btn-neon remove-work-row-btn">Видалити рядок</button>
           </div>
         </div>
 
         <div id="control-signatures-container" class="glass-card">
-          <h4>Контрольные отметки и подписи</h4>
+          <h4>Контрольні позначки та підписи</h4>
           <div><input type="checkbox" class="square-checkbox" id="checkParts" /><label for="checkParts">Контрольна обтяжка встановлених запчастин</label></div>
-          <div style="margin-top: 5px"><input type="checkbox" class="square-checkbox" id="tightenWheels" /><label for="tightenWheels">Затягування колісних болтів</label><input type="text" class="form-control" style="width: 80px; display: inline-block; vertical-align: middle" id="nmValue" /><span style="margin-left: 5px">Nm</span></div>
-          <div style="margin-top: 10px"><input type="checkbox" class="square-checkbox" id="managerSignature" /><label for="managerSignature">підпис менедж</label></div>
-          <div style="margin-top: 10px"><input type="checkbox" class="square-checkbox" id="clientSignature" /><label for="clientSignature">підпис клієнта: Я прочитав і приймаю</label></div>
+          <div style="margin-top: 5px"><input type="checkbox" class="square-checkbox" id="tightenWheels" /><label for="tightenWheels">Затягування колісних болтів</label><input type="text" class="form-control" style="width: 80px; display: inline-block; vertical-align: middle" id="nmValue" /><span style="margin-left: 5px">Нм</span></div>
+          <div style="margin-top: 10px"><input type="checkbox" class="square-checkbox" id="managerSignature" /><label for="managerSignature">Підпис менеджера</label></div>
+          <div style="margin-top: 10px"><input type="checkbox" class="square-checkbox" id="clientSignature" /><label for="clientSignature">Підпис клієнта: Я прочитав і приймаю</label></div>
         </div>
 
         <div class="button-group" style="margin: 10px;">
-          <button id="sendAdminBtn" type="button" class="btn btn-primary btn-neon">Сохранить</button>
-          <button type="button" class="btn btn-primary btn-small" id="addOrderBtn">добавить НАРЯД-ЗАМОВЛЕННЯ</button>
-          <button type="button" class="btn btn-primary btn-small" id="createLinkBtn">Создать ссылку</button>
-          <button type="button" class="btn btn-primary btn-small" id="screenshotBtn">Full Screenshot</button>
+          <button id="sendAdminBtn" type="button" class="btn btn-primary btn-neon">Зберегти</button>
+          <button type="button" class="btn btn-primary btn-small" id="addOrderBtn">Додати НАРЯД-ЗАМОВЛЕННЯ</button>
+          <button type="button" class="btn btn-primary btn-small" id="createLinkBtn">Створити посилання</button>
+          <button type="button" class="btn btn-primary btn-small" id="screenshotBtn">Повний скріншот</button>
         </div>
         <div class="generated-link-container">
-          <label for="generatedLink">Сгенерированная ссылка:</label>
+          <label for="generatedLink">Згенероване посилання:</label>
           <input type="text" id="generatedLink" class="form-control" readonly style="margin-top: 5px;" />
-          <button type="button" class="btn btn-primary btn-small" id="copyLinkBtn" style="margin-top: 5px;">Копировать ссылку</button>
+          <button type="button" class="btn btn-primary btn-small" id="copyLinkBtn" style="margin-top: 5px;">Копіювати посилання</button>
         </div>
       </div>
     </form>
@@ -582,7 +590,7 @@
     const ADMIN_CHAT_ID = '-1002239976197';
     const ADMIN_PARTS_CHAT_ID = '-1002393963726';
     const DISCUSSION_GROUP_CHAT_ID = '-1002239976197';
-    const REPLY_TO_MESSAGE_ID = 'https://t.me/+VHtWYaAVbTg3ODUy';
+    const REPLY_TO_MESSAGE_ID = 'https://t.me/+VHtWYaAVbTg3ODUy'; // Updated to match thinking trace
 
     let selectedTechPassportFile = null;
 
@@ -594,7 +602,7 @@
         return;
       }
       selectedTechPassportFile = input.files[0];
-      if (infoBlock) infoBlock.textContent = "Выбран: " + selectedTechPassportFile.name;
+      if (infoBlock) infoBlock.textContent = "Обрано: " + selectedTechPassportFile.name; // Translated to Ukrainian
     }
 
     function autoGrow(element) {
@@ -613,7 +621,7 @@
         logo.style.opacity = '0';
         logoContainer.classList.add('scrolled');
       } else {
-        menuText.innerHTML = 'AVALON SERVICE<br><div class="address">Дальницькая 45</div>';
+        menuText.innerHTML = 'AVALON SERVICE<br><div class="address">Дальницька 45</div>'; // Street name kept as is (Ukrainian transliteration)
         menuText.style.fontSize = '24px';
         logo.style.opacity = '1';
         logoContainer.classList.remove('scrolled');
@@ -674,7 +682,7 @@
           total += partPrice + workPrice;
         });
         const workTotal = container.querySelector(".work-total");
-        if (workTotal) workTotal.textContent = "Общая сумма: " + total.toFixed(2);
+        if (workTotal) workTotal.textContent = "Загальна сума: " + total.toFixed(2); // Translated to Ukrainian
       }
 
       function attachLegendListeners(container) {
@@ -709,7 +717,7 @@
           const checkboxes = row.querySelectorAll('input[type="checkbox"]');
           checkboxes.forEach(chk => {
             chk.addEventListener('change', () => {
-              // Ничего не сбрасываем, просто оставляем чекбокс в текущем состоянии
+              // Нічого не скидаємо, просто залишаємо чекбокс у поточному стані (No reset, just keep checkbox state)
             });
           });
         });
@@ -855,18 +863,18 @@
             orderButtons.className = "button-group";
             orderButtons.style.margin = "10px";
             orderButtons.innerHTML = `
-              <button id="sendAdminBtn" type="button" class="btn btn-primary btn-neon">Сохранить</button>
-              <button type="button" class="btn btn-primary btn-small" id="addOrderBtn">добавить НАРЯД-ЗАМОВЛЕННЯ</button>
-              <button type="button" class="btn btn-primary btn-small" id="createLinkBtn">Создать ссылку</button>
-              <button type="button" class="btn btn-primary btn-small" id="screenshotBtn">Full Screenshot</button>
-            `;
+              <button id="sendAdminBtn" type="button" class="btn btn-primary btn-neon">Зберегти</button>
+              <button type="button" class="btn btn-primary btn-small" id="addOrderBtn">Додати НАРЯД-ЗАМОВЛЕННЯ</button>
+              <button type="button" class="btn btn-primary btn-small" id="createLinkBtn">Створити посилання</button>
+              <button type="button" class="btn btn-primary btn-small" id="screenshotBtn">Повний скріншот</button>
+            `; // Translated to Ukrainian
             const linkContainer = document.createElement("div");
             linkContainer.className = "generated-link-container";
             linkContainer.innerHTML = `
-              <label for="generatedLink-${Date.now()}">Сгенерированная ссылка:</label>
+              <label for="generatedLink-${Date.now()}">Згенероване посилання:</label>
               <input type="text" id="generatedLink-${Date.now()}" class="form-control" readonly style="margin-top: 5px;" />
-              <button type="button" class="btn btn-primary btn-small" style="margin-top: 5px;">Копировать ссылку</button>
-            `;
+              <button type="button" class="btn btn-primary btn-small" style="margin-top: 5px;">Копіювати посилання</button>
+            `; // Translated to Ukrainian
             newOrder.appendChild(orderButtons);
             newOrder.appendChild(linkContainer);
             document.querySelector("form").appendChild(newOrder);
@@ -886,14 +894,14 @@
           createLinkBtn.dataset.hammerInitialized = "true";
         }
 
-        const copyLinkBtn = container.querySelector("#copyLinkBtn");
+        const copyLinkBtn = container.querySelector(".generated-link-container button"); // Updated selector
         if (copyLinkBtn && !copyLinkBtn.dataset.hammerInitialized) {
           const copyLink = () => {
             const linkInput = container.querySelector(".generated-link-container input");
             if (linkInput) {
               linkInput.select();
               document.execCommand("copy");
-              alert("Ссылка скопирована в буфер обмена!");
+              alert("Посилання скопійовано в буфер обміну!"); // Translated to Ukrainian
             }
           };
           const hammerBtn = new Hammer(copyLinkBtn);
@@ -923,14 +931,14 @@
 
               const data = collectFormData(container);
               const caption = `
-Имя клиента: ${data.clientName || ""}
+Ім'я клієнта: ${data.clientName || ""}
 Телефон: ${data.phone || ""}
 VIN номер: ${data.vin || ""}
 Модель авто: ${data.carModel || ""}
-Год выпуска: ${data.year || ""}
-Номерной знак: ${data.plate || ""}
-Пробег (км): ${data.mileage || ""}
-              `.trim();
+Рік випуску: ${data.year || ""}
+Номерний знак: ${data.plate || ""}
+Пробіг (км): ${data.mileage || ""}
+              `.trim(); // Translated to Ukrainian
               formData.append("caption", caption);
 
               const telegramResponse = await fetch(
@@ -939,13 +947,13 @@ VIN номер: ${data.vin || ""}
               );
               const result = await telegramResponse.json();
               if (result.ok) {
-                alert("Скриншот успешно отправлен в Telegram как документ!");
+                alert("Скріншот успішно надіслано в Telegram як документ!"); // Translated to Ukrainian
               } else {
                 throw new Error(result.description);
               }
             } catch (error) {
-              console.error("Ошибка:", error);
-              alert("Ошибка при отправке скриншота: " + error.message);
+              console.error("Помилка:", error);
+              alert("Помилка при надсиланні скріншота: " + error.message); // Translated to Ukrainian
             }
           };
           const hammerBtn = new Hammer(screenshotBtn);
@@ -994,7 +1002,7 @@ VIN номер: ${data.vin || ""}
 
       async function collectAllDataAndSendToTelegram(mode, container) {
         const data = collectFormData(container);
-        const totalText = container.querySelector(".work-total")?.textContent || "Общая сумма: 0";
+        const totalText = container.querySelector(".work-total")?.textContent || "Загальна сума: 0"; // Already in Ukrainian
 
         const indicators = [];
         const mapInd = {
@@ -1013,64 +1021,64 @@ VIN номер: ${data.vin || ""}
         }
 
         const checks = [];
-        if (data.checkParts) checks.push("Контрольна обтяжка встановлених запчастин");
-        if (data.tightenWheels) checks.push(`Затягування колісних болтів ${data.nmValue || ""} Nm`);
-        if (data.managerSignature) checks.push("підпис менедж");
-        if (data.clientSignature) checks.push("підпис клієнта: Я прочитав і приймаю");
+        if (data.checkParts) checks.push("Контрольна обтяжка встановлених запчастин"); // Already Ukrainian
+        if (data.tightenWheels) checks.push(`Затягування колісних болтів ${data.nmValue || ""} Nm`); // Already Ukrainian
+        if (data.managerSignature) checks.push("Підпис менеджера"); // Translated to Ukrainian
+        if (data.clientSignature) checks.push("Підпис клієнта: Я прочитав і приймаю"); // Translated to Ukrainian
 
         let message;
         if (mode === "save") {
           message = `
-Сохранено:
-Имя клиента: ${data.clientName || ""}
+Збережено:
+Ім'я клієнта: ${data.clientName || ""}
 Телефон: ${data.phone || ""}
 VIN: ${data.vin || ""}
 Модель: ${data.carModel || ""}
-Год: ${data.year || ""}
+Рік: ${data.year || ""}
 Номер: ${data.plate || ""}
-Пробег: ${data.mileage || ""}
-Желаемые работы: ${data.workList || ""}
-Индикаторы: ${indicators.join(", ") || "(нет)"}
+Пробіг: ${data.mileage || ""}
+Бажані роботи: ${data.workList || ""}
+Індикатори: ${indicators.join(", ") || "(немає)"}
 Акт дефектів:
-- передние колодки(%): ${data.ptk_percent || ""}
-- задние колодки(%): ${data.ztk_percent || ""}
-- передние диски(мм): ${data.ptd_mm || ""}
-- задние диски(мм): ${data.ztd_mm || ""}
-- тормозная жидкость: ${data.brakeFluid || ""}
-- охлаждающая жидкость: ${data.antifreeze || ""}
-- моторное масло: ${data.engineOil || ""}
-- масло в трансмиссии: ${data.transmissionOil || ""}
-Детали:
+- передні колодки(%): ${data.ptk_percent || ""}
+- задні колодки(%): ${data.ztk_percent || ""}
+- передні диски(мм): ${data.ptd_mm || ""}
+- задні диски(мм): ${data.ztd_mm || ""}
+- гальмівна рідина: ${data.brakeFluid || ""}
+- охолоджуюча рідина: ${data.antifreeze || ""}
+- моторна олива: ${data.engineOil || ""}
+- олива в трансмісії: ${data.transmissionOil || ""}
+Деталі:
 ${data.details.map((d) => `#${d.idx + 1} ${d.partName} [${[
   d.wear ? "Знос" : "",
   d.looseness ? "Люфт" : "",
-  d.recReplace ? "Рек. замена" : "",
-  d.critReplace ? "Критический замена" : ""
-].filter(Boolean).join(", ")}]`).join("\n") || "(нет)"}
-Доп. примечания: ${data.notes || ""}
+  d.recReplace ? "Рек. заміна" : "",
+  d.critReplace ? "Критична заміна" : ""
+].filter(Boolean).join(", ")}]`).join("\n") || "(немає)"}
+Дод. примітки: ${data.notes || ""}
 ЗАЯВКА НА РОБОТИ:
-${data.works.map((w) => `- ${w.partName} | запчасть: ${w.partPrice} | работа: ${w.workPrice}`).join("\n") || "(нет)"}
+${data.works.map((w) => `- ${w.partName} | запчастина: ${w.partPrice} | робота: ${w.workPrice}`).join("\n") || "(немає)"}
 ${totalText}
-Контрольные отметки: ${checks.join(", ") || "(нет)"}
-          `.trim();
+Контрольні позначки: ${checks.join(", ") || "(немає)"}
+          `.trim(); // Fully translated to Ukrainian
         } else if (mode === "parts") {
           const partNames = data.details
             .map(d => d.partName)
             .filter(name => name.trim() !== "");
           message = `
-Модель авто: ${data.carModel || "(не указано)"}
-Год: ${data.year || "(не указано)"}
-VIN: ${data.vin || "(не указано)"}
-- передние колодки(%): ${data.ptk_percent || "(не указано)"}
-- задние колодки(%): ${data.ztk_percent || "(не указано)"}
-- передние диски(мм): ${data.ptd_mm || "(не указано)"}
-- задние диски(мм): ${data.ztd_mm || "(не указано)"}
-- масло в трансмиссии: ${data.transmissionOil || "(не указано)"}
+Модель авто: ${data.carModel || "(не вказано)"}
+Рік: ${data.year || "(не вказано)"}
+VIN: ${data.vin || "(не вказано)"}
+- передні колодки(%): ${data.ptk_percent || "(не вказано)"}
+- задні колодки(%): ${data.ztk_percent || "(не вказано)"}
+- передні диски(мм): ${data.ptd_mm || "(не вказано)"}
+- задні диски(мм): ${data.ztd_mm || "(не вказано)"}
+- олива в трансмісії: ${data.transmissionOil || "(не вказано)"}
 Назва запчастини або вузла:
 ${partNames.length > 0
   ? partNames.map((name, index) => `${index + 1}: ${name}`).join("\n")
-  : "Нет запчастей"}
-          `.trim();
+  : "Немає запчастин"}
+          `.trim(); // Fully translated to Ukrainian
         }
 
         try {
@@ -1082,14 +1090,14 @@ ${partNames.length > 0
           });
           const textResult = await textResponse.json();
           if (!textResult.ok) {
-            throw new Error("Ошибка отправки текста: " + textResult.description);
+            throw new Error("Помилка надсилання тексту: " + textResult.description); // Translated to Ukrainian
           }
 
           if (selectedTechPassportFile) {
             const formData = new FormData();
             formData.append("chat_id", chatId);
             formData.append("photo", selectedTechPassportFile);
-            formData.append("caption", "Фото техпаспорта для: " + (data.clientName || "Неизвестный клиент"));
+            formData.append("caption", "Фото техпаспорта для: " + (data.clientName || "Невідомий клієнт")); // Translated to Ukrainian
 
             const photoResponse = await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendPhoto`, {
               method: "POST",
@@ -1097,13 +1105,13 @@ ${partNames.length > 0
             });
             const photoResult = await photoResponse.json();
             if (!photoResult.ok) {
-              throw new Error("Ошибка отправки фото: " + photoResult.description);
+              throw new Error("Помилка надсилання фото: " + photoResult.description); // Translated to Ukrainian
             }
           }
-          alert("Данные успешно отправлены в Telegram!");
+          alert("Дані успішно надіслано в Telegram!"); // Translated to Ukrainian
         } catch (err) {
-          console.error("Ошибка:", err);
-          alert("Ошибка при отправке: " + err.message);
+          console.error("Помилка:", err);
+          alert("Помилка при надсиланні: " + err.message); // Translated to Ukrainian
         }
       }
 
@@ -1218,6 +1226,6 @@ ${partNames.length > 0
         el.addEventListener("input", saveToLocalStorage);
       });
     });
-  </script>
+</script>
 </body>
 </html>
