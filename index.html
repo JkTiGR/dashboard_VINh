@@ -141,10 +141,21 @@
       cursor: pointer; 
       background: rgba(255, 255, 255, 0.1); 
       transition: all 0.2s ease;
+      position: relative; /* Для позиціонування псевдоелемента */
     }
     .square-checkbox:checked { 
       transform: scale(1.1);
       border: 1px solid var(--white); 
+    }
+    .square-checkbox:checked::after { 
+      content: "✔"; /* Символ галочки */
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      color: var(--white);
+      font-size: 12px;
+      font-weight: bold;
     }
     .legend-square { 
       display: inline-block; 
@@ -194,7 +205,6 @@
       from { opacity: 0; transform: translateY(20px); }
       to { opacity: 1; transform: translateY(0); }
     }
-    /* Remove animations for Indicators and Control Signatures sections */
     #indicators-container.glass-card,
     #control-signatures-container.glass-card {
       opacity: 1;
@@ -354,7 +364,14 @@
       margin-top: 10px; 
       flex-wrap: nowrap; 
     }
-    .button-group button { 
+    .button-group-row { 
+      display: flex; 
+      justify-content: space-between; 
+      gap: 10px; 
+      margin: 10px; 
+      flex-wrap: nowrap; 
+    }
+    .button-group button, .button-group-row button { 
       flex: 1; 
       min-width: 0; 
       white-space: nowrap; 
@@ -553,9 +570,9 @@
           </div>
           <table class="work-table" style="margin-top: 0px">
             <thead><tr><th style="width: 45%">Назва запчастини або вузла</th><th style="width: 20%">Ціна запчастини</th><th style="width: 20%">Ціна роботи</th></tr></thead>
-            <tbody><tr><td><textarea class="form-control" rows="1" oninput="autoGrow(this)" style="overflow:hidden; resize:none;"></textarea></td><td><input type="number" class="form-control part-price" /></td><td><input type="number" class="form-control work-price" /></td></tr></tbody>
+            <tbody><tr><td><textarea class="form-control" rows="1" oninput="autoGrow(this)" style="overflow:hidden; resize:none;"></textarea></td><td><input type="number" class="form-control part-price" step="0.01" min="0" /></td><td><input type="number" class="form-control work-price" step="0.01" min="0" /></td></tr></tbody>
           </table>
-          <div class="work-total" style="margin-top: 10px; text-align: right">Загальна сума: 0</div>
+          <div class="work-total" style="margin-top: 10px; text-align: right">Загальна сума: 0 UAH</div>
           <div class="button-group">
             <button type="button" class="btn btn-primary btn-small add-work-row-btn">Додати рядок</button>
             <button type="button" class="btn btn-danger btn-small btn-neon remove-work-row-btn">Видалити рядок</button>
@@ -570,12 +587,15 @@
           <div style="margin-top: 10px"><input type="checkbox" class="square-checkbox" id="clientSignature" /><label for="clientSignature">Підпис клієнта: Я прочитав і приймаю</label></div>
         </div>
 
-        <div class="button-group" style="margin: 10px;">
+        <div class="button-group-row">
           <button id="sendAdminBtn" type="button" class="btn btn-primary btn-neon">Зберегти</button>
           <button type="button" class="btn btn-primary btn-small" id="addOrderBtn">Додати НАРЯД-ЗАМОВЛЕННЯ</button>
-          <button type="button" class="btn btn-primary btn-small" id="createLinkBtn">Створити посилання</button>
-          <button type="button" class="btn btn-primary btn-small" id="screenshotBtn">Повний скріншот</button>
         </div>
+        <div class="button-group-row">
+          <button type="button" class="btn btn-primary btn-small" id="createLinkBtn">Створити посилання</button>
+          <button type="button" class="btn btn-primary btn-small" id="screenshotBtn">Скріншот</button>
+        </div>
+
         <div class="generated-link-container">
           <label for="generatedLink">Згенероване посилання:</label>
           <input type="text" id="generatedLink" class="form-control" readonly style="margin-top: 5px;" />
@@ -590,7 +610,7 @@
     const ADMIN_CHAT_ID = '-1002239976197';
     const ADMIN_PARTS_CHAT_ID = '-1002393963726';
     const DISCUSSION_GROUP_CHAT_ID = '-1002239976197';
-    const REPLY_TO_MESSAGE_ID = 'https://t.me/+VHtWYaAVbTg3ODUy'; // Updated to match thinking trace
+    const REPLY_TO_MESSAGE_ID = 'https://t.me/+VHtWYaAVbTg3ODUy';
 
     let selectedTechPassportFile = null;
 
@@ -602,7 +622,7 @@
         return;
       }
       selectedTechPassportFile = input.files[0];
-      if (infoBlock) infoBlock.textContent = "Обрано: " + selectedTechPassportFile.name; // Translated to Ukrainian
+      if (infoBlock) infoBlock.textContent = "Обрано: " + selectedTechPassportFile.name;
     }
 
     function autoGrow(element) {
@@ -621,7 +641,7 @@
         logo.style.opacity = '0';
         logoContainer.classList.add('scrolled');
       } else {
-        menuText.innerHTML = 'AVALON SERVICE<br><div class="address">Дальницька 45</div>'; // Street name kept as is (Ukrainian transliteration)
+        menuText.innerHTML = 'AVALON SERVICE<br><div class="address">Дальницька 45</div>';
         menuText.style.fontSize = '24px';
         logo.style.opacity = '1';
         logoContainer.classList.remove('scrolled');
@@ -682,7 +702,9 @@
           total += partPrice + workPrice;
         });
         const workTotal = container.querySelector(".work-total");
-        if (workTotal) workTotal.textContent = "Загальна сума: " + total.toFixed(2); // Translated to Ukrainian
+        if (workTotal) {
+          workTotal.textContent = `Загальна сума: ${total.toLocaleString('uk-UA', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} UAH`;
+        }
       }
 
       function attachLegendListeners(container) {
@@ -717,7 +739,7 @@
           const checkboxes = row.querySelectorAll('input[type="checkbox"]');
           checkboxes.forEach(chk => {
             chk.addEventListener('change', () => {
-              // Нічого не скидаємо, просто залишаємо чекбокс у поточному стані (No reset, just keep checkbox state)
+              // Залишаємо чекбокс у поточному стані
             });
           });
         });
@@ -725,11 +747,12 @@
 
       function reinitializeOrderEventsForContainer(container) {
         container.querySelectorAll(".part-price, .work-price").forEach((input) => {
-          if (!input.dataset.hammerInitialized) {
+          if (!input.dataset.eventInitialized) {
             input.addEventListener("input", () => recalcWorkTableForContainer(container));
+            input.addEventListener("change", () => recalcWorkTableForContainer(container));
             const hammerInput = new Hammer(input);
             hammerInput.on("tap", () => recalcWorkTableForContainer(container));
-            input.dataset.hammerInitialized = "true";
+            input.dataset.eventInitialized = "true";
           }
         });
 
@@ -792,11 +815,12 @@
                 });
                 tbody.appendChild(newRow);
                 newRow.querySelectorAll(".part-price, .work-price").forEach((input) => {
-                  if (!input.dataset.hammerInitialized) {
+                  if (!input.dataset.eventInitialized) {
                     input.addEventListener("input", () => recalcWorkTableForContainer(container));
+                    input.addEventListener("change", () => recalcWorkTableForContainer(container));
                     const hammerInput = new Hammer(input);
                     hammerInput.on("tap", () => recalcWorkTableForContainer(container));
-                    input.dataset.hammerInitialized = "true";
+                    input.dataset.eventInitialized = "true";
                   }
                 });
                 recalcWorkTableForContainer(container);
@@ -859,23 +883,27 @@
                 newOrder.appendChild(clone);
               }
             });
-            const orderButtons = document.createElement("div");
-            orderButtons.className = "button-group";
-            orderButtons.style.margin = "10px";
-            orderButtons.innerHTML = `
+            const orderButtons1 = document.createElement("div");
+            orderButtons1.className = "button-group-row";
+            orderButtons1.innerHTML = `
               <button id="sendAdminBtn" type="button" class="btn btn-primary btn-neon">Зберегти</button>
               <button type="button" class="btn btn-primary btn-small" id="addOrderBtn">Додати НАРЯД-ЗАМОВЛЕННЯ</button>
+            `;
+            const orderButtons2 = document.createElement("div");
+            orderButtons2.className = "button-group-row";
+            orderButtons2.innerHTML = `
               <button type="button" class="btn btn-primary btn-small" id="createLinkBtn">Створити посилання</button>
-              <button type="button" class="btn btn-primary btn-small" id="screenshotBtn">Повний скріншот</button>
-            `; // Translated to Ukrainian
+              <button type="button" class="btn btn-primary btn-small" id="screenshotBtn">Скріншот</button>
+            `;
             const linkContainer = document.createElement("div");
             linkContainer.className = "generated-link-container";
             linkContainer.innerHTML = `
               <label for="generatedLink-${Date.now()}">Згенероване посилання:</label>
               <input type="text" id="generatedLink-${Date.now()}" class="form-control" readonly style="margin-top: 5px;" />
               <button type="button" class="btn btn-primary btn-small" style="margin-top: 5px;">Копіювати посилання</button>
-            `; // Translated to Ukrainian
-            newOrder.appendChild(orderButtons);
+            `;
+            newOrder.appendChild(orderButtons1);
+            newOrder.appendChild(orderButtons2);
             newOrder.appendChild(linkContainer);
             document.querySelector("form").appendChild(newOrder);
             reinitializeOrderEventsForContainer(newOrder);
@@ -894,14 +922,14 @@
           createLinkBtn.dataset.hammerInitialized = "true";
         }
 
-        const copyLinkBtn = container.querySelector(".generated-link-container button"); // Updated selector
+        const copyLinkBtn = container.querySelector(".generated-link-container button");
         if (copyLinkBtn && !copyLinkBtn.dataset.hammerInitialized) {
           const copyLink = () => {
             const linkInput = container.querySelector(".generated-link-container input");
             if (linkInput) {
               linkInput.select();
               document.execCommand("copy");
-              alert("Посилання скопійовано в буфер обміну!"); // Translated to Ukrainian
+              alert("Посилання скопійовано в буфер обміну!");
             }
           };
           const hammerBtn = new Hammer(copyLinkBtn);
@@ -938,7 +966,7 @@ VIN номер: ${data.vin || ""}
 Рік випуску: ${data.year || ""}
 Номерний знак: ${data.plate || ""}
 Пробіг (км): ${data.mileage || ""}
-              `.trim(); // Translated to Ukrainian
+              `.trim();
               formData.append("caption", caption);
 
               const telegramResponse = await fetch(
@@ -947,13 +975,13 @@ VIN номер: ${data.vin || ""}
               );
               const result = await telegramResponse.json();
               if (result.ok) {
-                alert("Скріншот успішно надіслано в Telegram як документ!"); // Translated to Ukrainian
+                alert("Скріншот успішно надіслано в Telegram як документ!");
               } else {
                 throw new Error(result.description);
               }
             } catch (error) {
               console.error("Помилка:", error);
-              alert("Помилка при надсиланні скріншота: " + error.message); // Translated to Ukrainian
+              alert("Помилка при надсиланні скріншота: " + error.message);
             }
           };
           const hammerBtn = new Hammer(screenshotBtn);
@@ -1002,7 +1030,7 @@ VIN номер: ${data.vin || ""}
 
       async function collectAllDataAndSendToTelegram(mode, container) {
         const data = collectFormData(container);
-        const totalText = container.querySelector(".work-total")?.textContent || "Загальна сума: 0"; // Already in Ukrainian
+        const totalText = container.querySelector(".work-total")?.textContent || "Загальна сума: 0 UAH";
 
         const indicators = [];
         const mapInd = {
@@ -1021,10 +1049,10 @@ VIN номер: ${data.vin || ""}
         }
 
         const checks = [];
-        if (data.checkParts) checks.push("Контрольна обтяжка встановлених запчастин"); // Already Ukrainian
-        if (data.tightenWheels) checks.push(`Затягування колісних болтів ${data.nmValue || ""} Nm`); // Already Ukrainian
-        if (data.managerSignature) checks.push("Підпис менеджера"); // Translated to Ukrainian
-        if (data.clientSignature) checks.push("Підпис клієнта: Я прочитав і приймаю"); // Translated to Ukrainian
+        if (data.checkParts) checks.push("Контрольна обтяжка встановлених запчастин");
+        if (data.tightenWheels) checks.push(`Затягування колісних болтів ${data.nmValue || ""} Nm`);
+        if (data.managerSignature) checks.push("Підпис менеджера");
+        if (data.clientSignature) checks.push("Підпис клієнта: Я прочитав і приймаю");
 
         let message;
         if (mode === "save") {
@@ -1060,11 +1088,9 @@ ${data.details.map((d) => `#${d.idx + 1} ${d.partName} [${[
 ${data.works.map((w) => `- ${w.partName} | запчастина: ${w.partPrice} | робота: ${w.workPrice}`).join("\n") || "(немає)"}
 ${totalText}
 Контрольні позначки: ${checks.join(", ") || "(немає)"}
-          `.trim(); // Fully translated to Ukrainian
+          `.trim();
         } else if (mode === "parts") {
-          const partNames = data.details
-            .map(d => d.partName)
-            .filter(name => name.trim() !== "");
+          const partNames = data.details.map(d => d.partName).filter(name => name.trim() !== "");
           message = `
 Модель авто: ${data.carModel || "(не вказано)"}
 Рік: ${data.year || "(не вказано)"}
@@ -1075,43 +1101,64 @@ VIN: ${data.vin || "(не вказано)"}
 - задні диски(мм): ${data.ztd_mm || "(не вказано)"}
 - олива в трансмісії: ${data.transmissionOil || "(не вказано)"}
 Назва запчастини або вузла:
-${partNames.length > 0
-  ? partNames.map((name, index) => `${index + 1}: ${name}`).join("\n")
-  : "Немає запчастин"}
-          `.trim(); // Fully translated to Ukrainian
+${partNames.length > 0 ? partNames.map((name, index) => `${index + 1}: ${name}`).join("\n") : "Немає запчастин"}
+          `.trim();
         }
 
         try {
           const chatId = (mode === "parts") ? ADMIN_PARTS_CHAT_ID : ADMIN_CHAT_ID;
+
           const textResponse = await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ chat_id: chatId, text: message })
           });
           const textResult = await textResponse.json();
-          if (!textResult.ok) {
-            throw new Error("Помилка надсилання тексту: " + textResult.description); // Translated to Ukrainian
-          }
+          if (!textResult.ok) throw new Error("Помилка надсилання тексту: " + textResult.description);
 
           if (selectedTechPassportFile) {
             const formData = new FormData();
             formData.append("chat_id", chatId);
             formData.append("photo", selectedTechPassportFile);
-            formData.append("caption", "Фото техпаспорта для: " + (data.clientName || "Невідомий клієнт")); // Translated to Ukrainian
+            formData.append("caption", "Фото техпаспорта для: " + (data.clientName || "Невідомий клієнт"));
 
             const photoResponse = await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendPhoto`, {
               method: "POST",
               body: formData
             });
             const photoResult = await photoResponse.json();
-            if (!photoResult.ok) {
-              throw new Error("Помилка надсилання фото: " + photoResult.description); // Translated to Ukrainian
-            }
+            if (!photoResult.ok) throw new Error("Помилка надсилання фото: " + photoResult.description);
           }
-          alert("Дані успішно надіслано в Telegram!"); // Translated to Ukrainian
+
+          if (mode === "save") {
+            const canvas = await html2canvas(document.body, {
+              scale: window.devicePixelRatio,
+              width: document.documentElement.scrollWidth,
+              height: document.documentElement.scrollHeight,
+              useCORS: true,
+              scrollX: 0,
+              scrollY: 0
+            });
+            const imageData = canvas.toDataURL("image/png");
+            const response = await fetch(imageData);
+            const blob = await response.blob();
+            const formData = new FormData();
+            formData.append("chat_id", ADMIN_CHAT_ID);
+            formData.append("document", blob, "screenshot.png");
+            formData.append("caption", `Збережено для ${data.clientName || "Невідомий клієнт"}`);
+
+            const telegramResponse = await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendDocument`, {
+              method: "POST",
+              body: formData
+            });
+            const result = await telegramResponse.json();
+            if (!result.ok) throw new Error("Помилка надсилання скріншота: " + result.description);
+          }
+
+          alert("Дані успішно надіслано в Telegram!");
         } catch (err) {
           console.error("Помилка:", err);
-          alert("Помилка при надсиланні: " + err.message); // Translated to Ukrainian
+          alert("Помилка при надсиланні: " + err.message);
         }
       }
 
@@ -1162,8 +1209,8 @@ ${partNames.length > 0
               const newRow = worksTable.insertRow();
               newRow.innerHTML = `
                 <td><textarea class="form-control" rows="1" oninput="autoGrow(this)" style="overflow:hidden; resize:none;">${item.partName}</textarea></td>
-                <td><input type="number" class="form-control part-price" value="${item.partPrice}" /></td>
-                <td><input type="number" class="form-control work-price" value="${item.workPrice}" /></td>
+                <td><input type="number" class="form-control part-price" value="${item.partPrice}" step="0.01" min="0" /></td>
+                <td><input type="number" class="form-control work-price" value="${item.workPrice}" step="0.01" min="0" /></td>
               `;
             });
             recalcWorkTableForContainer(container);
@@ -1212,8 +1259,8 @@ ${partNames.length > 0
               const newRow = worksTable.insertRow();
               newRow.innerHTML = `
                 <td><textarea class="form-control" rows="1" oninput="autoGrow(this)" style="overflow:hidden; resize:none;">${item.partName}</textarea></td>
-                <td><input type="number" class="form-control part-price" value="${item.partPrice}" /></td>
-                <td><input type="number" class="form-control work-price" value="${item.workPrice}" /></td>
+                <td><input type="number" class="form-control part-price" value="${item.partPrice}" step="0.01" min="0" /></td>
+                <td><input type="number" class="form-control work-price" value="${item.workPrice}" step="0.01" min="0" /></td>
               `;
             });
             recalcWorkTableForContainer(container);
@@ -1226,6 +1273,6 @@ ${partNames.length > 0
         el.addEventListener("input", saveToLocalStorage);
       });
     });
-</script>
+  </script>
 </body>
 </html>
