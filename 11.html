@@ -1,0 +1,1103 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>VINh AUTOSERVICE Dashboard</title>
+  <link href="https://fonts.googleapis.com/css2?family=Share+Tech_Mono&subset=cyrillic&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" />
+  <script src="https://cdn.jsdelivr.net/npm/tesseract.js@v2.1.5/dist/tesseract.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/hammer.js/2.0.8/hammer.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+
+  <style>
+    @font-face { font-family: 'Passager'; src: url('passager.ttf') format('truetype'); font-weight: normal; font-style: normal; }
+    :root { 
+      --bg-dark: #0B0E14; 
+      --neon-cyan: #c300ff63; 
+      --neon-turquoise: #ff0000; 
+      --neon-blue: #6257ff; 
+      --neon-pink: #0011ff; 
+      --white: #FFFFFF; 
+      --glass-bg: rgba(11, 14, 20, 0.3); 
+      --glass-blur: 10px; 
+      --glass-border: rgba(255, 255, 255, 0.1); 
+      --btn-gradient: linear-gradient(45deg, var(--neon-cyan), var(--neon-pink)); 
+      --prism-colors: linear-gradient(45deg, #a1c4fd, #c2e9fb, #fbc2eb, #a6c1ee); 
+      --prism-opacity: 0.8; 
+      --prism-blur: 8px; 
+      --animation-duration: 10s; 
+    }
+    html, body { 
+      margin: 0; 
+      padding: 0; 
+      min-height: 100vh; 
+      background: linear-gradient(135deg, #0B0E14, #1F252E, #2A3244, #0B0E14); 
+      background-size: 200% 200%; 
+      animation: gradientAnimation 15s ease infinite; 
+      font-family: 'Share Tech Mono', monospace; 
+      color: var(--white); 
+      overflow-x: hidden; 
+      -webkit-user-select: none; 
+      user-select: none; 
+    }
+    @keyframes gradientAnimation {
+      0% { background-position: 0% 0%; }
+      50% { background-position: 100% 100%; }
+      100% { background-position: 0% 0%; }
+    }
+    h1, h2, h3, h4 { 
+      text-shadow: 0 0 5px var(--neon-cyan), 0 0 10px var(--neon-cyan), 0 0 20px var(--neon-cyan); 
+      letter-spacing: 1px; 
+      margin: 0; 
+    }
+    .sidebar { 
+      position: fixed; 
+      top: 0; 
+      right: -300px; 
+      width: 300px; 
+      height: 100vh; 
+      background: var(--glass-bg); 
+      border-radius: 0 0 0 10px; 
+      backdrop-filter: blur(var(--glass-blur)); 
+      box-shadow: 0 8px 32px rgba(0, 247, 255, 0.3); 
+      border: 1px solid var(--glass-border); 
+      padding: 20px; 
+      transition: right 0.3s ease; 
+      z-index: 1100; 
+    }
+    .sidebar.active { right: 0; animation: fadeIn 0.3s; }
+    @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+    .sidebar ul { list-style: none; padding: 0; margin: 0; }
+    .sidebar ul li { margin: 15px 0; }
+    .sidebar ul li a { color: var(--white); text-decoration: none; font-size: 18px; transition: color 0.3s; }
+    .sidebar ul li a:hover { color: var(--neon-turquoise); }
+    .close-sidebar { 
+      position: absolute; 
+      top: 10px; 
+      left: 10px; 
+      background: transparent; 
+      border: none; 
+      font-size: 24px; 
+      color: var(--white); 
+      cursor: pointer; 
+    }
+    .menu-toggle { 
+      position: fixed; 
+      top: 10px; 
+      right: 10px; 
+      z-index: 1200; 
+      display: flex; 
+      align-items: center; 
+      transition: transform 0.3s ease; 
+    }
+    .menu-toggle button { background: transparent; border: none; cursor: pointer; }
+    .menu-toggle img { width: 70px; height: 70px; margin-right: 10px; transition: all 0.3s ease; }
+    .vinh-menu-text { 
+      font-family: 'Passager', sans-serif; 
+      font-size: 24px; 
+      color: var(--white); 
+      text-shadow: 0 0 5px var(--neon-blue); 
+      transition: font-size 0.3s ease; 
+      display: flex; 
+      flex-direction: column; 
+      align-items: flex-end; 
+    }
+    .vinh-menu-text .address { 
+      font-size: 0.5em; 
+      color: rgba(255, 255, 255, 0.9); 
+      margin-top: 2px; 
+    }
+    .vinh-menu-text .date-time { 
+      font-size: 0.6em; 
+      color: rgba(255, 255, 255, 0.9); 
+      margin-top: 2px; 
+    }
+    .logo-container { 
+      position: fixed; 
+      top: 0px; 
+      left: -400px; 
+      display: flex; 
+      align-items: center; 
+      background: var(--glass-bg); 
+      border-radius: 0 0 10px 0; 
+      padding: 5px 10px; 
+      backdrop-filter: blur(var(--glass-blur)); 
+      border: 1px solid var(--glass-border); 
+      box-shadow: 0 1px 2px rgba(174, 0, 255, 0.3); 
+      transition: left 0.3s ease; 
+      z-index: 1200; 
+    }
+    .logo-container.scrolled { left: 0px; }
+    .logo-container img { width: 40px; height: 40px; margin-right: 5px; }
+    .logo-container .vinh-menu-text { font-size: 20px; }
+    .btn-small { font-size: 14px !important; padding: 5px 10px !important; }
+    .square-checkbox { 
+      -webkit-appearance: none; 
+      appearance: none; 
+      width: 18px; 
+      height: 18px; 
+      border: 1px solid var(--neon-blue); 
+      border-radius: 3px; 
+      margin-right: 5px; 
+      vertical-align: middle; 
+      cursor: pointer; 
+      background: rgba(255, 255, 255, 0.1); 
+    }
+    .square-checkbox:checked { background-color: var(--neon-blue); }
+    .legend-square { 
+      display: inline-block; 
+      width: 16px; 
+      height: 16px; 
+      vertical-align: middle; 
+      margin-right: 5px; 
+      border: 1px solid var(--white); 
+    }
+    .legend-green { background-color: green; }
+    .legend-black { background-color: black; }
+    .legend-yellow { background-color: yellow; }
+    .legend-red { background-color: red; }
+    .table-legend { font-size: 14px; }
+    .checkbox-green:checked { accent-color: green; }
+    .checkbox-black:checked { accent-color: black; }
+    .checkbox-yellow:checked { accent-color: yellow; }
+    .checkbox-red:checked { accent-color: red; }
+    .glass-card { 
+      background: var(--glass-bg); 
+      border-radius: 20px; 
+      padding: 15px; 
+      backdrop-filter: blur(var(--glass-blur)); 
+      border: 1px solid var(--glass-border); 
+      margin: 20px 10px; 
+      box-shadow: 0 8px 32px rgba(0, 247, 255, 0.2); 
+    }
+    .rainbow-text { animation: rainbowText 20s linear infinite; }
+    @keyframes rainbowText { 
+      0% { text-shadow: 0 0 5px #a1c4fd; } 
+      25% { text-shadow: 0 0 5px #c2e9fb; } 
+      50% { text-shadow: 0 0 5px #fbc2eb; } 
+      75% { text-shadow: 0 0 5px #a6c1ee; } 
+      100% { text-shadow: 0 0 5px #a1c4fd; } 
+    }
+    .form-control { 
+      background: rgba(0, 0, 0, 0.3); 
+      backdrop-filter: blur(5px); 
+      color: #fff; 
+      border: 1px solid rgba(255, 255, 255, 0.3); 
+      border-radius: 10px; 
+      font-size: 14px; 
+      padding: 8px; 
+      -webkit-user-select: auto; 
+      user-select: auto; 
+    }
+    .form-control:focus { 
+      background: rgba(0, 0, 0, 0.3); 
+      border-color: var(--neon-cyan); 
+      box-shadow: 0 0 5px var(--neon-cyan); 
+      animation: rainbowGlow 3s infinite; 
+    }
+    @keyframes rainbowGlow { 
+      0% { box-shadow: 0 0 2px #edffd8, 0 0 3px #ff0000, 0 0 4px #0011ff, 0 0 5px #005eff; } 
+      50% { box-shadow: 0 0 2px #ff0000, 0 0 3px #0011ff, 0 0 4px #005eff, 0 0 5px #edffd8; } 
+      100% { box-shadow: 0 0 2px #edffd8, 0 0 3px #ff0000, 0 0 4px #0011ff, 0 0 5px #005eff; } 
+    }
+    .btn-primary { 
+      background: var(--btn-gradient); 
+      border: none; 
+      font-weight: bold; 
+      color: #fff; 
+      padding: 8px 16px; 
+      font-size: 16px; 
+      border-radius: 12px; 
+      cursor: pointer; 
+      transition: background 0.3s, box-shadow 0.3s, transform 0.3s; 
+      box-shadow: 0 0 12px rgba(0, 247, 255, 0.3); 
+      touch-action: manipulation; 
+    }
+    .btn-primary:hover, .btn-primary:active { 
+      box-shadow: 0 0 20px rgba(0, 247, 255, 0.6); 
+      transform: scale(1.02); 
+    }
+    .btn-danger { 
+      background: linear-gradient(45deg, #ff3000, #cc0000); 
+      border: none; 
+      font-weight: bold; 
+      color: #fff; 
+      padding: 6px 12px; 
+      font-size: 14px; 
+      border-radius: 12px; 
+      cursor: pointer; 
+      transition: background 0.3s, box-shadow 0.3s, transform 0.3s; 
+      box-shadow: 0 0 10px rgba(255, 0, 0, 0.4); 
+      touch-action: manipulation; 
+    }
+    .btn-danger:hover, .btn-danger:active { 
+      background: linear-gradient(45deg, #d60000, #7f0000); 
+      box-shadow: 0 0 16px rgba(255, 0, 0, 0.6); 
+      transform: scale(1.02); 
+    }
+    .btn-neon { position: relative; overflow: hidden; outline: none; }
+    .btn-neon::before { 
+      content: ""; 
+      position: absolute; 
+      top: -2px; 
+      left: -2px; 
+      width: calc(100% + 4px); 
+      height: calc(100% + 4px); 
+      border-radius: 12px; 
+      z-index: -1; 
+      background: var(--prism-colors); 
+      background-size: 400%; 
+      filter: blur(var(--prism-blur)); 
+      opacity: var(--prism-opacity); 
+      animation: prismGlow var(--animation-duration) infinite linear; 
+    }
+    @keyframes prismGlow { 
+      0% { background-position: 0% 50%; } 
+      50% { background-position: 100% 50%; } 
+      100% { background-position: 0% 50%; } 
+    }
+    .work-table, .details-table { 
+      width: 100%; 
+      border: none; 
+      border-radius: 8px; 
+      overflow: hidden; 
+      box-shadow: 0 0 8px rgba(0, 247, 255, 0.5); 
+      background: rgba(0, 0, 0, 0.2); 
+      margin-bottom: 15px; 
+      table-layout: fixed; 
+    }
+    .work-table th, .work-table td, .details-table th, .details-table td { 
+      border: none; 
+      padding: 5px; 
+      text-align: center; 
+      font-size: 14px; 
+      overflow: hidden; 
+      text-overflow: ellipsis; 
+      white-space: nowrap; 
+    }
+    .work-table th, .details-table th { background-color: rgba(50, 50, 50, 0.7); }
+    .indicators { 
+      display: grid; 
+      grid-template-columns: repeat(auto-fit, minmax(100px, 1fr)); 
+      gap: 10px; 
+    }
+    hr { border: 1px solid var(--neon-blue); margin: 10px 0; }
+    .section-header { 
+      display: flex; 
+      justify-content: flex-end; 
+      align-items: center; 
+      margin-bottom: 10px; 
+      flex-wrap: wrap; 
+    }
+    .section-header .duplicate-info { 
+      font-size: 0.9em; 
+      margin-left: 10px; 
+      color: rgba(255, 255, 255, 0.9); 
+    }
+    .row { margin-top: 10px; }
+    .button-group { 
+      display: flex; 
+      justify-content: space-between; 
+      gap: 10px; 
+      margin-top: 10px; 
+      flex-wrap: nowrap; 
+    }
+    .button-group button { 
+      flex: 1; 
+      min-width: 0; 
+      white-space: nowrap; 
+      overflow: hidden; 
+      text-overflow: ellipsis; 
+    }
+    .generated-link-container { margin: 10px; text-align: center; display: none; }
+
+    /* Адаптивный дизайн для iPad */
+    @media only screen and (min-device-width: 768px) and (max-device-width: 1024px) and (min-device-height: 1024px) and (max-device-height: 1536px) and (-webkit-min-device-pixel-ratio: 2) {
+      .container { padding: 20px; padding-top: 60px; }
+      .sidebar { width: 280px; right: -280px; }
+      .sidebar.active { right: 0; }
+      .menu-toggle { top: 15px; right: 15px; }
+      .menu-toggle img { width: 32px; height: 32px; }
+      .vinh-menu-text { font-size: 24px; }
+      .form-control { font-size: 16px; padding: 10px; }
+      .btn-primary { padding: 12px 24px; font-size: 16px; min-width: 100px; }
+      .btn-small { font-size: 14px !important; padding: 10px 15px !important; min-width: 90px; }
+      .glass-card { margin: 15px 5px; padding: 15px; }
+      .indicators { grid-template-columns: repeat(4, 1fr); gap: 15px; }
+      .work-table th, .work-table td, .details-table th, .details-table td { font-size: 14px; padding: 8px; }
+    }
+  </style>
+</head>
+<body>
+  <script>
+    const BOT_TOKEN = '8099553216:AAEE3Ctou3yY4ddwVbXiUfHgfT7PeZyUyhA';
+    const ADMIN_CHAT_ID = '-1002239976197';
+    const ADMIN_PARTS_CHAT_ID = '-1002393963726';
+  </script>
+
+  <div id="sidebar" class="sidebar">
+    <button class="close-sidebar" id="closeSidebar">×</button>
+    <ul>
+      <li><a href="#">Home</a></li>
+      <li><a href="https://calendar.google.com/calendar/embed?src=jediservice.ua%40gmail.com&ctz=Europe%2FKiev" target="_blank">Расписание</a></li>
+      <li><a href="#">Диагностика</a></li>
+      <li><a href="#">Ремонт</a></li>
+      <li><a href="#">Запчасти</a></li>
+      <li><a href="#">Мойка</a></li>
+      <li><a href="#">Шиномонтаж</a></li>
+      <li><a href="#">Контакт</a></li>
+      <li><a href="#">Выйти</a></li>
+    </ul>
+  </div>
+
+  <div class="menu-toggle">
+    <img src="img/logo.png" alt="Logo" class="logo" />
+    <button id="menuButton">
+      <span class="vinh-menu-text">
+        AVALON SERVICE
+        <div id="dateTimeAct" class="date-time"></div>
+        <div class="address">Дальницькая 45</div>
+      </span>
+    </button>
+  </div>
+
+  <div class="logo-container">
+    <img src="img/logo.png" alt="Logo" class="logo" />
+    <span class="vinh-menu-text">
+      AVALON SERVICE
+      <div id="dateTimeActClone" class="date-time"></div>
+      <div class="address">Дальницькая 45</div>
+    </span>
+  </div>
+
+  <div class="container" style="padding-top: 60px;">
+    <form style="width: 100%;">
+      <div class="order">
+        <div id="vinh-container" style="margin: 0px;">
+          <div class="row">
+            <div class="col-md-6 col-12"><label for="clientName">Имя клиента:</label><input type="text" id="clientName" class="form-control" /></div>
+            <div class="col-md-6 col-12"><label for="phone">Телефон:</label><input type="text" id="phone" class="form-control" pattern="[0-9]*" inputmode="numeric" /></div>
+          </div>
+          <div class="row">
+            <div class="col-10">
+              <label for="vin">VIN номер:</label>
+              <div class="position-relative" style="display: inline-block; width: 100%;">
+                <input type="text" id="vin" class="form-control" pattern="[A-Z0-9]*" style="text-transform: uppercase; padding-right: 40px;" oninput="this.value = this.value.toUpperCase();" placeholder="Введите VIN" />
+                <a href="https://lens.google.com/" target="_blank" title="Открыть Google Объектив (Web)" style="position: absolute; top: 50%; right: 8px; transform: translateY(-50%);">
+                  <img src="img/google_lens.png" alt="Google Lens" style="width: 24px; height: 24px; cursor: pointer;" />
+                </a>
+              </div>
+            </div>
+            <div class="col-2 d-flex align-items-end">
+              <button type="button" style="border: none; background: none; cursor: pointer; padding: 0;" onclick="document.getElementById('techPassportPhotoInput').click()" title="Прикрепить фото техпаспорта">
+                <img src="img/paper_clips.png" alt="Прикрепить фото" style="width: 32px; height: 32px;" />
+              </button>
+              <input type="file" id="techPassportPhotoInput" accept="image/*" capture="environment" style="display: none;" onchange="handleTechPassportFileSelected(this)" />
+              <div id="selectedTechFileName" style="margin-left: 5px; font-size: 0.9em; color: #ccc;"></div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-6 col-6"><label for="carModel">Модель авто:</label><input type="text" id="carModel" class="form-control" pattern="[A-Z]+" style="text-transform: uppercase" oninput="this.value = this.value.toUpperCase();" /></div>
+            <div class="col-md-6 col-6"><label for="year">Год выпуска:</label><input type="text" id="year" class="form-control" pattern="[0-9]*" inputmode="numeric" /></div>
+          </div>
+          <div class="row">
+            <div class="col-md-6 col-6"><label for="plate">Номерной знак:</label><input type="text" id="plate" class="form-control" style="text-transform: uppercase" oninput="this.value = this.value.replace(/\s+/g, '').toUpperCase();" /></div>
+            <div class="col-md-6 col-6"><label for="mileage">Пробег (км):</label><input type="text" id="mileage" class="form-control" pattern="[0-9]*" inputmode="numeric" /></div>
+          </div>
+          <div><label for="workList">Перечень желаемых работ:</label><textarea class="form-control" id="workList" rows="3" oninput="autoGrow(this)"></textarea></div>
+        </div>
+
+        <div id="indicators-container" class="glass-card">
+          <h4>Индикаторы</h4>
+          <div class="indicators">
+            <div class="form-check"><input class="form-check-input" type="checkbox" id="checkEngine" /><label class="form-check-label" for="checkEngine"><img src="img/check_engine.png" alt="Check Engine" style="width: 24px; height: 24px" /></label></div>
+            <div class="form-check"><input class="form-check-input" type="checkbox" id="battery" /><label class="form-check-label" for="battery"><img src="img/battery.png" alt="Battery" style="width: 24px; height: 24px" /></label></div>
+            <div class="form-check"><input class="form-check-input" type="checkbox" id="oil" /><label class="form-check-label" for="oil"><img src="img/oil.png" alt="Oil" style="width: 24px; height: 24px" /></label></div>
+            <div class="form-check"><input class="form-check-input" type="checkbox" id="coolant" /><label class="form-check-label" for="coolant"><img src="img/coolant.png" alt="Coolant" style="width: 24px; height: 24px" /></label></div>
+            <div class="form-check"><input class="form-check-input" type="checkbox" id="tpms" /><label class="form-check-label" for="tpms"><img src="img/tpms.png" alt="TPMS" style="width: 24px; height: 24px" /></label></div>
+            <div class="form-check"><input class="form-check-input" type="checkbox" id="airbag" /><label class="form-check-label" for="airbag"><img src="img/airbag.png" alt="Airbag" style="width: 24px; height: 24px" /></label></div>
+            <div class="form-check"><input class="form-check-input" type="checkbox" id="abs" /><label class="form-check-label" for="abs"><img src="img/abs.png" alt="ABS" style="width: 24px; height: 24px" /></label></div>
+            <div class="form-check"><input class="form-check-input" type="checkbox" id="esp" /><label class="form-check-label" for="esp"><img src="img/esp.png" alt="ESP" style="width: 24px; height: 24px" /></label></div>
+            <div class="form-check"><input class="form-check-input" type="checkbox" id="brakeWear" /><label class="form-check-label" for="brakeWear"><img src="img/brake_wear.png" alt="Brake Wear" style="width: 24px; height: 24px" /></label></div>
+          </div>
+        </div>
+
+        <div id="defects-container" class="section" style="margin: 0px">
+          <hr />
+          <div class="section-header">
+            <h4 class="rainbow-text">Акт дефектів автомобіля</h4>
+            <div class="duplicate-info"><strong>|</strong> <span id="vin_defects"></span><strong>|</strong> <span id="carModel_defects"></span><strong>|</strong> <span id="year_defects"></span><strong>|</strong> <span id="plate_defects"></span></div>
+          </div>
+          <div class="row">
+            <div class="col-md-6 col-6"><label for="ptk_percent">передний тормоз. колодки (%):</label><input type="text" id="ptk_percent" class="form-control" pattern="[0-9]*" inputmode="numeric" /></div>
+            <div class="col-md-6 col-6"><label for="ztk_percent">задний тормоз. колодки (%):</label><input type="text" id="ztk_percent" class="form-control" pattern="[0-9]*" inputmode="numeric" /></div>
+          </div>
+          <div class="row">
+            <div class="col-md-6 col-6"><label for="ptd_mm">передний тормоз. диски (мм):</label><input type="text" id="ptd_mm" class="form-control" pattern="[0-9]*" inputmode="numeric" /></div>
+            <div class="col-md-6 col-6"><label for="ztd_mm">задний тормоз. диски (мм):</label><input type="text" id="ztd_mm" class="form-control" pattern="[0-9]*" inputmode="numeric" /></div>
+          </div>
+          <div class="row">
+            <div class="col-md-6 col-6"><label for="brakeFluid">тормозная жидкость:</label><input type="text" id="brakeFluid" class="form-control" /></div>
+            <div class="col-md-6 col-6"><label for="antifreeze">охлаждающая жидкость:</label><input type="text" id="antifreeze" class="form-control" /></div>
+          </div>
+          <div class="row">
+            <div class="col-md-6 col-6"><label for="engineOil">моторное масло:</label><input type="text" id="engineOil" class="form-control" /></div>
+            <div class="col-md-6 col-6"><label for="transmissionOil">масло в трансмиссии:</label><input type="text" id="transmissionOil" class="form-control" /></div>
+          </div>
+          <table class="details-table" style="margin-top: 10px; width: 100%">
+            <thead>
+              <tr>
+                <th style="width: 5%">#</th>
+                <th style="width: 60%">Назва запчастини або вузла</th>
+                <th style="width: 10%"><span class="legend-square legend-green"></span></th>
+                <th style="width: 10%"><span class="legend-square legend-black"></span></th>
+                <th style="width: 10%"><span class="legend-square legend-yellow"></span></th>
+                <th style="width: 10%"><span class="legend-square legend-red"></span></th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>1</td>
+                <td><textarea class="form-control" name="part1" oninput="autoGrow(this)" style="overflow:hidden; resize:none;" rows="1"></textarea></td>
+                <td><input type="checkbox" class="checkbox-green" /></td>
+                <td><input type="checkbox" class="checkbox-black" /></td>
+                <td><input type="checkbox" class="checkbox-yellow" /></td>
+                <td><input type="checkbox" class="checkbox-red" /></td>
+              </tr>
+            </tbody>
+          </table>
+          <div class="table-legend" style="text-align: right; margin-top: 5px">
+            <span class="legend-square legend-green"></span>Знос
+            <span class="legend-square legend-black" style="margin-left: 10px"></span>Люфт
+            <span class="legend-square legend-yellow" style="margin-left: 10px"></span>Рек. замена
+            <span class="legend-square legend-red" style="margin-left: 10px"></span>Критический замена
+          </div>
+          <div class="button-group">
+            <button type="button" class="btn btn-primary btn-small add-row-btn">Додати рядок</button>
+            <button type="button" class="btn btn-danger btn-small btn-neon remove-row-btn">Удалить строку</button>
+          </div>
+          <div><label for="notes">Дополнительные примечания:</label><textarea class="form-control" id="notes" rows="3" oninput="autoGrow(this)"></textarea></div>
+          <div style="margin-top: 10px; text-align: right">
+            <p style="margin: 0; font-size: 0.9em">Администрация сервиса.</p>
+            <button type="button" class="btn btn-primary btn-small" id="sendPartsBtn" style="margin-top: 5px">send parts</button>
+          </div>
+        </div>
+
+        <div id="work-container" class="section" style="margin: 0px">
+          <hr />
+          <div class="section-header">
+            <h2 class="rainbow-text">ЗАЯВКА НА ВИКОНАННЯ РОБІТ</h2>
+            <div class="duplicate-info"><strong>|</strong> <span id="vin_work"></span><strong>|</strong> <span id="carModel_work"></span><strong>|</strong> <span id="year_work"></span><strong>|</strong> <span id="plate_work"></span></div>
+          </div>
+          <table class="work-table" style="margin-top: 0px">
+            <thead><tr><th style="width: 45%">Назва запчастини або вузла</th><th style="width: 20%">ціна запчастини</th><th style="width: 20%">ціна работы</th></tr></thead>
+            <tbody><tr><td><textarea class="form-control" rows="1" oninput="autoGrow(this)" style="overflow:hidden; resize:none;"></textarea></td><td><input type="number" class="form-control part-price" /></td><td><input type="number" class="form-control work-price" /></td></tr></tbody>
+          </table>
+          <div class="work-total" style="margin-top: 10px; text-align: right">Общая сумма: 0</div>
+          <div class="button-group">
+            <button type="button" class="btn btn-primary btn-small add-work-row-btn">Додати рядок</button>
+            <button type="button" class="btn btn-danger btn-small btn-neon remove-work-row-btn">Удалить строку</button>
+          </div>
+        </div>
+
+        <div id="control-signatures-container" class="glass-card">
+          <h4>Контрольные отметки и подписи</h4>
+          <div><input type="checkbox" class="square-checkbox" id="checkParts" /><label for="checkParts">Контрольна обтяжка встановлених запчастин</label></div>
+          <div style="margin-top: 5px"><input type="checkbox" class="square-checkbox" id="tightenWheels" /><label for="tightenWheels">Затягування колісних болтів</label><input type="text" class="form-control" style="width: 80px; display: inline-block; vertical-align: middle" id="nmValue" /><span style="margin-left: 5px">Nm</span></div>
+          <div style="margin-top: 10px"><input type="checkbox" class="square-checkbox" id="managerSignature" /><label for="managerSignature">підпис менедж</label></div>
+          <div style="margin-top: 10px"><input type="checkbox" class="square-checkbox" id="clientSignature" /><label for="clientSignature">підпис клієнта: Я прочитав і приймаю</label></div>
+        </div>
+
+        <div class="button-group" style="margin: 10px;">
+          <button id="sendAdminBtn" type="button" class="btn btn-primary btn-neon">Сохранить</button>
+          <button type="button" class="btn btn-primary btn-small" id="addOrderBtn">добавить НАРЯД-ЗАМОВЛЕННЯ</button>
+          <button type="button" class="btn btn-primary btn-small" id="createLinkBtn">Создать ссылку</button>
+          <button type="button" class="btn btn-primary btn-small" id="screenshotBtn">Full Screenshot</button>
+        </div>
+        <div class="generated-link-container">
+          <label for="generatedLink">Сгенерированная ссылка:</label>
+          <input type="text" id="generatedLink" class="form-control" readonly style="margin-top: 5px;" />
+          <button type="button" class="btn btn-primary btn-small" id="copyLinkBtn" style="margin-top: 5px;">Копировать ссылку</button>
+        </div>
+      </div>
+    </form>
+  </div>
+
+  <script>
+    let selectedTechPassportFile = null;
+
+    function handleTechPassportFileSelected(input) {
+      const infoBlock = document.getElementById("selectedTechFileName");
+      if (!input.files || !input.files.length) {
+        selectedTechPassportFile = null;
+        if (infoBlock) infoBlock.textContent = "";
+        return;
+      }
+      selectedTechPassportFile = input.files[0];
+      if (infoBlock) infoBlock.textContent = "Выбран: " + selectedTechPassportFile.name;
+    }
+
+    function autoGrow(element) {
+      element.style.height = "auto";
+      element.style.height = element.scrollHeight + "px";
+    }
+
+    window.addEventListener('scroll', () => {
+      const menuToggle = document.querySelector('.menu-toggle');
+      const menuText = menuToggle.querySelector('.vinh-menu-text');
+      const logo = menuToggle.querySelector('img');
+      const logoContainer = document.querySelector('.logo-container');
+      if (window.scrollY > 300) {
+        menuText.innerHTML = 'E<br><div class="address"></div>';
+        menuText.style.fontSize = '35px';
+        logo.style.opacity = '0';
+        logoContainer.classList.add('scrolled');
+      } else {
+        menuText.innerHTML = 'AVALON SERVICE<br><div id="dateTimeAct" class="date-time"></div><div class="address">Дальницькая 45</div>';
+        menuText.style.fontSize = '24px';
+        logo.style.opacity = '1';
+        logoContainer.classList.remove('scrolled');
+      }
+      updateDateTime();
+    });
+
+    document.addEventListener("DOMContentLoaded", function() {
+      const menuButton = document.getElementById("menuButton");
+      const sidebar = document.getElementById("sidebar");
+      const closeSidebar = document.getElementById("closeSidebar");
+
+      if (menuButton && sidebar) {
+        const hammerMenu = new Hammer(menuButton);
+        hammerMenu.on("tap", () => sidebar.classList.toggle("active"));
+        document.addEventListener("click", (event) => {
+          if (!sidebar.contains(event.target) && !menuButton.contains(event.target)) sidebar.classList.remove("active");
+        });
+        if (closeSidebar) {
+          const hammerClose = new Hammer(closeSidebar);
+          hammerClose.on("tap", () => sidebar.classList.remove("active"));
+        }
+      }
+
+      function updateDateTime() {
+        const now = new Date();
+        const formatted = now.toLocaleString();
+        const dtAct = document.getElementById("dateTimeAct");
+        const dtActClone = document.getElementById("dateTimeActClone");
+        if (dtAct) dtAct.textContent = formatted;
+        if (dtActClone) dtActClone.textContent = formatted;
+      }
+      setInterval(updateDateTime, 1000);
+      updateDateTime();
+
+      function updateDuplicates() {
+        const vinValue = document.getElementById("vin")?.value || "";
+        const carModelValue = document.getElementById("carModel")?.value || "";
+        const yearValue = document.getElementById("year")?.value || "";
+        const plateValue = document.getElementById("plate")?.value || "";
+        ["vin_defects", "vin_work"].forEach(id => document.getElementById(id).textContent = vinValue);
+        ["carModel_defects", "carModel_work"].forEach(id => document.getElementById(id).textContent = carModelValue);
+        ["year_defects", "year_work"].forEach(id => document.getElementById(id).textContent = yearValue);
+        ["plate_defects", "plate_work"].forEach(id => document.getElementById(id).textContent = plateValue);
+      }
+      ["vin", "carModel", "year", "plate"].forEach((id) => {
+        const el = document.getElementById(id);
+        if (el) el.addEventListener("input", updateDuplicates);
+      });
+      updateDuplicates();
+
+      function recalcWorkTableForContainer(container) {
+        const rows = container.querySelectorAll(".work-table tbody tr");
+        let total = 0;
+        rows.forEach((row) => {
+          const partPrice = parseFloat(row.querySelector(".part-price")?.value || "0") || 0;
+          const workPrice = parseFloat(row.querySelector(".work-price")?.value || "0") || 0;
+          total += partPrice + workPrice;
+        });
+        const workTotal = container.querySelector(".work-total");
+        if (workTotal) workTotal.textContent = "Общая сумма: " + total.toFixed(2);
+      }
+
+      function reinitializeOrderEventsForContainer(container) {
+        if (container.dataset.initialized) return;
+        container.dataset.initialized = "true";
+
+        container.querySelectorAll(".part-price, .work-price").forEach((input) => {
+          input.addEventListener("input", () => recalcWorkTableForContainer(container));
+          const hammerInput = new Hammer(input);
+          hammerInput.on("tap", () => recalcWorkTableForContainer(container));
+        });
+
+        container.querySelectorAll(".add-row-btn").forEach((btn) => {
+          const addRow = () => {
+            const tableBody = container.querySelector(".details-table tbody");
+            if (tableBody) {
+              const lastRow = tableBody.lastElementChild.cloneNode(true);
+              lastRow.cells[0].textContent = tableBody.rows.length + 1;
+              lastRow.querySelectorAll("textarea").forEach((ta) => { ta.value = ""; ta.style.height = "auto"; ta.rows = 1; });
+              lastRow.querySelectorAll("input[type='checkbox']").forEach((chk) => chk.checked = false);
+              tableBody.appendChild(lastRow);
+            }
+          };
+          const hammerBtn = new Hammer(btn);
+          hammerBtn.off("tap");
+          hammerBtn.on("tap", addRow);
+        });
+
+        container.querySelectorAll(".remove-row-btn").forEach((btn) => {
+          const removeRow = () => {
+            const tableBody = container.querySelector(".details-table tbody");
+            if (tableBody && tableBody.rows.length > 1) tableBody.removeChild(tableBody.lastElementChild);
+          };
+          const hammerBtn = new Hammer(btn);
+          hammerBtn.off("tap");
+          hammerBtn.on("tap", removeRow);
+        });
+
+        container.querySelectorAll(".add-work-row-btn").forEach((btn) => {
+          const addWorkRow = () => {
+            const tbody = container.querySelector(".work-table tbody");
+            if (tbody) {
+              const newRow = tbody.lastElementChild.cloneNode(true);
+              newRow.querySelectorAll("input, textarea").forEach((el) => { el.value = ""; if (el.tagName === "TEXTAREA") { el.style.height = "auto"; el.rows = 1; } });
+              tbody.appendChild(newRow);
+              newRow.querySelectorAll(".part-price, .work-price").forEach((input) => {
+                input.addEventListener("input", () => recalcWorkTableForContainer(container));
+                const hammerInput = new Hammer(input);
+                hammerInput.on("tap", () => recalcWorkTableForContainer(container));
+              });
+              recalcWorkTableForContainer(container);
+            }
+          };
+          const hammerBtn = new Hammer(btn);
+          hammerBtn.off("tap");
+          hammerBtn.on("tap", addWorkRow);
+        });
+
+        container.querySelectorAll(".remove-work-row-btn").forEach((btn) => {
+          const removeWorkRow = () => {
+            const tbody = container.querySelector(".work-table tbody");
+            if (tbody && tbody.rows.length > 1) {
+              tbody.removeChild(tbody.lastElementChild);
+              recalcWorkTableForContainer(container);
+            }
+          };
+          const hammerBtn = new Hammer(btn);
+          hammerBtn.off("tap");
+          hammerBtn.on("tap", removeWorkRow);
+        });
+
+        const sendAdminBtn = container.querySelector("#sendAdminBtn");
+        if (sendAdminBtn) {
+          const hammerBtn = new Hammer(sendAdminBtn);
+          hammerBtn.off("tap");
+          hammerBtn.on("tap", () => collectAllDataAndSendToTelegram("save", container));
+        }
+
+        const sendPartsBtn = container.querySelector("#sendPartsBtn");
+        if (sendPartsBtn) {
+          const hammerBtn = new Hammer(sendPartsBtn);
+          hammerBtn.off("tap");
+          hammerBtn.on("tap", () => collectAllDataAndSendToTelegram("parts", container));
+        }
+
+        const addOrderBtn = container.querySelector("#addOrderBtn");
+        if (addOrderBtn) {
+          const addOrder = () => {
+            const sectionIds = ["vinh-container", "indicators-container", "defects-container", "work-container", "control-signatures-container"];
+            const newOrder = document.createElement("div");
+            newOrder.classList.add("order");
+            sectionIds.forEach((id) => {
+              const originalSection = document.getElementById(id);
+              if (originalSection) {
+                const clone = originalSection.cloneNode(true);
+                clone.removeAttribute("id");
+                clone.querySelectorAll("input, textarea").forEach((el) => {
+                  if (el.type === "checkbox") el.checked = false;
+                  else el.value = "";
+                  if (el.tagName === "TEXTAREA") { el.style.height = "auto"; el.rows = 1; }
+                });
+                newOrder.appendChild(clone);
+              }
+            });
+            const orderButtons = document.createElement("div");
+            orderButtons.className = "button-group";
+            orderButtons.style.margin = "10px";
+            orderButtons.innerHTML = `
+              <button id="sendAdminBtn" type="button" class="btn btn-primary btn-neon">Сохранить</button>
+              <button type="button" class="btn btn-primary btn-small" id="addOrderBtn">добавить НАРЯД-ЗАМОВЛЕННЯ</button>
+              <button type="button" class="btn btn-primary btn-small" id="createLinkBtn">Создать ссылку</button>
+              <button type="button" class="btn btn-primary btn-small" id="screenshotBtn">Full Screenshot</button>
+            `;
+            const linkContainer = document.createElement("div");
+            linkContainer.className = "generated-link-container";
+            linkContainer.innerHTML = `
+              <label for="generatedLink-${Date.now()}">Сгенерированная ссылка:</label>
+              <input type="text" id="generatedLink-${Date.now()}" class="form-control" readonly style="margin-top: 5px;" />
+              <button type="button" class="btn btn-primary btn-small" style="margin-top: 5px;">Копировать ссылку</button>
+            `;
+            newOrder.appendChild(orderButtons);
+            newOrder.appendChild(linkContainer);
+            document.querySelector("form").appendChild(newOrder);
+            reinitializeOrderEventsForContainer(newOrder);
+          };
+          const hammerBtn = new Hammer(addOrderBtn);
+          hammerBtn.off("tap");
+          hammerBtn.on("tap", addOrder);
+        }
+
+        const createLinkBtn = container.querySelector("#createLinkBtn");
+        if (createLinkBtn) {
+          const hammerBtn = new Hammer(createLinkBtn);
+          hammerBtn.off("tap");
+          hammerBtn.on("tap", () => createShareableLink(container));
+        }
+
+        const copyLinkBtn = container.querySelector("#copyLinkBtn");
+        if (copyLinkBtn) {
+          const copyLink = () => {
+            const linkInput = container.querySelector(".generated-link-container input");
+            if (linkInput) {
+              linkInput.select();
+              document.execCommand("copy");
+              alert("Ссылка скопирована в буфер обмена!");
+            }
+          };
+          const hammerBtn = new Hammer(copyLinkBtn);
+          hammerBtn.off("tap");
+          hammerBtn.on("tap", copyLink);
+        }
+
+        const screenshotBtn = container.querySelector("#screenshotBtn");
+        if (screenshotBtn) {
+          let isProcessing = false;
+          const takeScreenshot = async () => {
+            if (isProcessing) return;
+            isProcessing = true;
+            try {
+              const canvas = await html2canvas(document.body, {
+                scale: 1,
+                useCORS: true,
+                scrollX: 0,
+                scrollY: 0,
+                windowWidth: document.documentElement.scrollWidth,
+                windowHeight: document.documentElement.scrollHeight
+              });
+              const imageData = canvas.toDataURL("image/png");
+              const blob = await (await fetch(imageData)).blob();
+              const formData = new FormData();
+              formData.append("chat_id", ADMIN_CHAT_ID);
+              formData.append("photo", blob, "screenshot.png");
+
+              const data = collectFormData(container);
+              const caption = `
+Имя клиента: ${data.clientName || ""}
+Телефон: ${data.phone || ""}
+VIN номер: ${data.vin || ""}
+Модель авто: ${data.carModel || ""}
+Год выпуска: ${data.year || ""}
+Номерной знак: ${data.plate || ""}
+Пробег (км): ${data.mileage || ""}
+              `.trim();
+              formData.append("caption", caption);
+
+              const response = await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendPhoto`, {
+                method: "POST",
+                body: formData
+              });
+              const result = await response.json();
+              if (result.ok) {
+                alert("Скриншот отправлен в Telegram!");
+              } else {
+                throw new Error(result.description);
+              }
+            } catch (error) {
+              console.error("Ошибка:", error);
+              alert("Ошибка при отправке скриншота: " + error.message);
+            } finally {
+              isProcessing = false;
+            }
+          };
+          const hammerBtn = new Hammer(screenshotBtn);
+          hammerBtn.off("tap");
+          hammerBtn.on("tap", takeScreenshot);
+        }
+      }
+
+      function createShareableLink(container) {
+        const data = collectFormData(container);
+        const jsonData = JSON.stringify(data);
+        const encodedData = encodeURIComponent(jsonData);
+        const currentUrl = window.location.href.split('?')[0];
+        const shareableLink = `${currentUrl}?formData=${encodedData}`;
+        const linkContainer = container.querySelector(".generated-link-container");
+        const linkInput = linkContainer.querySelector("input");
+        linkContainer.style.display = "block";
+        linkInput.value = shareableLink;
+      }
+
+      function collectFormData(container) {
+        const data = {};
+        container.querySelectorAll("input, textarea").forEach((el) => {
+          if (el.id) data[el.id] = el.type === "checkbox" ? el.checked : el.value;
+        });
+        const details = [];
+        container.querySelectorAll(".details-table tbody tr").forEach((row, idx) => {
+          const partName = row.cells[1]?.querySelector("textarea")?.value || "";
+          const wear = row.cells[2]?.querySelector("input")?.checked || false;
+          const looseness = row.cells[3]?.querySelector("input")?.checked || false;
+          const recReplace = row.cells[4]?.querySelector("input")?.checked || false;
+          const critReplace = row.cells[5]?.querySelector("input")?.checked || false;
+          details.push({ idx, partName, wear, looseness, recReplace, critReplace });
+        });
+        data.details = details;
+        const works = [];
+        container.querySelectorAll(".work-table tbody tr").forEach((row) => {
+          const partName = row.cells[0]?.querySelector("textarea")?.value || "";
+          const partPrice = row.cells[1]?.querySelector("input")?.value || "";
+          const workPrice = row.cells[2]?.querySelector("input")?.value || "";
+          works.push({ partName, partPrice, workPrice });
+        });
+        data.works = works;
+        return data;
+      }
+
+      function restoreFormData(container) {
+        const urlParams = new URLSearchParams(window.location.search);
+        const formData = urlParams.get("formData");
+        if (formData) {
+          const decodedData = JSON.parse(decodeURIComponent(formData));
+          container.querySelectorAll("input, textarea").forEach((el) => {
+            if (el.id && decodedData[el.id] !== undefined) {
+              if (el.type === "checkbox") el.checked = decodedData[el.id];
+              else el.value = decodedData[el.id];
+              if (el.tagName === "TEXTAREA") autoGrow(el);
+            }
+          });
+          const detailsTable = container.querySelector(".details-table tbody");
+          if (detailsTable && decodedData.details) {
+            detailsTable.innerHTML = "";
+            decodedData.details.forEach((item, idx) => {
+              const newRow = detailsTable.insertRow();
+              newRow.innerHTML = `
+                <td>${idx + 1}</td>
+                <td><textarea class="form-control" oninput="autoGrow(this)" style="overflow:hidden; resize:none;" rows="1">${item.partName}</textarea></td>
+                <td><input type="checkbox" class="checkbox-green" ${item.wear ? "checked" : ""} /></td>
+                <td><input type="checkbox" class="checkbox-black" ${item.looseness ? "checked" : ""} /></td>
+                <td><input type="checkbox" class="checkbox-yellow" ${item.recReplace ? "checked" : ""} /></td>
+                <td><input type="checkbox" class="checkbox-red" ${item.critReplace ? "checked" : ""} /></td>
+              `;
+            });
+          }
+          const worksTable = container.querySelector(".work-table tbody");
+          if (worksTable && decodedData.works) {
+            worksTable.innerHTML = "";
+            decodedData.works.forEach((item) => {
+              const newRow = worksTable.insertRow();
+              newRow.innerHTML = `
+                <td><textarea class="form-control" rows="1" oninput="autoGrow(this)" style="overflow:hidden; resize:none;">${item.partName}</textarea></td>
+                <td><input type="number" class="form-control part-price" value="${item.partPrice}" /></td>
+                <td><input type="number" class="form-control work-price" value="${item.workPrice}" /></td>
+              `;
+            });
+            recalcWorkTableForContainer(container);
+          }
+          updateDuplicates();
+        }
+      }
+
+      const originalOrder = document.querySelector(".order");
+      if (originalOrder) {
+        reinitializeOrderEventsForContainer(originalOrder);
+        restoreFormData(originalOrder);
+      }
+
+      async function collectAllDataAndSendToTelegram(mode, container) {
+        const data = collectFormData(container);
+        const totalText = container.querySelector(".work-total")?.textContent || "Общая сумма: 0";
+        const indicators = [];
+        const mapInd = { checkEngine: "Check Engine", battery: "Battery", oil: "Oil", coolant: "Coolant", tpms: "TPMS", airbag: "Airbag", abs: "ABS", esp: "ESP", brakeWear: "Brake Wear" };
+        for (const key in mapInd) if (data[key]) indicators.push(mapInd[key]);
+        const checks = [];
+        if (data.checkParts) checks.push("Контрольна обтяжка встановлених запчастин");
+        if (data.tightenWheels) checks.push(`Затягування колісних болтів ${data.nmValue || ""} Nm`);
+        if (data.managerSignature) checks.push("підпис менедж");
+        if (data.clientSignature) checks.push("підпис клієнта: Я прочитав і приймаю");
+
+        let message;
+        if (mode === "save") {
+          message = `
+Сохранено:
+Имя клиента: ${data.clientName || ""}
+Телефон: ${data.phone || ""}
+VIN: ${data.vin || ""}
+Модель: ${data.carModel || ""}
+Год: ${data.year || ""}
+Номер: ${data.plate || ""}
+Пробег: ${data.mileage || ""}
+Желаемые работы: ${data.workList || ""}
+Индикаторы: ${indicators.join(", ") || "(нет)"}
+Акт дефектів:
+- передние колодки(%): ${data.ptk_percent || ""}
+- задние колодки(%): ${data.ztk_percent || ""}
+- передние диски(мм): ${data.ptd_mm || ""}
+- задние диски(мм): ${data.ztd_mm || ""}
+- тормозная жидкость: ${data.brakeFluid || ""}
+- охлаждающая жидкость: ${data.antifreeze || ""}
+- моторное масло: ${data.engineOil || ""}
+- масло в трансмиссии: ${data.transmissionOil || ""}
+Детали:
+${data.details.map((d) => `#${d.idx + 1} ${d.partName} [${[d.wear ? "Знос" : "", d.looseness ? "Люфт" : "", d.recReplace ? "Рек. замена" : "", d.critReplace ? "Критический замена" : ""].filter(Boolean).join(", ")}]`).join("\n") || "(нет)"}
+Доп. примечания: ${data.notes || ""}
+ЗАЯВКА НА РОБОТИ:
+${data.works.map((w) => `- ${w.partName} | запчасть: ${w.partPrice} | работа: ${w.workPrice}`).join("\n") || "(нет)"}
+${totalText}
+Контрольные отметки: ${checks.join(", ") || "(нет)"}
+          `.trim();
+        } else if (mode === "parts") {
+          const partNames = data.details
+            .map(d => d.partName)
+            .filter(name => name.trim() !== "");
+          message = `
+Модель авто: ${data.carModel || "(не указано)"}
+Год: ${data.year || "(не указано)"}
+VIN: ${data.vin || "(не указано)"}
+- передние колодки(%): ${data.ptk_percent || "(не указано)"}
+- задние колодки(%): ${data.ztk_percent || "(не указано)"}
+- передние диски(мм): ${data.ptd_mm || "(не указано)"}
+- задние диски(мм): ${data.ztd_mm || "(не указано)"}
+- масло в трансмиссии: ${data.transmissionOil || "(не указано)"}
+Назва запчастини або вузла:
+${partNames.length > 0 ? partNames.map((name, index) => `${index + 1}: ${name}`).join("\n") : "Нет запчастей"}
+          `.trim();
+        }
+
+        try {
+          const chatId = mode === "parts" ? ADMIN_PARTS_CHAT_ID : ADMIN_CHAT_ID;
+          const textResponse = await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ chat_id: chatId, text: message })
+          });
+          const textResult = await textResponse.json();
+          if (!textResult.ok) throw new Error("Ошибка отправки текста: " + textResult.description);
+
+          if (selectedTechPassportFile) {
+            const formData = new FormData();
+            formData.append("chat_id", chatId);
+            formData.append("photo", selectedTechPassportFile);
+            formData.append("caption", "Фото техпаспорта для: " + (data.clientName || "Неизвестный клиент"));
+            const photoResponse = await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendPhoto`, { method: "POST", body: formData });
+            const photoResult = await photoResponse.json();
+            if (!photoResult.ok) throw new Error("Ошибка отправки фото: " + photoResult.description);
+          }
+          alert("Данные успешно отправлены в Telegram!");
+        } catch (err) {
+          console.error("Ошибка:", err);
+          alert("Ошибка при отправке: " + err.message);
+        }
+      }
+
+      function saveToLocalStorage() {
+        const data = collectFormData(document.querySelector(".order"));
+        localStorage.setItem('formData', JSON.stringify(data));
+      }
+
+      function restoreFromLocalStorage() {
+        const savedData = localStorage.getItem('formData');
+        if (savedData) {
+          const data = JSON.parse(savedData);
+          const container = document.querySelector(".order");
+          container.querySelectorAll("input, textarea").forEach((el) => {
+            if (el.id && data[el.id] !== undefined) {
+              if (el.type === "checkbox") el.checked = data[el.id];
+              else el.value = data[el.id];
+              if (el.tagName === "TEXTAREA") autoGrow(el);
+            }
+          });
+          const detailsTable = container.querySelector(".details-table tbody");
+          if (detailsTable && data.details) {
+            detailsTable.innerHTML = "";
+            data.details.forEach((item, idx) => {
+              const newRow = detailsTable.insertRow();
+              newRow.innerHTML = `
+                <td>${idx + 1}</td>
+                <td><textarea class="form-control" oninput="autoGrow(this)" style="overflow:hidden; resize:none;" rows="1">${item.partName}</textarea></td>
+                <td><input type="checkbox" class="checkbox-green" ${item.wear ? "checked" : ""} /></td>
+                <td><input type="checkbox" class="checkbox-black" ${item.looseness ? "checked" : ""} /></td>
+                <td><input type="checkbox" class="checkbox-yellow" ${item.recReplace ? "checked" : ""} /></td>
+                <td><input type="checkbox" class="checkbox-red" ${item.critReplace ? "checked" : ""} /></td>
+              `;
+            });
+          }
+          const worksTable = container.querySelector(".work-table tbody");
+          if (worksTable && data.works) {
+            worksTable.innerHTML = "";
+            data.works.forEach((item) => {
+              const newRow = worksTable.insertRow();
+              newRow.innerHTML = `
+                <td><textarea class="form-control" rows="1" oninput="autoGrow(this)" style="overflow:hidden; resize:none;">${item.partName}</textarea></td>
+                <td><input type="number" class="form-control part-price" value="${item.partPrice}" /></td>
+                <td><input type="number" class="form-control work-price" value="${item.workPrice}" /></td>
+              `;
+            });
+            recalcWorkTableForContainer(container);
+          }
+          updateDuplicates();
+        }
+      }
+
+      document.addEventListener('DOMContentLoaded', function() {
+        const urlParams = new URLSearchParams(window.location.search);
+        const formData = urlParams.get('formData');
+        if (formData) {
+          const data = JSON.parse(decodeURIComponent(formData));
+          const container = document.querySelector(".order");
+          container.querySelectorAll("input, textarea").forEach((el) => {
+            if (el.id && data[el.id] !== undefined) {
+              if (el.type === "checkbox") el.checked = data[el.id];
+              else el.value = data[el.id];
+              if (el.tagName === "TEXTAREA") autoGrow(el);
+            }
+          });
+          const detailsTable = container.querySelector(".details-table tbody");
+          if (detailsTable && data.details) {
+            detailsTable.innerHTML = "";
+            data.details.forEach((item, idx) => {
+              const newRow = detailsTable.insertRow();
+              newRow.innerHTML = `
+                <td>${idx + 1}</td>
+                <td><textarea class="form-control" oninput="autoGrow(this)" style="overflow:hidden; resize:none;" rows="1">${item.partName}</textarea></td>
+                <td><input type="checkbox" class="checkbox-green" ${item.wear ? "checked" : ""} /></td>
+                <td><input type="checkbox" class="checkbox-black" ${item.looseness ? "checked" : ""} /></td>
+                <td><input type="checkbox" class="checkbox-yellow" ${item.recReplace ? "checked" : ""} /></td>
+                <td><input type="checkbox" class="checkbox-red" ${item.critReplace ? "checked" : ""} /></td>
+              `;
+            });
+          }
+          const worksTable = container.querySelector(".work-table tbody");
+          if (worksTable && data.works) {
+            worksTable.innerHTML = "";
+            data.works.forEach((item) => {
+              const newRow = worksTable.insertRow();
+              newRow.innerHTML = `
+                <td><textarea class="form-control" rows="1" oninput="autoGrow(this)" style="overflow:hidden; resize:none;">${item.partName}</textarea></td>
+                <td><input type="number" class="form-control part-price" value="${item.partPrice}" /></td>
+                <td><input type="number" class="form-control work-price" value="${item.workPrice}" /></td>
+              `;
+            });
+            recalcWorkTableForContainer(container);
+          }
+          updateDuplicates();
+        } else {
+          restoreFromLocalStorage();
+        }
+      });
+
+      document.querySelectorAll("input, textarea").forEach((el) => {
+        el.addEventListener("input", saveToLocalStorage);
+      });
+    });
+  </script>
+</body>
+</html>
