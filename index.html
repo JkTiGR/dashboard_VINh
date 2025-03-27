@@ -3,308 +3,338 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  
+  <!-- Название вкладки -->
   <title>Панель керування VINh AUTOSERVICE</title>
+  
+  <!-- Favicon -->
   <link rel="icon" type="image/x-icon" href="favicon.ico" />
+  
+  <!-- Поддержка PWA (манифест, цветовая тема для Android, иконка для iOS) -->
+  <link rel="manifest" href="manifest.json" />
+  <meta name="theme-color" content="#ffffff" />
+  <!-- iOS-телефонам нужно apple-touch-icon -->
+  <link rel="apple-touch-icon" href="img/icons/apple-touch-icon-180.png" />
+
+  <!-- Шрифт + Bootstrap -->
   <link href="https://fonts.googleapis.com/css2?family=Share+Tech_Mono&subset=cyrillic&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" />
+
+  <!-- Скрипты -->
   <script src="https://cdn.jsdelivr.net/npm/tesseract.js@v2.1.5/dist/tesseract.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/hammer.js/2.0.8/hammer.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 
   <style>
-    @font-face { font-family: 'Passager'; src: url('passager.ttf') format('truetype'); font-weight: normal; font-style: normal; }
-    :root { 
-      --bg-dark: #0B0E14; 
-      --neon-cyan: #c300ff63; 
-      --neon-turquoise: #ff0000; 
-      --neon-blue: #6257ff; 
-      --neon-pink: #0011ff; 
-      --white: #FFFFFF; 
-      --glass-bg: rgba(11, 14, 20, 0.3); 
-      --glass-blur: 10px; 
-      --glass-border: rgba(255, 255, 255, 0.1); 
-      --btn-gradient: linear-gradient(45deg, var(--neon-cyan), var(--neon-pink)); 
-      --prism-colors: linear-gradient(45deg, #a1c4fd, #c2e9fb, #fbc2eb, #a6c1ee); 
-      --prism-opacity: 0.8; 
-      --prism-blur: 8px; 
-      --animation-duration: 10s; 
+    @font-face {
+      font-family: 'Passager';
+      src: url('passager.ttf') format('truetype');
+      font-weight: normal;
+      font-style: normal;
+    }
+    :root {
+      --bg-dark: #0B0E14;
+      --neon-cyan: #c300ff63;
+      --neon-turquoise: #ff0000;
+      --neon-blue: #6257ff;
+      --neon-pink: #0011ff;
+      --white: #FFFFFF;
+      --glass-bg: rgba(11, 14, 20, 0.3);
+      --glass-blur: 10px;
+      --glass-border: rgba(255, 255, 255, 0.1);
+      --btn-gradient: linear-gradient(45deg, var(--neon-cyan), var(--neon-pink));
+      --prism-colors: linear-gradient(45deg, #a1c4fd, #c2e9fb, #fbc2eb, #a6c1ee);
+      --prism-opacity: 0.8;
+      --prism-blur: 8px;
+      --animation-duration: 10s;
       --bs-body-color: #ffffff;
     }
-    html, body { 
-      margin: 0; 
-      padding: 0; 
-      min-height: 100vh; 
-      background: linear-gradient(102deg, #1e28a4, #2a004c, #000b24, #4a0546); 
-      background-size: 200% 200%; 
-      animation: gradientAnimation 15s ease infinite; 
-      font-family: 'Share Tech Mono', monospace; 
+    html, body {
+      margin: 0;
+      padding: 0;
+      min-height: 100vh;
+      background: linear-gradient(102deg, #1e28a4, #2a004c, #000b24, #4a0546);
+      background-size: 200% 200%;
+      animation: gradientAnimation 15s ease infinite;
+      font-family: 'Share Tech Mono', monospace;
       color: var(--bs-body-color);
-      overflow-x: hidden; 
-      -webkit-user-select: none; 
-      user-select: none; 
+      overflow-x: hidden;
+      -webkit-user-select: none;
+      user-select: none;
     }
-    @keyframes gradientAnimation { 
-      0% { background-position: 0% 50%; } 
-      50% { background-position: 100% 50%; } 
-      100% { background-position: 0% 50%; } 
+    @keyframes gradientAnimation {
+      0%   { background-position: 0% 50%; }
+      50%  { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
     }
-    h1, h2, h3, h4 { 
-      text-shadow: 0 0 5px var(--neon-cyan), 0 0 10px var(--neon-cyan), 0 0 20px var(--neon-cyan); 
-      letter-spacing: 1px; 
-      margin: 0; 
+    h1, h2, h3, h4 {
+      text-shadow: 0 0 5px var(--neon-cyan),
+                   0 0 10px var(--neon-cyan),
+                   0 0 20px var(--neon-cyan);
+      letter-spacing: 1px;
+      margin: 0;
     }
-    .sidebar { 
-      position: fixed; 
-      top: 0; 
-      right: -300px; 
-      width: 300px; 
-      height: 100vh; 
-      background: var(--glass-bg); 
-      border-radius: 0 0 0 10px; 
-      backdrop-filter: blur(var(--glass-blur)); 
-      box-shadow: 0 8px 32px rgba(0, 247, 255, 0.3); 
-      border: 1px solid var(--glass-border); 
-      padding: 20px; 
-      transition: right 0.3s ease, opacity 0.3s ease; 
-      z-index: 1100; 
+
+    /* Сайдбар */
+    .sidebar {
+      position: fixed; top: 0; right: -300px;
+      width: 300px; height: 100vh;
+      background: var(--glass-bg);
+      border-radius: 0 0 0 10px;
+      backdrop-filter: blur(var(--glass-blur));
+      box-shadow: 0 8px 32px rgba(0, 247, 255, 0.3);
+      border: 1px solid var(--glass-border);
+      padding: 20px;
+      transition: right 0.3s ease, opacity 0.3s ease;
+      z-index: 1100;
     }
-    .sidebar.active { right: 0; animation: fadeIn 0.3s; }
-    @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-    .sidebar ul { list-style: none; padding: 0; margin: 0; }
+    .sidebar.active {
+      right: 0; animation: fadeIn 0.3s;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to   { opacity: 1; }
+    }
+    .sidebar ul {
+      list-style: none; padding: 0; margin: 0;
+    }
     .sidebar ul li { margin: 15px 0; }
-    .sidebar ul li a { color: var(--white); text-decoration: none; font-size: 18px; transition: color 0.3s; }
-    .sidebar ul li a:hover { color: var(--neon-turquoise); }
-    .close-sidebar { 
-      position: absolute; 
-      top: 10px; 
-      left: 10px; 
-      background: transparent; 
-      border: none; 
-      font-size: 24px; 
-      color: var(--white); 
-      cursor: pointer; 
+    .sidebar ul li a {
+      color: var(--white);
+      text-decoration: none;
+      font-size: 18px;
+      transition: color 0.3s;
     }
-    .menu-toggle { 
-      position: fixed; 
-      top: 10px; 
-      right: 10px; 
-      z-index: 1200; 
-      display: flex; 
-      align-items: center; 
-      transition: transform 0.3s ease; 
+    .sidebar ul li a:hover {
+      color: var(--neon-turquoise);
     }
-    .menu-toggle button { background: transparent; border: none; cursor: pointer; }
-    .menu-toggle img { width: 70px; height: 70px; margin-right: 10px; transition: all 0.3s ease; }
-    .vinh-menu-text { 
-      font-family: 'Passager', sans-serif; 
-      font-size: 24px; 
-      color: var(--white); 
-      text-shadow: 0 0 5px var(--neon-blue); 
-      transition: font-size 0.3s ease; 
-      display: flex; 
-      flex-direction: column; 
-      align-items: flex-end; 
+    .close-sidebar {
+      position: absolute; top: 10px; left: 10px;
+      background: transparent; border: none;
+      font-size: 24px; color: var(--white);
+      cursor: pointer;
     }
-    .vinh-menu-text .address { 
-      font-size: 0.5em; 
-      color: rgba(255, 255, 255, 0.9); 
-      margin-top: 2px; 
+
+    /* Кнопка меню (справа, logo, текст) */
+    .menu-toggle {
+      position: fixed; top: 10px; right: 10px;
+      z-index: 1200;
+      display: flex; align-items: center;
+      transition: transform 0.3s ease;
     }
-    .logo-container { 
-      position: fixed; 
-      top: 0px; 
-      left: -400px; 
-      display: flex; 
-      align-items: center; 
-      background: var(--glass-bg); 
-      border-radius: 0 0 10px 0; 
-      padding: 5px 10px; 
-      backdrop-filter: blur(var(--glass-blur)); 
-      border: 1px solid var(--glass-border); 
-      box-shadow: 0 1px 2px rgba(174, 0, 255, 0.3); 
-      transition: left 0.3s ease; 
-      z-index: 1200; 
+    .menu-toggle button {
+      background: transparent; border: none; cursor: pointer;
+    }
+    .menu-toggle img {
+      width: 70px; height: 70px;
+      margin-right: 10px;
+      transition: all 0.3s ease;
+    }
+    .vinh-menu-text {
+      font-family: 'Passager', sans-serif;
+      font-size: 24px; color: var(--white);
+      text-shadow: 0 0 5px var(--neon-blue);
+      transition: font-size 0.3s ease;
+      display: flex; flex-direction: column; align-items: flex-end;
+    }
+    .vinh-menu-text .address {
+      font-size: 0.5em;
+      color: rgba(255, 255, 255, 0.9);
+      margin-top: 2px;
+    }
+
+    /* Логотип слева */
+    .logo-container {
+      position: fixed; top: 0px; left: -400px;
+      display: flex; align-items: center;
+      background: var(--glass-bg);
+      border-radius: 0 0 10px 0;
+      padding: 5px 10px;
+      backdrop-filter: blur(var(--glass-blur));
+      border: 1px solid var(--glass-border);
+      box-shadow: 0 1px 2px rgba(174, 0, 255, 0.3);
+      transition: left 0.3s ease;
+      z-index: 1200;
     }
     .logo-container.scrolled { left: 0px; }
-    .logo-container img { width: 40px; height: 40px; margin-right: 5px; }
+    .logo-container img {
+      width: 40px; height: 40px;
+      margin-right: 5px;
+    }
     .logo-container .vinh-menu-text { font-size: 20px; }
-    .btn-small { font-size: 14px !important; padding: 5px 10px !important; }
-    .square-checkbox { 
-      -webkit-appearance: none; 
-      appearance: none; 
-      width: 18px; 
-      height: 18px; 
-      border: 1px solid var(--white); 
-      border-radius: 3px; 
-      margin-right: 5px; 
-      vertical-align: middle; 
-      cursor: pointer; 
-      background: rgba(255, 255, 255, 0.1); 
+
+    .btn-small {
+      font-size: 14px !important;
+      padding: 5px 10px !important;
+    }
+
+    /* Square checkbox + псевдоэлемент ✔ */
+    .square-checkbox {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 18px; height: 18px;
+      border: 1px solid var(--white);
+      border-radius: 3px;
+      margin-right: 5px;
+      vertical-align: middle;
+      cursor: pointer;
+      background: rgba(255, 255, 255, 0.1);
       transition: all 0.2s ease;
-      position: relative; /* Для позиціонування псевдоелемента */
+      position: relative; /* для псевдоэлемента */
     }
-    .square-checkbox:checked { 
+    .square-checkbox:checked {
       transform: scale(1.1);
-      border: 1px solid var(--white); 
+      border-color: var(--white);
     }
-    .square-checkbox:checked::after { 
-      content: "✔"; /* Символ галочки */
+    .square-checkbox:checked::after {
+      content: "✔";
       position: absolute;
-      top: 50%;
-      left: 50%;
+      top: 50%; left: 50%;
       transform: translate(-50%, -50%);
       color: var(--white);
       font-size: 12px;
       font-weight: bold;
     }
-    .legend-square { 
-      display: inline-block; 
-      width: 16px; 
-      height: 16px; 
-      vertical-align: middle; 
-      margin-right: 5px; 
-      border: 1px solid var(--white); 
-      cursor: pointer; 
+
+    .legend-square {
+      display: inline-block;
+      width: 16px; height: 16px;
+      vertical-align: middle;
+      margin-right: 5px;
+      border: 1px solid var(--white);
+      cursor: pointer;
     }
     .legend-green { background-color: green; }
     .legend-black { background-color: black; }
     .legend-yellow { background-color: yellow; }
     .legend-red { background-color: red; }
     .table-legend { font-size: 14px; }
-    .checkbox-green:checked {
-      background-color: green !important;
-      border-color: rgb(255, 255, 255) !important;
-    }
-    .checkbox-black:checked {
-      background-color: black !important;
-      border-color: rgb(255, 255, 255) !important;
-    }
-    .checkbox-yellow:checked {
-      background-color: yellow !important;
-      border-color: rgb(255, 255, 255) !important;
-    }
-    .checkbox-red:checked {
-      background-color: red !important;
-      border-color: rgb(255, 255, 255) !important;
-    }
-    .glass-card { 
-      background: var(--glass-bg); 
-      border-radius: 20px; 
-      padding: 15px; 
-      backdrop-filter: blur(var(--glass-blur)); 
-      border: 1px solid var(--glass-border); 
-      margin: 20px 10px; 
-      box-shadow: 0 8px 32px rgba(0, 247, 255, 0.2); 
-      opacity: 0;
-      animation: fadeInCard 0.5s ease-out forwards;
+    .checkbox-green:checked   { background-color: green   !important; border-color: #fff !important; }
+    .checkbox-black:checked   { background-color: black   !important; border-color: #fff !important; }
+    .checkbox-yellow:checked  { background-color: yellow  !important; border-color: #fff !important; }
+    .checkbox-red:checked     { background-color: red     !important; border-color: #fff !important; }
+
+    /* Стеклянные карточки */
+    .glass-card {
+      background: var(--glass-bg);
+      border-radius: 20px;
+      padding: 15px;
+      backdrop-filter: blur(var(--glass-blur));
+      border: 1px solid var(--glass-border);
+      margin: 20px 10px;
+      box-shadow: 0 8px 32px rgba(0, 247, 255, 0.2);
+      opacity: 0; animation: fadeInCard 0.5s ease-out forwards;
     }
     .glass-card:nth-child(1) { animation-delay: 0.1s; }
     .glass-card:nth-child(2) { animation-delay: 0.2s; }
     .glass-card:nth-child(3) { animation-delay: 0.3s; }
     @keyframes fadeInCard {
       from { opacity: 0; transform: translateY(20px); }
-      to { opacity: 1; transform: translateY(0); }
+      to   { opacity: 1; transform: translateY(0); }
     }
     #indicators-container.glass-card,
     #control-signatures-container.glass-card {
-      opacity: 1;
-      animation: none;
-      transform: translateY(0);
+      opacity: 1; animation: none; transform: translateY(0);
     }
+
     .rainbow-text { animation: rainbowText 20s linear infinite; }
-    @keyframes rainbowText { 
-      0% { text-shadow: 0 0 5px #a1c4fd; } 
-      25% { text-shadow: 0 0 5px #c2e9fb; } 
-      50% { text-shadow: 0 0 5px #fbc2eb; } 
-      75% { text-shadow: 0 0 5px #a6c1ee; } 
-      100% { text-shadow: 0 0 5px #a1c4fd; } 
+    @keyframes rainbowText {
+      0%   { text-shadow: 0 0 5px #a1c4fd; }
+      25%  { text-shadow: 0 0 5px #c2e9fb; }
+      50%  { text-shadow: 0 0 5px #fbc2eb; }
+      75%  { text-shadow: 0 0 5px #a6c1ee; }
+      100% { text-shadow: 0 0 5px #a1c4fd; }
     }
-    .form-control { 
-      background: rgba(0, 0, 0, 0.3); 
-      backdrop-filter: blur(5px); 
-      color: #fff; 
-      border: 1px solid rgba(255, 255, 255, 0.3); 
-      border-radius: 10px; 
-      font-size: 14px; 
-      padding: 8px; 
-      -webkit-user-select: auto; 
-      user-select: auto; 
+
+    /* Поля ввода */
+    .form-control {
+      background: rgba(0, 0, 0, 0.3);
+      backdrop-filter: blur(5px);
+      color: #fff;
+      border: 1px solid rgba(255, 255, 255, 0.3);
+      border-radius: 10px;
+      font-size: 14px;
+      padding: 8px;
+      -webkit-user-select: auto;
+      user-select: auto;
     }
-    .form-control:focus { 
-      background: rgba(0, 0, 0, 0.3); 
-      border-color: var(--neon-cyan); 
-      box-shadow: 0 0 5px var(--neon-cyan); 
-      animation: rainbowGlow 3s infinite; 
+    .form-control:focus {
+      background: rgba(0, 0, 0, 0.3);
+      border-color: var(--neon-cyan);
+      box-shadow: 0 0 5px var(--neon-cyan);
+      animation: rainbowGlow 3s infinite;
     }
-    @keyframes rainbowGlow { 
-      0% { box-shadow: 0 0 2px #edffd8, 0 0 3px #ff0000, 0 0 4px #0011ff, 0 0 5px #005eff; } 
-      50% { box-shadow: 0 0 2px #ff0000, 0 0 3px #0011ff, 0 0 4px #005eff, 0 0 5px #edffd8; } 
-      100% { box-shadow: 0 0 2px #edffd8, 0 0 3px #ff0000, 0 0 4px #0011ff, 0 0 5px #005eff; } 
+    @keyframes rainbowGlow {
+      0%   { box-shadow: 0 0 2px #edffd8, 0 0 3px #ff0000, 0 0 4px #0011ff, 0 0 5px #005eff; }
+      50%  { box-shadow: 0 0 2px #ff0000, 0 0 3px #0011ff, 0 0 4px #005eff, 0 0 5px #edffd8; }
+      100% { box-shadow: 0 0 2px #edffd8, 0 0 3px #ff0000, 0 0 4px #0011ff, 0 0 5px #005eff; }
     }
-    .btn-primary { 
-      background: var(--btn-gradient); 
-      border: none; 
-      font-weight: bold; 
-      color: #fff; 
-      padding: 8px 16px; 
-      font-size: 16px; 
-      border-radius: 12px; 
-      cursor: pointer; 
-      transition: all 0.3s ease; 
-      box-shadow: 0 0 12px rgba(0, 247, 255, 0.3); 
-      touch-action: manipulation; 
+
+    /* Кнопки */
+    .btn-primary {
+      background: var(--btn-gradient);
+      border: none;
+      font-weight: bold;
+      color: #fff;
+      padding: 8px 16px;
+      font-size: 16px;
+      border-radius: 12px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      box-shadow: 0 0 12px rgba(0, 247, 255, 0.3);
+      touch-action: manipulation;
     }
-    .btn-primary:hover { 
+    .btn-primary:hover {
       box-shadow: 0 4px 15px rgba(0, 247, 255, 0.4);
       transform: translateY(-2px);
     }
-    .btn-primary:active { 
+    .btn-primary:active {
       transform: translateY(1px);
       box-shadow: 0 2px 10px rgba(0, 247, 255, 0.2);
     }
-    .btn-danger { 
-      background: linear-gradient(45deg, #ff3000, #cc0000); 
-      border: none; 
-      font-weight: bold; 
-      color: #fff; 
-      padding: 6px 12px; 
-      font-size: 14px; 
-      border-radius: 12px; 
-      cursor: pointer; 
-      transition: all 0.3s ease; 
-      box-shadow: 0 0 10px rgba(255, 0, 0, 0.4); 
-      touch-action: manipulation; 
+    .btn-danger {
+      background: linear-gradient(45deg, #ff3000, #cc0000);
+      border: none;
+      font-weight: bold;
+      color: #fff;
+      padding: 6px 12px;
+      font-size: 14px;
+      border-radius: 12px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      box-shadow: 0 0 10px rgba(255, 0, 0, 0.4);
+      touch-action: manipulation;
     }
-    .btn-danger:hover { 
-      background: linear-gradient(45deg, #d60000, #7f0000); 
+    .btn-danger:hover {
+      background: linear-gradient(45deg, #d60000, #7f0000);
       box-shadow: 0 4px 15px rgba(255, 0, 0, 0.6);
       transform: translateY(-2px);
     }
-    .btn-danger:active { 
+    .btn-danger:active {
       transform: translateY(1px);
       box-shadow: 0 2px 10px rgba(255, 0, 0, 0.2);
     }
-    .btn-neon { 
-      position: relative; 
-      overflow: hidden; 
-      outline: none; 
+    .btn-neon {
+      position: relative; overflow: hidden; outline: none;
       transition: all 0.3s ease;
     }
-    .btn-neon::before { 
-      content: ""; 
-      position: absolute; 
-      top: -2px; 
-      left: -2px; 
-      width: calc(100% + 4px); 
-      height: calc(100% + 4px); 
-      border-radius: 12px; 
-      z-index: -1; 
-      background: var(--prism-colors); 
-      background-size: 400%; 
-      filter: blur(var(--prism-blur)); 
-      opacity: var(--prism-opacity); 
-      animation: prismGlow var(--animation-duration) infinite linear; 
+    .btn-neon::before {
+      content: "";
+      position: absolute; top: -2px; left: -2px;
+      width: calc(100% + 4px); height: calc(100% + 4px);
+      border-radius: 12px; z-index: -1;
+      background: var(--prism-colors);
+      background-size: 400%;
+      filter: blur(var(--prism-blur));
+      opacity: var(--prism-opacity);
+      animation: prismGlow var(--animation-duration) infinite linear;
     }
+    @keyframes prismGlow {
+      0%   { background-position: 0% 50%; }
+      50%  { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+
     .btn-neon:hover {
       box-shadow: 0 4px 15px rgba(0, 247, 255, 0.4);
       transform: translateY(-2px);
@@ -313,89 +343,105 @@
       transform: translateY(1px);
       box-shadow: 0 2px 10px rgba(0, 247, 255, 0.2);
     }
-    @keyframes prismGlow { 
-      0% { background-position: 0% 50%; } 
-      50% { background-position: 100% 50%; } 
-      100% { background-position: 0% 50%; } 
+
+    /* Таблицы */
+    .work-table, .details-table {
+      width: 100%;
+      border: none;
+      border-radius: 8px;
+      overflow: hidden;
+      box-shadow: 0 0 8px rgba(0, 247, 255, 0.5);
+      background: rgba(0, 0, 0, 0.2);
+      margin-bottom: 15px;
+      table-layout: fixed;
     }
-    .work-table, .details-table { 
-      width: 100%; 
-      border: none; 
-      border-radius: 8px; 
-      overflow: hidden; 
-      box-shadow: 0 0 8px rgba(0, 247, 255, 0.5); 
-      background: rgba(0, 0, 0, 0.2); 
-      margin-bottom: 15px; 
-      table-layout: fixed; 
+    .work-table th, .work-table td,
+    .details-table th, .details-table td {
+      border: none;
+      padding: 5px;
+      text-align: center;
+      font-size: 14px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
     }
-    .work-table th, .work-table td, .details-table th, .details-table td { 
-      border: none; 
-      padding: 5px; 
-      text-align: center; 
-      font-size: 14px; 
-      overflow: hidden; 
-      text-overflow: ellipsis; 
-      white-space: nowrap; 
+    .work-table th, .details-table th {
+      background-color: rgba(50, 50, 50, 0.7);
     }
-    .work-table th, .details-table th { background-color: rgba(50, 50, 50, 0.7); }
-    .indicators { 
-      display: grid; 
-      grid-template-columns: repeat(auto-fit, minmax(100px, 1fr)); 
-      gap: 10px; 
+    .indicators {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+      gap: 10px;
     }
-    hr { border: 1px solid var(--neon-blue); margin: 10px 0; }
-    .section-header { 
-      display: flex; 
-      justify-content: flex-end; 
-      align-items: center; 
-      margin-bottom: 10px; 
-      flex-wrap: wrap; 
+    hr {
+      border: 1px solid var(--neon-blue);
+      margin: 10px 0;
     }
-    .section-header .duplicate-info { 
-      font-size: 0.9em; 
-      margin-left: 10px; 
-      color: rgba(255, 255, 255, 0.9); 
+    .section-header {
+      display: flex;
+      justify-content: flex-end;
+      align-items: center;
+      margin-bottom: 10px;
+      flex-wrap: wrap;
+    }
+    .section-header .duplicate-info {
+      font-size: 0.9em;
+      margin-left: 10px;
+      color: rgba(255, 255, 255, 0.9);
     }
     .row { margin-top: 10px; }
-    .button-group { 
-      display: flex; 
-      justify-content: space-between; 
-      gap: 10px; 
-      margin-top: 10px; 
-      flex-wrap: nowrap; 
+    .button-group {
+      display: flex; justify-content: space-between; gap: 10px; margin-top: 10px;
+      flex-wrap: nowrap;
     }
-    .button-group-row { 
-      display: flex; 
-      justify-content: space-between; 
-      gap: 10px; 
-      margin: 10px; 
-      flex-wrap: nowrap; 
+    .button-group-row {
+      display: flex; justify-content: space-between; gap: 10px; margin: 10px;
+      flex-wrap: nowrap;
     }
-    .button-group button, .button-group-row button { 
-      flex: 1; 
-      min-width: 0; 
-      white-space: nowrap; 
-      overflow: hidden; 
-      text-overflow: ellipsis; 
+    .button-group button, .button-group-row button {
+      flex: 1; min-width: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
     }
-    .generated-link-container { margin: 10px; text-align: center; display: none; }
-    @media only screen and (min-device-width: 768px) and (max-device-width: 1024px) and (min-device-height: 1024px) and (max-device-height: 1536px) and (-webkit-min-device-pixel-ratio: 2) {
-      .container { padding: 20px; padding-top: 60px; }
+    .generated-link-container {
+      margin: 10px;
+      text-align: center;
+      display: none;
+    }
+
+    /* Адаптив под iPad */
+    @media only screen
+           and (min-device-width: 768px) and (max-device-width: 1024px)
+           and (min-device-height: 1024px) and (max-device-height: 1536px)
+           and (-webkit-min-device-pixel-ratio: 2) {
+      .container {
+        padding: 20px; padding-top: 60px;
+      }
       .sidebar { width: 280px; right: -280px; }
       .sidebar.active { right: 0; }
       .menu-toggle { top: 15px; right: 15px; }
       .menu-toggle img { width: 32px; height: 32px; }
       .vinh-menu-text { font-size: 24px; }
       .form-control { font-size: 16px; padding: 10px; }
-      .btn-primary { padding: 12px 24px; font-size: 16px; min-width: 100px; }
-      .btn-small { font-size: 14px !important; padding: 10px 15px !important; min-width: 90px; }
-      .glass-card { margin: 15px 5px; padding: 15px; }
-      .indicators { grid-template-columns: repeat(4, 1fr); gap: 15px; }
-      .work-table th, .work-table td, .details-table th, .details-table td { font-size: 14px; padding: 8px; }
+      .btn-primary {
+        padding: 12px 24px; font-size: 16px; min-width: 100px;
+      }
+      .btn-small {
+        font-size: 14px !important; padding: 10px 15px !important; min-width: 90px;
+      }
+      .glass-card {
+        margin: 15px 5px; padding: 15px;
+      }
+      .indicators {
+        grid-template-columns: repeat(4, 1fr); gap: 15px;
+      }
+      .work-table th, .work-table td,
+      .details-table th, .details-table td {
+        font-size: 14px; padding: 8px;
+      }
     }
   </style>
 </head>
 <body>
+  <!-- Боковое меню -->
   <div id="sidebar" class="sidebar">
     <button class="close-sidebar" id="closeSidebar">×</button>
     <ul>
@@ -411,6 +457,7 @@
     </ul>
   </div>
 
+  <!-- Кнопка открытия бокового меню -->
   <div class="menu-toggle">
     <img src="img/logo.png" alt="Логотип" class="logo" />
     <button id="menuButton">
@@ -421,6 +468,7 @@
     </button>
   </div>
 
+  <!-- Логотип-ссылка слева -->
   <div class="logo-container">
     <img src="img/logo.png" alt="Логотип" class="logo" />
     <span class="vinh-menu-text">
@@ -429,79 +477,253 @@
     </span>
   </div>
 
+  <!-- Основная форма -->
   <div class="container" style="padding-top: 60px;">
     <form style="width: 100%;">
       <div class="order">
+        
+        <!-- Блок (vinh-container) -->
         <div id="vinh-container" style="margin: 0px;">
           <div class="row">
-            <div class="col-md-6 col-12"><label for="clientName">Ім'я клієнта:</label><input type="text" id="clientName" class="form-control" /></div>
-            <div class="col-md-6 col-12"><label for="phone">Телефон:</label><input type="text" id="phone" class="form-control" pattern="[0-9]*" inputmode="numeric" /></div>
+            <div class="col-md-6 col-12">
+              <label for="clientName">Ім'я клієнта:</label>
+              <input type="text" id="clientName" class="form-control" />
+            </div>
+            <div class="col-md-6 col-12">
+              <label for="phone">Телефон:</label>
+              <input type="text" id="phone" class="form-control" pattern="[0-9]*" inputmode="numeric" />
+            </div>
           </div>
           <div class="row">
             <div class="col-10">
               <label for="vin">VIN номер:</label>
               <div class="position-relative" style="display: inline-block; width: 100%;">
-                <input type="text" id="vin" class="form-control" pattern="[A-Z0-9]*" style="text-transform: uppercase; padding-right: 40px;" oninput="this.value = this.value.toUpperCase();" placeholder="Введіть VIN" />
-                <a href="https://lens.google.com/" target="_blank" title="Відкрити Google Об'єктив (Web)" style="position: absolute; top: 50%; right: 8px; transform: translateY(-50%);">
+                <input
+                  type="text"
+                  id="vin"
+                  class="form-control"
+                  pattern="[A-Z0-9]*"
+                  style="text-transform: uppercase; padding-right: 40px;"
+                  oninput="this.value = this.value.toUpperCase();"
+                  placeholder="Введіть VIN"
+                />
+                <a
+                  href="https://lens.google.com/"
+                  target="_blank"
+                  title="Відкрити Google Об'єктив (Web)"
+                  style="position: absolute; top: 50%; right: 8px; transform: translateY(-50%);"
+                >
                   <img src="img/google_lens.png" alt="Google Lens" style="width: 24px; height: 24px; cursor: pointer;" />
                 </a>
               </div>
             </div>
             <div class="col-2 d-flex align-items-end">
-              <button type="button" style="border: none; background: none; cursor: pointer; padding: 0;" onclick="document.getElementById('techPassportPhotoInput').click()" title="Прикріпити фото техпаспорта">
+              <button
+                type="button"
+                style="border: none; background: none; cursor: pointer; padding: 0;"
+                onclick="document.getElementById('techPassportPhotoInput').click()"
+                title="Прикріпити фото техпаспорта"
+              >
                 <img src="img/paper_clips.png" alt="Прикріпити фото" style="width: 32px; height: 32px;" />
               </button>
-              <input type="file" id="techPassportPhotoInput" accept="image/*" capture="environment" style="display: none;" onchange="handleTechPassportFileSelected(this)" />
+              <input
+                type="file"
+                id="techPassportPhotoInput"
+                accept="image/*"
+                capture="environment"
+                style="display: none;"
+                onchange="handleTechPassportFileSelected(this)"
+              />
               <div id="selectedTechFileName" style="margin-left: 5px; font-size: 0.9em; color: #ccc;"></div>
             </div>
           </div>
           <div class="row">
-            <div class="col-md-6 col-6"><label for="carModel">Модель авто:</label><input type="text" id="carModel" class="form-control" pattern="[A-Z]+" style="text-transform: uppercase" oninput="this.value = this.value.toUpperCase();" /></div>
-            <div class="col-md-6 col-6"><label for="year">Рік випуску:</label><input type="text" id="year" class="form-control" pattern="[0-9]*" inputmode="numeric" /></div>
+            <div class="col-md-6 col-6">
+              <label for="carModel">Модель авто:</label>
+              <input
+                type="text"
+                id="carModel"
+                class="form-control"
+                pattern="[A-Z]+"
+                style="text-transform: uppercase"
+                oninput="this.value = this.value.toUpperCase();"
+              />
+            </div>
+            <div class="col-md-6 col-6">
+              <label for="year">Рік випуску:</label>
+              <input
+                type="text"
+                id="year"
+                class="form-control"
+                pattern="[0-9]*"
+                inputmode="numeric"
+              />
+            </div>
           </div>
           <div class="row">
-            <div class="col-md-6 col-6"><label for="plate">Номерний знак:</label><input type="text" id="plate" class="form-control" style="text-transform: uppercase" oninput="this.value = this.value.replace(/\s+/g, '').toUpperCase();" /></div>
-            <div class="col-md-6 col-6"><label for="mileage">Пробіг (км):</label><input type="text" id="mileage" class="form-control" pattern="[0-9]*" inputmode="numeric" /></div>
+            <div class="col-md-6 col-6">
+              <label for="plate">Номерний знак:</label>
+              <input
+                type="text"
+                id="plate"
+                class="form-control"
+                style="text-transform: uppercase"
+                oninput="this.value = this.value.replace(/\s+/g, '').toUpperCase();"
+              />
+            </div>
+            <div class="col-md-6 col-6">
+              <label for="mileage">Пробіг (км):</label>
+              <input
+                type="text"
+                id="mileage"
+                class="form-control"
+                pattern="[0-9]*"
+                inputmode="numeric"
+              />
+            </div>
           </div>
-          <div><label for="workList">Перелік бажаних робіт:</label><textarea class="form-control" id="workList" rows="3" oninput="autoGrow(this)"></textarea></div>
+          <div>
+            <label for="workList">Перелік бажаних робіт:</label>
+            <textarea class="form-control" id="workList" rows="3" oninput="autoGrow(this)"></textarea>
+          </div>
         </div>
 
+        <!-- ИНДИКАТОРЫ -->
         <div id="indicators-container" class="glass-card">
           <h4>Індикатори</h4>
           <div class="indicators">
-            <div class="form-check"><input class="form-check-input" type="checkbox" id="checkEngine" /><label class="form-check-label" for="checkEngine"><img src="img/check_engine.png" alt="Check Engine" style="width: 24px; height: 24px" /></label></div>
-            <div class="form-check"><input class="form-check-input" type="checkbox" id="battery" /><label class="form-check-label" for="battery"><img src="img/battery.png" alt="Battery" style="width: 24px; height: 24px" /></label></div>
-            <div class="form-check"><input class="form-check-input" type="checkbox" id="oil" /><label class="form-check-label" for="oil"><img src="img/oil.png" alt="Oil" style="width: 24px; height: 24px" /></label></div>
-            <div class="form-check"><input class="form-check-input" type="checkbox" id="coolant" /><label class="form-check-label" for="coolant"><img src="img/coolant.png" alt="Coolant" style="width: 24px; height: 24px" /></label></div>
-            <div class="form-check"><input class="form-check-input" type="checkbox" id="tpms" /><label class="form-check-label" for="tpms"><img src="img/tpms.png" alt="TPMS" style="width: 24px; height: 24px" /></label></div>
-            <div class="form-check"><input class="form-check-input" type="checkbox" id="airbag" /><label class="form-check-label" for="airbag"><img src="img/airbag.png" alt="Airbag" style="width: 24px; height: 24px" /></label></div>
-            <div class="form-check"><input class="form-check-input" type="checkbox" id="abs" /><label class="form-check-label" for="abs"><img src="img/abs.png" alt="ABS" style="width: 24px; height: 24px" /></label></div>
-            <div class="form-check"><input class="form-check-input" type="checkbox" id="esp" /><label class="form-check-label" for="esp"><img src="img/esp.png" alt="ESP" style="width: 24px; height: 24px" /></label></div>
-            <div class="form-check"><input class="form-check-input" type="checkbox" id="brakeWear" /><label class="form-check-label" for="brakeWear"><img src="img/brake_wear.png" alt="Brake Wear" style="width: 24px; height: 24px" /></label></div>
+            <div class="form-check">
+              <input class="form-check-input" type="checkbox" id="checkEngine" />
+              <label class="form-check-label" for="checkEngine">
+                <img src="img/check_engine.png" alt="Check Engine" style="width: 24px; height: 24px" />
+              </label>
+            </div>
+            <div class="form-check">
+              <input class="form-check-input" type="checkbox" id="battery" />
+              <label class="form-check-label" for="battery">
+                <img src="img/battery.png" alt="Battery" style="width: 24px; height: 24px" />
+              </label>
+            </div>
+            <div class="form-check">
+              <input class="form-check-input" type="checkbox" id="oil" />
+              <label class="form-check-label" for="oil">
+                <img src="img/oil.png" alt="Oil" style="width: 24px; height: 24px" />
+              </label>
+            </div>
+            <div class="form-check">
+              <input class="form-check-input" type="checkbox" id="coolant" />
+              <label class="form-check-label" for="coolant">
+                <img src="img/coolant.png" alt="Coolant" style="width: 24px; height: 24px" />
+              </label>
+            </div>
+            <div class="form-check">
+              <input class="form-check-input" type="checkbox" id="tpms" />
+              <label class="form-check-label" for="tpms">
+                <img src="img/tpms.png" alt="TPMS" style="width: 24px; height: 24px" />
+              </label>
+            </div>
+            <div class="form-check">
+              <input class="form-check-input" type="checkbox" id="airbag" />
+              <label class="form-check-label" for="airbag">
+                <img src="img/airbag.png" alt="Airbag" style="width: 24px; height: 24px" />
+              </label>
+            </div>
+            <div class="form-check">
+              <input class="form-check-input" type="checkbox" id="abs" />
+              <label class="form-check-label" for="abs">
+                <img src="img/abs.png" alt="ABS" style="width: 24px; height: 24px" />
+              </label>
+            </div>
+            <div class="form-check">
+              <input class="form-check-input" type="checkbox" id="esp" />
+              <label class="form-check-label" for="esp">
+                <img src="img/esp.png" alt="ESP" style="width: 24px; height: 24px" />
+              </label>
+            </div>
+            <div class="form-check">
+              <input class="form-check-input" type="checkbox" id="brakeWear" />
+              <label class="form-check-label" for="brakeWear">
+                <img src="img/brake_wear.png" alt="Brake Wear" style="width: 24px; height: 24px" />
+              </label>
+            </div>
           </div>
         </div>
 
+        <!-- Акт дефектов -->
         <div id="defects-container" class="section" style="margin: 0px">
           <hr />
           <div class="section-header">
             <h4 class="rainbow-text">Акт дефектів автомобіля</h4>
-            <div class="duplicate-info"><strong>|</strong> <span id="vin_defects"></span><strong>|</strong> <span id="carModel_defects"></span><strong>|</strong> <span id="year_defects"></span><strong>|</strong> <span id="plate_defects"></span></div>
+            <div class="duplicate-info">
+              <strong>|</strong> <span id="vin_defects"></span>
+              <strong>|</strong> <span id="carModel_defects"></span>
+              <strong>|</strong> <span id="year_defects"></span>
+              <strong>|</strong> <span id="plate_defects"></span>
+            </div>
           </div>
           <div class="row">
-            <div class="col-md-6 col-6"><label for="ptk_percent">Передні гальмівні колодки (%):</label><input type="text" id="ptk_percent" class="form-control" pattern="[0-9]*" inputmode="numeric" /></div>
-            <div class="col-md-6 col-6"><label for="ztk_percent">Задні гальмівні колодки (%):</label><input type="text" id="ztk_percent" class="form-control" pattern="[0-9]*" inputmode="numeric" /></div>
+            <div class="col-md-6 col-6">
+              <label for="ptk_percent">Передні гальмівні колодки (%):</label>
+              <input
+                type="text"
+                id="ptk_percent"
+                class="form-control"
+                pattern="[0-9]*"
+                inputmode="numeric"
+              />
+            </div>
+            <div class="col-md-6 col-6">
+              <label for="ztk_percent">Задні гальмівні колодки (%):</label>
+              <input
+                type="text"
+                id="ztk_percent"
+                class="form-control"
+                pattern="[0-9]*"
+                inputmode="numeric"
+              />
+            </div>
           </div>
           <div class="row">
-            <div class="col-md-6 col-6"><label for="ptd_mm">Передні гальмівні диски (мм):</label><input type="text" id="ptd_mm" class="form-control" pattern="[0-9]*" inputmode="numeric" /></div>
-            <div class="col-md-6 col-6"><label for="ztd_mm">Задні гальмівні диски (мм):</label><input type="text" id="ztd_mm" class="form-control" pattern="[0-9]*" inputmode="numeric" /></div>
+            <div class="col-md-6 col-6">
+              <label for="ptd_mm">Передні гальмівні диски (мм):</label>
+              <input
+                type="text"
+                id="ptd_mm"
+                class="form-control"
+                pattern="[0-9]*"
+                inputmode="numeric"
+              />
+            </div>
+            <div class="col-md-6 col-6">
+              <label for="ztd_mm">Задні гальмівні диски (мм):</label>
+              <input
+                type="text"
+                id="ztd_mm"
+                class="form-control"
+                pattern="[0-9]*"
+                inputmode="numeric"
+              />
+            </div>
           </div>
           <div class="row">
-            <div class="col-md-6 col-6"><label for="brakeFluid">Гальмівна рідина:</label><input type="text" id="brakeFluid" class="form-control" /></div>
-            <div class="col-md-6 col-6"><label for="antifreeze">Охолоджуюча рідина:</label><input type="text" id="antifreeze" class="form-control" /></div>
+            <div class="col-md-6 col-6">
+              <label for="brakeFluid">Гальмівна рідина:</label>
+              <input type="text" id="brakeFluid" class="form-control" />
+            </div>
+            <div class="col-md-6 col-6">
+              <label for="antifreeze">Охолоджуюча рідина:</label>
+              <input type="text" id="antifreeze" class="form-control" />
+            </div>
           </div>
           <div class="row">
-            <div class="col-md-6 col-6"><label for="engineOil">Моторна олива:</label><input type="text" id="engineOil" class="form-control" /></div>
-            <div class="col-md-6 col-6"><label for="transmissionOil">Олива в трансмісії:</label><input type="text" id="transmissionOil" class="form-control" /></div>
+            <div class="col-md-6 col-6">
+              <label for="engineOil">Моторна олива:</label>
+              <input type="text" id="engineOil" class="form-control" />
+            </div>
+            <div class="col-md-6 col-6">
+              <label for="transmissionOil">Олива в трансмісії:</label>
+              <input type="text" id="transmissionOil" class="form-control" />
+            </div>
           </div>
           <table class="details-table" style="margin-top: 10px; width: 100%">
             <thead>
@@ -526,7 +748,13 @@
               <tr>
                 <td>1</td>
                 <td>
-                  <textarea class="form-control" name="part1" oninput="autoGrow(this)" style="overflow:hidden; resize:none;" rows="1"></textarea>
+                  <textarea
+                    class="form-control"
+                    name="part1"
+                    oninput="autoGrow(this)"
+                    style="overflow:hidden; resize:none;"
+                    rows="1"
+                  ></textarea>
                 </td>
                 <td>
                   <input type="checkbox" class="checkbox-green square-checkbox" />
@@ -543,77 +771,152 @@
               </tr>
             </tbody>
           </table>
-          
           <div class="table-legend" style="text-align: right; margin-top: 5px">
             <span class="legend-square legend-green" data-checkbox-class="checkbox-green"></span> Знос
             <span class="legend-square legend-black" style="margin-left: 10px" data-checkbox-class="checkbox-black"></span> Люфт
             <span class="legend-square legend-yellow" style="margin-left: 10px" data-checkbox-class="checkbox-yellow"></span> Рекомендується заміна
             <span class="legend-square legend-red" style="margin-left: 10px" data-checkbox-class="checkbox-red"></span> Критична заміна
           </div>
-          
           <div class="button-group">
             <button type="button" class="btn btn-primary btn-small add-row-btn">Додати рядок</button>
             <button type="button" class="btn btn-danger btn-small btn-neon remove-row-btn">Видалити рядок</button>
           </div>
-          <div><label for="notes">Додаткові примітки:</label><textarea class="form-control" id="notes" rows="3" oninput="autoGrow(this)"></textarea></div>
+          <div>
+            <label for="notes">Додаткові примітки:</label>
+            <textarea class="form-control" id="notes" rows="3" oninput="autoGrow(this)"></textarea>
+          </div>
           <div style="margin-top: 10px; text-align: right">
             <p style="margin: 0; font-size: 0.9em">Адміністрація сервісу.</p>
-            <button type="button" class="btn btn-primary btn-small" id="sendPartsBtn" style="margin-top: 5px">Надіслати запчастини</button>
+            <button type="button" class="btn btn-primary btn-small" id="sendPartsBtn" style="margin-top: 5px">
+              Надіслати запчастини
+            </button>
           </div>
         </div>
 
+        <!-- Заявка на работы -->
         <div id="work-container" class="section" style="margin: 0px">
           <hr />
           <div class="section-header">
             <h2 class="rainbow-text">ЗАЯВКА НА ВИКОНАННЯ РОБІТ</h2>
-            <div class="duplicate-info"><strong>|</strong> <span id="vin_work"></span><strong>|</strong> <span id="carModel_work"></span><strong>|</strong> <span id="year_work"></span><strong>|</strong> <span id="plate_work"></span></div>
+            <div class="duplicate-info">
+              <strong>|</strong> <span id="vin_work"></span>
+              <strong>|</strong> <span id="carModel_work"></span>
+              <strong>|</strong> <span id="year_work"></span>
+              <strong>|</strong> <span id="plate_work"></span>
+            </div>
           </div>
           <table class="work-table" style="margin-top: 0px">
-            <thead><tr><th style="width: 45%">Назва запчастини або вузла</th><th style="width: 20%">Ціна запчастини</th><th style="width: 20%">Ціна роботи</th></tr></thead>
-            <tbody><tr><td><textarea class="form-control" rows="1" oninput="autoGrow(this)" style="overflow:hidden; resize:none;"></textarea></td><td><input type="number" class="form-control part-price" step="0.01" min="0" /></td><td><input type="number" class="form-control work-price" step="0.01" min="0" /></td></tr></tbody>
+            <thead>
+              <tr>
+                <th style="width: 45%">Назва запчастини або вузла</th>
+                <th style="width: 20%">Ціна запчастини</th>
+                <th style="width: 20%">Ціна роботи</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>
+                  <textarea
+                    class="form-control"
+                    rows="1"
+                    oninput="autoGrow(this)"
+                    style="overflow:hidden; resize:none;"
+                  ></textarea>
+                </td>
+                <!-- step=0.01, чтобы можно было вводить копейки -->
+                <td><input type="number" class="form-control part-price" step="0.01" min="0" /></td>
+                <td><input type="number" class="form-control work-price" step="0.01" min="0" /></td>
+              </tr>
+            </tbody>
           </table>
-          <div class="work-total" style="margin-top: 10px; text-align: right">Загальна сума: 0 UAH</div>
+          <div class="work-total" style="margin-top: 10px; text-align: right">
+            Загальна сума: 0 UAH
+          </div>
           <div class="button-group">
             <button type="button" class="btn btn-primary btn-small add-work-row-btn">Додати рядок</button>
             <button type="button" class="btn btn-danger btn-small btn-neon remove-work-row-btn">Видалити рядок</button>
           </div>
         </div>
 
+        <!-- Контрольные подписи -->
         <div id="control-signatures-container" class="glass-card">
           <h4>Контрольні позначки та підписи</h4>
-          <div><input type="checkbox" class="square-checkbox" id="checkParts" /><label for="checkParts">Контрольна обтяжка встановлених запчастин</label></div>
-          <div style="margin-top: 5px"><input type="checkbox" class="square-checkbox" id="tightenWheels" /><label for="tightenWheels">Затягування колісних болтів</label><input type="text" class="form-control" style="width: 80px; display: inline-block; vertical-align: middle" id="nmValue" /><span style="margin-left: 5px">Нм</span></div>
-          <div style="margin-top: 10px"><input type="checkbox" class="square-checkbox" id="managerSignature" /><label for="managerSignature">Підпис менеджера</label></div>
-          <div style="margin-top: 10px"><input type="checkbox" class="square-checkbox" id="clientSignature" /><label for="clientSignature">Підпис клієнта: Я прочитав і приймаю</label></div>
+          <div>
+            <input type="checkbox" class="square-checkbox" id="checkParts" />
+            <label for="checkParts">Контрольна обтяжка встановлених запчастин</label>
+          </div>
+          <div style="margin-top: 5px">
+            <input type="checkbox" class="square-checkbox" id="tightenWheels" />
+            <label for="tightenWheels">Затягування колісних болтів</label>
+            <input
+              type="text"
+              class="form-control"
+              style="width: 80px; display: inline-block; vertical-align: middle"
+              id="nmValue"
+            />
+            <span style="margin-left: 5px">Нм</span>
+          </div>
+          <div style="margin-top: 10px">
+            <input type="checkbox" class="square-checkbox" id="managerSignature" />
+            <label for="managerSignature">Підпис менеджера</label>
+          </div>
+          <div style="margin-top: 10px">
+            <input type="checkbox" class="square-checkbox" id="clientSignature" />
+            <label for="clientSignature">Підпис клієнта: Я прочитав і приймаю</label>
+          </div>
         </div>
 
+        <!-- Кнопки: Сохранить / Добавить Наряд / Создать ссылку / Скриншот -->
         <div class="button-group-row">
-          <button id="sendAdminBtn" type="button" class="btn btn-primary btn-neon">Зберегти</button>
-          <button type="button" class="btn btn-primary btn-small" id="addOrderBtn">Додати НАРЯД-ЗАМОВЛЕННЯ</button>
+          <button id="sendAdminBtn" type="button" class="btn btn-primary btn-neon">
+            Зберегти
+          </button>
+          <button type="button" class="btn btn-primary btn-small" id="addOrderBtn">
+            Додати НАРЯД-ЗАМОВЛЕННЯ
+          </button>
         </div>
         <div class="button-group-row">
-          <button type="button" class="btn btn-primary btn-small" id="createLinkBtn">Створити посилання</button>
-          <button type="button" class="btn btn-primary btn-small" id="screenshotBtn">Скріншот</button>
+          <button type="button" class="btn btn-primary btn-small" id="createLinkBtn">
+            Створити посилання
+          </button>
+          <button type="button" class="btn btn-primary btn-small" id="screenshotBtn">
+            Скріншот
+          </button>
         </div>
 
+        <!-- Здесь появится сгенерированная ссылка -->
         <div class="generated-link-container">
           <label for="generatedLink">Згенероване посилання:</label>
-          <input type="text" id="generatedLink" class="form-control" readonly style="margin-top: 5px;" />
-          <button type="button" class="btn btn-primary btn-small" id="copyLinkBtn" style="margin-top: 5px;">Копіювати посилання</button>
+          <input
+            type="text"
+            id="generatedLink"
+            class="form-control"
+            readonly
+            style="margin-top: 5px;"
+          />
+          <button
+            type="button"
+            class="btn btn-primary btn-small"
+            id="copyLinkBtn"
+            style="margin-top: 5px;"
+          >
+            Копіювати посилання
+          </button>
         </div>
       </div>
     </form>
   </div>
 
   <script>
-    const BOT_TOKEN = '8099553216:AAEE3Ctou3yY4ddwVbXiUfHgfT7PeZyUyhA';
-    const ADMIN_CHAT_ID = '-1002239976197';
-    const ADMIN_PARTS_CHAT_ID = '-1002393963726';
-    const DISCUSSION_GROUP_CHAT_ID = '-1002239976197';
-    const REPLY_TO_MESSAGE_ID = 'https://t.me/+VHtWYaAVbTg3ODUy';
+    /* === Константы бота и чатов === */
+    const BOT_TOKEN              = 'ВАШ_BOT_TOKEN';
+    const ADMIN_CHAT_ID          = '-1002239976197'; /* куда отправлять при «Зберегти» */
+    const ADMIN_PARTS_CHAT_ID    = '-1002393963726'; /* куда отправлять запчасти */
+    const DISCUSSION_GROUP_CHAT_ID = '-1002239976197'; /* куда идет скриншот (кнопка «Скріншот») */
+    const REPLY_TO_MESSAGE_ID    = 'https://t.me/+VHtWYaAVbTg3ODUy';
 
+    /* Храним файл (техпаспорт) */
     let selectedTechPassportFile = null;
-
     function handleTechPassportFileSelected(input) {
       const infoBlock = document.getElementById("selectedTechFileName");
       if (!input.files || !input.files.length) {
@@ -625,32 +928,36 @@
       if (infoBlock) infoBlock.textContent = "Обрано: " + selectedTechPassportFile.name;
     }
 
+    /* Автоувеличение textarea */
     function autoGrow(element) {
       element.style.height = "auto";
       element.style.height = element.scrollHeight + "px";
     }
 
+    /* При скролле меняем меню / лого */
     window.addEventListener('scroll', () => {
-      const menuToggle = document.querySelector('.menu-toggle');
-      const menuText = menuToggle.querySelector('.vinh-menu-text');
-      const logo = menuToggle.querySelector('img');
+      const menuToggle    = document.querySelector('.menu-toggle');
+      const menuText      = menuToggle.querySelector('.vinh-menu-text');
+      const logo          = menuToggle.querySelector('img');
       const logoContainer = document.querySelector('.logo-container');
       if (window.scrollY > 300) {
-        menuText.innerHTML = 'E<br><div class="address"></div>';
+        menuText.innerHTML      = 'E<br><div class="address"></div>';
         menuText.style.fontSize = '35px';
-        logo.style.opacity = '0';
+        logo.style.opacity      = '0';
         logoContainer.classList.add('scrolled');
       } else {
-        menuText.innerHTML = 'AVALON SERVICE<br><div class="address">Дальницька 45</div>';
+        menuText.innerHTML      = 'AVALON SERVICE<br><div class="address">Дальницька 45</div>';
         menuText.style.fontSize = '24px';
-        logo.style.opacity = '1';
+        logo.style.opacity      = '1';
         logoContainer.classList.remove('scrolled');
       }
     });
 
+    /* Основная логика */
     document.addEventListener("DOMContentLoaded", function() {
-      const menuButton = document.getElementById("menuButton");
-      const sidebar = document.getElementById("sidebar");
+      /* Открытие/закрытие бокового меню через Hammer.js */
+      const menuButton   = document.getElementById("menuButton");
+      const sidebar      = document.getElementById("sidebar");
       const closeSidebar = document.getElementById("closeSidebar");
 
       if (menuButton && sidebar) {
@@ -667,11 +974,12 @@
         }
       }
 
+      /* Дублирование VIN/модель/год/номер */
       function updateDuplicates() {
-        const vinValue = document.getElementById("vin")?.value || "";
-        const carModelValue = document.getElementById("carModel")?.value || "";
-        const yearValue = document.getElementById("year")?.value || "";
-        const plateValue = document.getElementById("plate")?.value || "";
+        const vinValue       = document.getElementById("vin")?.value || "";
+        const carModelValue  = document.getElementById("carModel")?.value || "";
+        const yearValue      = document.getElementById("year")?.value || "";
+        const plateValue     = document.getElementById("plate")?.value || "";
 
         ["vin_defects", "vin_work"].forEach(id => {
           document.getElementById(id).textContent = vinValue;
@@ -686,27 +994,39 @@
           document.getElementById(id).textContent = plateValue;
         });
       }
-
       ["vin", "carModel", "year", "plate"].forEach((id) => {
         const el = document.getElementById(id);
         if (el) el.addEventListener("input", updateDuplicates);
       });
       updateDuplicates();
 
+      /* Функция пересчёта калькулятора в work-table */
       function recalcWorkTableForContainer(container) {
         const rows = container.querySelectorAll(".work-table tbody tr");
         let total = 0;
         rows.forEach((row) => {
+          // parseFloat
+          // Если хотите поддерживать запятую как разделитель: 
+          // let p = (row.querySelector(".part-price")?.value || "0").replace(",", ".");
+          // let w = (row.querySelector(".work-price")?.value || "0").replace(",", ".");
+          // const partPrice = parseFloat(p) || 0;
+          // const workPrice = parseFloat(w) || 0;
+
           const partPrice = parseFloat(row.querySelector(".part-price")?.value || "0") || 0;
           const workPrice = parseFloat(row.querySelector(".work-price")?.value || "0") || 0;
           total += partPrice + workPrice;
         });
         const workTotal = container.querySelector(".work-total");
         if (workTotal) {
-          workTotal.textContent = `Загальна сума: ${total.toLocaleString('uk-UA', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} UAH`;
+          /* Форматируем как 0.00 */
+          workTotal.textContent = `Загальна сума: ${total.toLocaleString('uk-UA', {
+            minimumFractionDigits: 2,
+            maximumFractionDigits: 2
+          })} UAH`;
         }
       }
 
+      /* Ставим клики по легендам (галочки) */
       function attachLegendListeners(container) {
         const legendsInThead = container.querySelectorAll('.details-table thead .legend-square');
         legendsInThead.forEach(legend => {
@@ -719,7 +1039,6 @@
             });
           });
         });
-
         const legendsBottom = container.querySelectorAll('.table-legend .legend-square');
         legendsBottom.forEach(legend => {
           legend.addEventListener('click', () => {
@@ -733,22 +1052,25 @@
         });
       }
 
+      /* Подключаем чекбоксы (дефекты) */
       function attachCheckboxListeners(container) {
         const rows = container.querySelectorAll('.details-table tbody tr');
         rows.forEach(row => {
           const checkboxes = row.querySelectorAll('input[type="checkbox"]');
           checkboxes.forEach(chk => {
             chk.addEventListener('change', () => {
-              // Залишаємо чекбокс у поточному стані
+              // нет доп. логики, оставим как есть
             });
           });
         });
       }
 
+      /* (Re)инициализация событий для блока .order */
       function reinitializeOrderEventsForContainer(container) {
+        /* Ловим поля в work-table */
         container.querySelectorAll(".part-price, .work-price").forEach((input) => {
           if (!input.dataset.eventInitialized) {
-            input.addEventListener("input", () => recalcWorkTableForContainer(container));
+            input.addEventListener("input",  () => recalcWorkTableForContainer(container));
             input.addEventListener("change", () => recalcWorkTableForContainer(container));
             const hammerInput = new Hammer(input);
             hammerInput.on("tap", () => recalcWorkTableForContainer(container));
@@ -756,6 +1078,7 @@
           }
         });
 
+        /* "Додати рядок" в таблице дефектов */
         container.querySelectorAll(".add-row-btn").forEach((btn) => {
           if (!btn.dataset.hammerInitialized) {
             const addRow = () => {
@@ -765,7 +1088,15 @@
                 const newRow = document.createElement("tr");
                 newRow.innerHTML = `
                   <td>${rowCount + 1}</td>
-                  <td><textarea class="form-control" name="part${rowCount + 1}" oninput="autoGrow(this)" style="overflow:hidden; resize:none;" rows="1"></textarea></td>
+                  <td>
+                    <textarea
+                      class="form-control"
+                      name="part${rowCount + 1}"
+                      oninput="autoGrow(this)"
+                      style="overflow:hidden; resize:none;"
+                      rows="1"
+                    ></textarea>
+                  </td>
                   <td><input type="checkbox" class="checkbox-green square-checkbox" /></td>
                   <td><input type="checkbox" class="checkbox-black square-checkbox" /></td>
                   <td><input type="checkbox" class="checkbox-yellow square-checkbox" /></td>
@@ -783,12 +1114,14 @@
           }
         });
 
+        /* "Видалити рядок" в таблице дефектов */
         container.querySelectorAll(".remove-row-btn").forEach((btn) => {
           if (!btn.dataset.hammerInitialized) {
             const removeRow = () => {
               const tableBody = container.querySelector(".details-table tbody");
               if (tableBody && tableBody.rows.length > 1) {
                 tableBody.removeChild(tableBody.lastElementChild);
+                /* Перенумеруем */
                 Array.from(tableBody.rows).forEach((row, index) => {
                   row.cells[0].textContent = index + 1;
                 });
@@ -800,6 +1133,7 @@
           }
         });
 
+        /* "Додати рядок" в work-table */
         container.querySelectorAll(".add-work-row-btn").forEach((btn) => {
           if (!btn.dataset.hammerInitialized) {
             const addWorkRow = () => {
@@ -816,7 +1150,7 @@
                 tbody.appendChild(newRow);
                 newRow.querySelectorAll(".part-price, .work-price").forEach((input) => {
                   if (!input.dataset.eventInitialized) {
-                    input.addEventListener("input", () => recalcWorkTableForContainer(container));
+                    input.addEventListener("input",  () => recalcWorkTableForContainer(container));
                     input.addEventListener("change", () => recalcWorkTableForContainer(container));
                     const hammerInput = new Hammer(input);
                     hammerInput.on("tap", () => recalcWorkTableForContainer(container));
@@ -832,6 +1166,7 @@
           }
         });
 
+        /* "Видалити рядок" в work-table */
         container.querySelectorAll(".remove-work-row-btn").forEach((btn) => {
           if (!btn.dataset.hammerInitialized) {
             const removeWorkRow = () => {
@@ -847,6 +1182,7 @@
           }
         });
 
+        /* Кнопка "Зберегти" -> отправка в TG + скриншот */
         const sendAdminBtn = container.querySelector("#sendAdminBtn");
         if (sendAdminBtn && !sendAdminBtn.dataset.hammerInitialized) {
           const hammerBtn = new Hammer(sendAdminBtn);
@@ -854,6 +1190,7 @@
           sendAdminBtn.dataset.hammerInitialized = "true";
         }
 
+        /* Кнопка "Надіслати запчастини" -> отправка в TG (parts) */
         const sendPartsBtn = container.querySelector("#sendPartsBtn");
         if (sendPartsBtn && !sendPartsBtn.dataset.hammerInitialized) {
           const hammerBtn = new Hammer(sendPartsBtn);
@@ -861,10 +1198,17 @@
           sendPartsBtn.dataset.hammerInitialized = "true";
         }
 
+        /* "Добавить заказ" -> клон контейнера .order */
         const addOrderBtn = container.querySelector("#addOrderBtn");
         if (addOrderBtn && !addOrderBtn.dataset.hammerInitialized) {
           const addOrder = () => {
-            const sectionIds = ["vinh-container", "indicators-container", "defects-container", "work-container", "control-signatures-container"];
+            const sectionIds = [
+              "vinh-container",
+              "indicators-container",
+              "defects-container",
+              "work-container",
+              "control-signatures-container"
+            ];
             const newOrder = document.createElement("div");
             newOrder.classList.add("order");
             sectionIds.forEach((id) => {
@@ -883,6 +1227,7 @@
                 newOrder.appendChild(clone);
               }
             });
+            /* Кнопки под клоном */
             const orderButtons1 = document.createElement("div");
             orderButtons1.className = "button-group-row";
             orderButtons1.innerHTML = `
@@ -898,13 +1243,14 @@
             const linkContainer = document.createElement("div");
             linkContainer.className = "generated-link-container";
             linkContainer.innerHTML = `
-              <label for="generatedLink-${Date.now()}">Згенероване посилання:</label>
-              <input type="text" id="generatedLink-${Date.now()}" class="form-control" readonly style="margin-top: 5px;" />
+              <label>Згенероване посилання:</label>
+              <input type="text" class="form-control" readonly style="margin-top: 5px;" />
               <button type="button" class="btn btn-primary btn-small" style="margin-top: 5px;">Копіювати посилання</button>
             `;
             newOrder.appendChild(orderButtons1);
             newOrder.appendChild(orderButtons2);
             newOrder.appendChild(linkContainer);
+
             document.querySelector("form").appendChild(newOrder);
             reinitializeOrderEventsForContainer(newOrder);
             attachCheckboxListeners(newOrder);
@@ -915,6 +1261,7 @@
           addOrderBtn.dataset.hammerInitialized = "true";
         }
 
+        /* "Створити посилання" -> кодируем JSON в URL */
         const createLinkBtn = container.querySelector("#createLinkBtn");
         if (createLinkBtn && !createLinkBtn.dataset.hammerInitialized) {
           const hammerBtn = new Hammer(createLinkBtn);
@@ -922,6 +1269,7 @@
           createLinkBtn.dataset.hammerInitialized = "true";
         }
 
+        /* "Копировать ссылку" в блоке .generated-link-container */
         const copyLinkBtn = container.querySelector(".generated-link-container button");
         if (copyLinkBtn && !copyLinkBtn.dataset.hammerInitialized) {
           const copyLink = () => {
@@ -937,22 +1285,23 @@
           copyLinkBtn.dataset.hammerInitialized = "true";
         }
 
+        /* "Скріншот" -> отправить в DISCUSSION_GROUP_CHAT_ID */
         const screenshotBtn = container.querySelector("#screenshotBtn");
         if (screenshotBtn && !screenshotBtn.dataset.hammerInitialized) {
           const takeScreenshot = async () => {
             try {
               const canvas = await html2canvas(document.body, {
                 scale: window.devicePixelRatio,
-                width: document.documentElement.scrollWidth,
+                width:  document.documentElement.scrollWidth,
                 height: document.documentElement.scrollHeight,
                 useCORS: true,
                 scrollX: 0,
                 scrollY: 0
               });
               const imageData = canvas.toDataURL("image/png");
-              const response = await fetch(imageData);
-              const blob = await response.blob();
-              const formData = new FormData();
+              const response  = await fetch(imageData);
+              const blob      = await response.blob();
+              const formData  = new FormData();
               formData.append("chat_id", DISCUSSION_GROUP_CHAT_ID);
               formData.append("document", blob, "screenshot.png");
               formData.append("reply_to_message_id", REPLY_TO_MESSAGE_ID);
@@ -966,7 +1315,7 @@ VIN номер: ${data.vin || ""}
 Рік випуску: ${data.year || ""}
 Номерний знак: ${data.plate || ""}
 Пробіг (км): ${data.mileage || ""}
-              `.trim();
+`.trim();
               formData.append("caption", caption);
 
               const telegramResponse = await fetch(
@@ -990,6 +1339,7 @@ VIN номер: ${data.vin || ""}
         }
       }
 
+      /* Инициализируем .order */
       const originalOrder = document.querySelector(".order");
       if (originalOrder) {
         reinitializeOrderEventsForContainer(originalOrder);
@@ -998,6 +1348,7 @@ VIN номер: ${data.vin || ""}
         restoreFormData(originalOrder);
       }
 
+      /* Сбор формы в объект */
       function collectFormData(container) {
         const data = {};
         container.querySelectorAll("input, textarea").forEach((el) => {
@@ -1007,10 +1358,10 @@ VIN номер: ${data.vin || ""}
         });
         const details = [];
         container.querySelectorAll(".details-table tbody tr").forEach((row, idx) => {
-          const partName = row.cells[1]?.querySelector("textarea")?.value || "";
-          const wear = row.cells[2]?.querySelector("input")?.checked || false;
-          const looseness = row.cells[3]?.querySelector("input")?.checked || false;
-          const recReplace = row.cells[4]?.querySelector("input")?.checked || false;
+          const partName    = row.cells[1]?.querySelector("textarea")?.value || "";
+          const wear        = row.cells[2]?.querySelector("input")?.checked || false;
+          const looseness   = row.cells[3]?.querySelector("input")?.checked || false;
+          const recReplace  = row.cells[4]?.querySelector("input")?.checked || false;
           const critReplace = row.cells[5]?.querySelector("input")?.checked || false;
           details.push({ idx, partName, wear, looseness, recReplace, critReplace });
         });
@@ -1018,44 +1369,45 @@ VIN номер: ${data.vin || ""}
 
         const works = [];
         container.querySelectorAll(".work-table tbody tr").forEach((row) => {
-          const partName = row.cells[0]?.querySelector("textarea")?.value || "";
+          const partName  = row.cells[0]?.querySelector("textarea")?.value || "";
           const partPrice = row.cells[1]?.querySelector("input")?.value || "";
           const workPrice = row.cells[2]?.querySelector("input")?.value || "";
           works.push({ partName, partPrice, workPrice });
         });
         data.works = works;
-
         return data;
       }
 
+      /* Отправка данных в TG */
       async function collectAllDataAndSendToTelegram(mode, container) {
-        const data = collectFormData(container);
+        const data      = collectFormData(container);
         const totalText = container.querySelector(".work-total")?.textContent || "Загальна сума: 0 UAH";
 
         const indicators = [];
         const mapInd = {
           checkEngine: "Check Engine",
-          battery: "Battery",
-          oil: "Oil",
-          coolant: "Coolant",
-          tpms: "TPMS",
-          airbag: "Airbag",
-          abs: "ABS",
-          esp: "ESP",
-          brakeWear: "Brake Wear"
+          battery:     "Battery",
+          oil:         "Oil",
+          coolant:     "Coolant",
+          tpms:        "TPMS",
+          airbag:      "Airbag",
+          abs:         "ABS",
+          esp:         "ESP",
+          brakeWear:   "Brake Wear"
         };
         for (const key in mapInd) {
           if (data[key]) indicators.push(mapInd[key]);
         }
 
         const checks = [];
-        if (data.checkParts) checks.push("Контрольна обтяжка встановлених запчастин");
-        if (data.tightenWheels) checks.push(`Затягування колісних болтів ${data.nmValue || ""} Nm`);
+        if (data.checkParts)     checks.push("Контрольна обтяжка встановлених запчастин");
+        if (data.tightenWheels)  checks.push(`Затягування колісних болтів ${data.nmValue || ""} Nm`);
         if (data.managerSignature) checks.push("Підпис менеджера");
-        if (data.clientSignature) checks.push("Підпис клієнта: Я прочитав і приймаю");
+        if (data.clientSignature)  checks.push("Підпис клієнта: Я прочитав і приймаю");
 
         let message;
         if (mode === "save") {
+          // "Сохранить" -> отправляем текст + сразу делаем скриншот
           message = `
 Збережено:
 Ім'я клієнта: ${data.clientName || ""}
@@ -1067,6 +1419,7 @@ VIN: ${data.vin || ""}
 Пробіг: ${data.mileage || ""}
 Бажані роботи: ${data.workList || ""}
 Індикатори: ${indicators.join(", ") || "(немає)"}
+
 Акт дефектів:
 - передні колодки(%): ${data.ptk_percent || ""}
 - задні колодки(%): ${data.ztk_percent || ""}
@@ -1076,21 +1429,39 @@ VIN: ${data.vin || ""}
 - охолоджуюча рідина: ${data.antifreeze || ""}
 - моторна олива: ${data.engineOil || ""}
 - олива в трансмісії: ${data.transmissionOil || ""}
+
 Деталі:
-${data.details.map((d) => `#${d.idx + 1} ${d.partName} [${[
-  d.wear ? "Знос" : "",
-  d.looseness ? "Люфт" : "",
-  d.recReplace ? "Рек. заміна" : "",
-  d.critReplace ? "Критична заміна" : ""
-].filter(Boolean).join(", ")}]`).join("\n") || "(немає)"}
+${
+  data.details
+    .map((d) => {
+      const flags = [
+        d.wear        ? "Знос" : "",
+        d.looseness   ? "Люфт" : "",
+        d.recReplace  ? "Рек. заміна" : "",
+        d.critReplace ? "Критична заміна" : ""
+      ].filter(Boolean).join(", ");
+      return `#${d.idx + 1} ${d.partName} [${flags}]`;
+    })
+    .join("\n") || "(немає)"
+}
+
 Дод. примітки: ${data.notes || ""}
+
 ЗАЯВКА НА РОБОТИ:
-${data.works.map((w) => `- ${w.partName} | запчастина: ${w.partPrice} | робота: ${w.workPrice}`).join("\n") || "(немає)"}
+${
+  data.works
+    .map((w) => `- ${w.partName} | запчастина: ${w.partPrice} | робота: ${w.workPrice}`)
+    .join("\n") || "(немає)"
+}
 ${totalText}
+
 Контрольні позначки: ${checks.join(", ") || "(немає)"}
-          `.trim();
+`.trim();
         } else if (mode === "parts") {
-          const partNames = data.details.map(d => d.partName).filter(name => name.trim() !== "");
+          // "Надіслати запчастини"
+          const partNames = data.details
+            .map(d => d.partName)
+            .filter(name => name.trim() !== "");
           message = `
 Модель авто: ${data.carModel || "(не вказано)"}
 Рік: ${data.year || "(не вказано)"}
@@ -1100,59 +1471,72 @@ VIN: ${data.vin || "(не вказано)"}
 - передні диски(мм): ${data.ptd_mm || "(не вказано)"}
 - задні диски(мм): ${data.ztd_mm || "(не вказано)"}
 - олива в трансмісії: ${data.transmissionOil || "(не вказано)"}
+
 Назва запчастини або вузла:
-${partNames.length > 0 ? partNames.map((name, index) => `${index + 1}: ${name}`).join("\n") : "Немає запчастин"}
-          `.trim();
+${
+  partNames.length > 0
+    ? partNames.map((name, index) => `${index + 1}: ${name}`).join("\n")
+    : "Немає запчастин"
+}
+`.trim();
         }
 
         try {
           const chatId = (mode === "parts") ? ADMIN_PARTS_CHAT_ID : ADMIN_CHAT_ID;
-
+          // 1) Отправляем текст
           const textResponse = await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ chat_id: chatId, text: message })
           });
           const textResult = await textResponse.json();
-          if (!textResult.ok) throw new Error("Помилка надсилання тексту: " + textResult.description);
+          if (!textResult.ok) {
+            throw new Error("Помилка надсилання тексту: " + textResult.description);
+          }
 
+          // 2) Если есть файл техпаспорта, отправляем фото
           if (selectedTechPassportFile) {
             const formData = new FormData();
             formData.append("chat_id", chatId);
             formData.append("photo", selectedTechPassportFile);
             formData.append("caption", "Фото техпаспорта для: " + (data.clientName || "Невідомий клієнт"));
-
             const photoResponse = await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendPhoto`, {
               method: "POST",
               body: formData
             });
             const photoResult = await photoResponse.json();
-            if (!photoResult.ok) throw new Error("Помилка надсилання фото: " + photoResult.description);
+            if (!photoResult.ok) {
+              throw new Error("Помилка надсилання фото: " + photoResult.description);
+            }
           }
 
+          // 3) Если это режим "save", делаем еще скриншот и отправляем
           if (mode === "save") {
             const canvas = await html2canvas(document.body, {
               scale: window.devicePixelRatio,
-              width: document.documentElement.scrollWidth,
+              width:  document.documentElement.scrollWidth,
               height: document.documentElement.scrollHeight,
               useCORS: true,
               scrollX: 0,
               scrollY: 0
             });
             const imageData = canvas.toDataURL("image/png");
-            const response = await fetch(imageData);
-            const blob = await response.blob();
+            const response  = await fetch(imageData);
+            const blob      = await response.blob();
+
             const formData = new FormData();
             formData.append("chat_id", ADMIN_CHAT_ID);
             formData.append("document", blob, "screenshot.png");
             formData.append("caption", `Збережено для ${data.clientName || "Невідомий клієнт"}`);
 
-            const telegramResponse = await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendDocument`, {
-              method: "POST",
-              body: formData
-            });
+            const telegramResponse = await fetch(
+              `https://api.telegram.org/bot${BOT_TOKEN}/sendDocument`,
+              { method: "POST", body: formData }
+            );
             const result = await telegramResponse.json();
-            if (!result.ok) throw new Error("Помилка надсилання скріншота: " + result.description);
+            if (!result.ok) {
+              throw new Error("Помилка надсилання скріншота: " + result.description);
+            }
           }
 
           alert("Дані успішно надіслано в Telegram!");
@@ -1162,23 +1546,26 @@ ${partNames.length > 0 ? partNames.map((name, index) => `${index + 1}: ${name}`)
         }
       }
 
+      /* "Створити посилання" -> JSON => ?formData=... */
       function createShareableLink(container) {
-        const data = collectFormData(container);
-        const jsonData = JSON.stringify(data);
-        const encodedData = encodeURIComponent(jsonData);
+        const data       = collectFormData(container);
+        const jsonData   = JSON.stringify(data);
+        const encodedData= encodeURIComponent(jsonData);
         const currentUrl = window.location.href.split('?')[0];
         const shareableLink = `${currentUrl}?formData=${encodedData}`;
         const linkContainer = container.querySelector(".generated-link-container");
-        const linkInput = linkContainer.querySelector("input");
+        const linkInput     = linkContainer.querySelector("input");
         linkContainer.style.display = "block";
         linkInput.value = shareableLink;
       }
 
+      /* Восстановление данных из ?formData=... */
       function restoreFormData(container) {
         const urlParams = new URLSearchParams(window.location.search);
-        const formData = urlParams.get("formData");
+        const formData  = urlParams.get("formData");
         if (formData) {
           const decodedData = JSON.parse(decodeURIComponent(formData));
+          // восстанавливаем input/textarea
           container.querySelectorAll("input, textarea").forEach((el) => {
             if (el.id && decodedData[el.id] !== undefined) {
               if (el.type === "checkbox") el.checked = decodedData[el.id];
@@ -1186,6 +1573,7 @@ ${partNames.length > 0 ? partNames.map((name, index) => `${index + 1}: ${name}`)
               if (el.tagName === "TEXTAREA") autoGrow(el);
             }
           });
+          // детали
           const detailsTable = container.querySelector(".details-table tbody");
           if (detailsTable && decodedData.details) {
             detailsTable.innerHTML = "";
@@ -1193,22 +1581,37 @@ ${partNames.length > 0 ? partNames.map((name, index) => `${index + 1}: ${name}`)
               const newRow = detailsTable.insertRow();
               newRow.innerHTML = `
                 <td>${idx + 1}</td>
-                <td><textarea class="form-control" oninput="autoGrow(this)" style="overflow:hidden; resize:none;" rows="1">${item.partName}</textarea></td>
-                <td><input type="checkbox" class="checkbox-green square-checkbox" ${item.wear ? "checked" : ""} /></td>
-                <td><input type="checkbox" class="checkbox-black square-checkbox" ${item.looseness ? "checked" : ""} /></td>
+                <td>
+                  <textarea
+                    class="form-control"
+                    oninput="autoGrow(this)"
+                    style="overflow:hidden; resize:none;"
+                    rows="1"
+                  >${item.partName}</textarea>
+                </td>
+                <td><input type="checkbox" class="checkbox-green square-checkbox" ${item.wear        ? "checked" : ""} /></td>
+                <td><input type="checkbox" class="checkbox-black square-checkbox" ${item.looseness   ? "checked" : ""} /></td>
                 <td><input type="checkbox" class="checkbox-yellow square-checkbox" ${item.recReplace ? "checked" : ""} /></td>
-                <td><input type="checkbox" class="checkbox-red square-checkbox" ${item.critReplace ? "checked" : ""} /></td>
+                <td><input type="checkbox" class="checkbox-red square-checkbox" ${item.critReplace  ? "checked" : ""} /></td>
               `;
             });
             attachCheckboxListeners(container);
           }
+          // работы
           const worksTable = container.querySelector(".work-table tbody");
           if (worksTable && decodedData.works) {
             worksTable.innerHTML = "";
             decodedData.works.forEach((item) => {
               const newRow = worksTable.insertRow();
               newRow.innerHTML = `
-                <td><textarea class="form-control" rows="1" oninput="autoGrow(this)" style="overflow:hidden; resize:none;">${item.partName}</textarea></td>
+                <td>
+                  <textarea
+                    class="form-control"
+                    rows="1"
+                    oninput="autoGrow(this)"
+                    style="overflow:hidden; resize:none;"
+                  >${item.partName}</textarea>
+                </td>
                 <td><input type="number" class="form-control part-price" value="${item.partPrice}" step="0.01" min="0" /></td>
                 <td><input type="number" class="form-control work-price" value="${item.workPrice}" step="0.01" min="0" /></td>
               `;
@@ -1219,15 +1622,16 @@ ${partNames.length > 0 ? partNames.map((name, index) => `${index + 1}: ${name}`)
         }
       }
 
+      /* Cохранение в localStorage (при вводе) */
       function saveToLocalStorage() {
         const data = collectFormData(document.querySelector(".order"));
         localStorage.setItem('formData', JSON.stringify(data));
       }
-
+      /* Восстановление из localStorage */
       function restoreFromLocalStorage() {
         const savedData = localStorage.getItem('formData');
         if (savedData) {
-          const data = JSON.parse(savedData);
+          const data      = JSON.parse(savedData);
           const container = document.querySelector(".order");
           container.querySelectorAll("input, textarea").forEach((el) => {
             if (el.id && data[el.id] !== undefined) {
@@ -1269,10 +1673,13 @@ ${partNames.length > 0 ? partNames.map((name, index) => `${index + 1}: ${name}`)
         }
       }
 
+      /* Навешиваем автосохранение при вводе */
       document.querySelectorAll("input, textarea").forEach((el) => {
         el.addEventListener("input", saveToLocalStorage);
       });
+      // restoreFromLocalStorage(); // Если хотите восстанавливать при загрузке
     });
   </script>
 </body>
 </html>
+
