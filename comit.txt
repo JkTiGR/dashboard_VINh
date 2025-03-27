@@ -1,0 +1,4 @@
+git remote set-url origin https://github.com/JkTiGR/VINh_service_Tab.git
+git add .
+git commit -m "Твой комментарий к изменениям"
+git push -u origin main
