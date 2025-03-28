@@ -6,7 +6,7 @@
   <title>Панель керування VINh AUTOSERVICE</title>
   <link rel="icon" type="image/x-icon" href="favicon.ico" />
   <link rel="manifest" href="manifest.json" />
-  <meta name="theme-color" content="#ffffff" />
+  <meta name="theme-color" content="#000000" /> <!-- Черный цвет для верхней панели в темном режиме -->
   <link rel="apple-touch-icon" href="img/icons/apple-touch-icon-180.png" />
   <link href="https://fonts.googleapis.com/css2?family=Share+Tech_Mono&subset=cyrillic&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" />
@@ -38,23 +38,34 @@
       --animation-duration: 10s;
       --bs-body-color: #ffffff;
     }
+    /* Переменные для светлого режима */
+    :root.light-mode {
+      --bg-dark: #FFFFFF; /* Белый фон */
+      --neon-cyan: #00B7EB;
+      --neon-turquoise: #00D4B8;
+      --neon-blue: #1E90FF;
+      --neon-pink: #FF69B4;
+      --white: #000000; /* Черный текст */
+      --glass-bg: rgba(255, 255, 255, 0.3);
+      --glass-border: rgba(0, 0, 0, 0.1);
+      --btn-gradient: linear-gradient(45deg, #00B7EB, #FF69B4);
+      --bs-body-color: #000000; /* Черный цвет текста */
+    }
     html, body {
       margin: 0;
       padding: 0;
       min-height: 100vh;
-      background: linear-gradient(102deg, #1e28a4, #2a004c, #000b24, #4a0546);
-      background-size: 200% 200%;
-      animation: gradientAnimation 15s ease infinite;
+      background: #000000; /* Черный фон в темном режиме */
       font-family: 'Share Tech Mono', monospace;
       color: var(--bs-body-color);
       overflow-x: hidden;
       -webkit-user-select: none;
       user-select: none;
     }
-    @keyframes gradientAnimation {
-      0%   { background-position: 0% 50%; }
-      50%  { background-position: 100% 50%; }
-      100% { background-position: 0% 50%; }
+    /* Светлый режим */
+    .light-mode body {
+      background: #FFFFFF; /* Чисто белый фон */
+      color: var(--bs-body-color);
     }
     h1, h2, h3, h4 {
       text-shadow: 0 0 5px var(--neon-cyan),
@@ -62,6 +73,10 @@
                    0 0 20px var(--neon-cyan);
       letter-spacing: 1px;
       margin: 0;
+    }
+    .light-mode h1, .light-mode h2, .light-mode h3, .light-mode h4 {
+      text-shadow: none; /* Убираем тень в светлом режиме */
+      color: #000000; /* Черный цвет текста */
     }
     .sidebar {
       position: fixed; top: 0; right: -300px;
@@ -74,6 +89,12 @@
       padding: 20px;
       transition: right 0.3s ease, opacity 0.3s ease;
       z-index: 1100;
+      perspective: 1000px; /* Для 3D-эффекта логотипа */
+    }
+    .light-mode .sidebar {
+      background: var(--glass-bg);
+      border: 1px solid var(--glass-border);
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
     }
     .sidebar.active {
       right: 0; animation: fadeIn 0.3s;
@@ -92,6 +113,9 @@
       font-size: 18px;
       transition: color 0.3s;
     }
+    .light-mode .sidebar ul li a {
+      color: var(--white); /* Черный текст в светлом режиме */
+    }
     .sidebar ul li a:hover {
       color: var(--neon-turquoise);
     }
@@ -101,37 +125,69 @@
       font-size: 24px; color: var(--white);
       cursor: pointer;
     }
+    .light-mode .close-sidebar {
+      color: var(--white); /* Черный цвет в светлом режиме */
+    }
     .sidebar-logo {
       display: block;
       margin: 20px auto 0;
       width: 50px;
       height: 50px;
+      animation: spin 24s linear infinite, glow 6s ease-in-out infinite;
       transition: opacity 0.3s ease;
     }
     .sidebar.active .sidebar-logo {
       opacity: 1;
-      animation: spin 4s linear infinite;
     }
     .sidebar:not(.active) .sidebar-logo {
       opacity: 0;
     }
+    /* Анимация вращения с наклоном оси */
     @keyframes spin {
-      0% { transform: rotate(0deg); }
-      100% { transform: rotate(360deg); }
+      0% {
+        transform: rotateY(0deg) rotateX(23.5deg);
+      }
+      100% {
+        transform: rotateY(360deg) rotateX(23.5deg);
+      }
+    }
+    /* Эффект освещения */
+    @keyframes glow {
+      0% {
+        box-shadow: 10px 0 20px rgba(0, 247, 255, 0.5),
+                    -10px 0 10px rgba(0, 0, 0, 0.3);
+      }
+      25% {
+        box-shadow: 0 10px 20px rgba(0, 247, 255, 0.5),
+                    0 -10px 10px rgba(0, 0, 0, 0.3);
+      }
+      50% {
+        box-shadow: -10px 0 20px rgba(0, 247, 255, 0.5),
+                    10px 0 10px rgba(0, 0, 0, 0.3);
+      }
+      75% {
+        box-shadow: 0 -10px 20px rgba(0, 247, 255, 0.5),
+                    0 10px 10px rgba(0, 0, 0, 0.3);
+      }
+      100% {
+        box-shadow: 10px 0 20px rgba(0, 247, 255, 0.5),
+                    -10px 0 10px rgba(0, 0, 0, 0.3);
+      }
     }
     .menu-toggle {
       position: fixed; top: 10px; right: 10px;
       z-index: 1200;
       display: flex; align-items: center;
       transition: transform 0.3s ease;
+      perspective: 1000px; /* Для 3D-эффекта логотипа */
     }
     .menu-toggle button {
       background: transparent; border: none; cursor: pointer;
     }
-    .menu-toggle img {
-      width: 70px; height: 70px;
+    .menu-toggle img.logo {
+      width: 55px; height: 55px;
       margin-right: 10px;
-      transition: all 0.3s ease;
+      animation: spin 24s linear infinite, glow 6s ease-in-out infinite;
     }
     .vinh-menu-text {
       font-family: 'Passager', sans-serif;
@@ -140,10 +196,17 @@
       transition: font-size 0.3s ease;
       display: flex; flex-direction: column; align-items: flex-end;
     }
+    .light-mode .vinh-menu-text {
+      color: var(--white); /* Черный текст в светлом режиме */
+      text-shadow: none; /* Убираем тень в светлом режиме */
+    }
     .vinh-menu-text .address {
       font-size: 0.5em;
       color: rgba(255, 255, 255, 0.9);
       margin-top: 2px;
+    }
+    .light-mode .vinh-menu-text .address {
+      color: rgba(0, 0, 0, 0.9); /* Черный адрес в светлом режиме */
     }
     .menu-toggle.active .vinh-menu-text {
       font-size: 35px;
@@ -163,11 +226,13 @@
       box-shadow: 0 1px 2px rgba(174, 0, 255, 0.3);
       transition: left 0.3s ease;
       z-index: 1200;
+      perspective: 1000px; /* Для 3D-эффекта логотипа */
     }
     .logo-container.scrolled { left: 0px; }
     .logo-container img {
       width: 40px; height: 40px;
       margin-right: 5px;
+      animation: spin 24s linear infinite, glow 6s ease-in-out infinite;
     }
     .logo-container .vinh-menu-text { font-size: 20px; }
     .btn-small {
@@ -186,6 +251,10 @@
       background: rgba(255, 255, 255, 0.1);
       transition: all 0.2s ease;
       position: relative;
+    }
+    .light-mode .square-checkbox {
+      border: 1px solid var(--white); /* Черная граница в светлом режиме */
+      background: rgba(0, 0, 0, 0.1);
     }
     .square-checkbox:checked {
       transform: scale(1.1);
@@ -208,6 +277,9 @@
       border: 1px solid var(--white);
       cursor: pointer;
     }
+    .light-mode .legend-square {
+      border: 1px solid var(--white); /* Черная граница в светлом режиме */
+    }
     .legend-green { background-color: green; }
     .legend-black { background-color: black; }
     .legend-yellow { background-color: yellow; }
@@ -226,6 +298,11 @@
       margin: 20px 10px;
       box-shadow: 0 8px 32px rgba(0, 247, 255, 0.2);
       opacity: 0; animation: fadeInCard 0.5s ease-out forwards;
+    }
+    .light-mode .glass-card {
+      background: var(--glass-bg);
+      border: 1px solid var(--glass-border);
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
     }
     .glass-card:nth-child(1) { animation-delay: 0.1s; }
     .glass-card:nth-child(2) { animation-delay: 0.2s; }
@@ -246,6 +323,11 @@
       75%  { text-shadow: 0 0 5px #a6c1ee; }
       100% { text-shadow: 0 0 5px #a1c4fd; }
     }
+    .light-mode .rainbow-text {
+      animation: none; /* Убираем анимацию в светлом режиме */
+      text-shadow: none;
+      color: #000000;
+    }
     .form-control {
       background: rgba(0, 0, 0, 0.3);
       backdrop-filter: blur(5px);
@@ -262,6 +344,16 @@
       border-color: var(--neon-cyan);
       box-shadow: 0 0 5px var(--neon-cyan);
       animation: rainbowGlow 3s infinite;
+    }
+    .light-mode .form-control {
+      background: rgba(255, 255, 255, 0.3);
+      color: #000;
+      border: 1px solid rgba(0, 0, 0, 0.3);
+    }
+    .light-mode .form-control:focus {
+      background: rgba(255, 255, 255, 0.3);
+      border-color: var(--neon-cyan);
+      box-shadow: 0 0 5px var(--neon-cyan);
     }
     @keyframes rainbowGlow {
       0%   { box-shadow: 0 0 2px #edffd8, 0 0 3px #ff0000, 0 0 4px #0011ff, 0 0 5px #005eff; }
@@ -280,6 +372,9 @@
       transition: all 0.3s ease;
       box-shadow: 0 0 12px rgba(0, 247, 255, 0.3);
       touch-action: manipulation;
+    }
+    .light-mode .btn-primary {
+      color: #fff; /* Белый текст кнопки в светлом режиме */
     }
     .btn-primary:hover {
       box-shadow: 0 4px 15px rgba(0, 247, 255, 0.4);
@@ -339,6 +434,23 @@
       transform: translateY(1px);
       box-shadow: 0 2px 10px rgba(0, 247, 255, 0.2);
     }
+    .theme-toggle-btn {
+      background: transparent;
+      border: none;
+      color: var(--white);
+      font-size: 18px;
+      font-family: 'Share Tech Mono', monospace;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      transition: color 0.3s;
+    }
+    .light-mode .theme-toggle-btn {
+      color: var(--white); /* Черный текст в светлом режиме */
+    }
+    .theme-toggle-btn:hover {
+      color: var(--neon-turquoise);
+    }
     .work-table, .details-table {
       width: 100%;
       border: none;
@@ -348,6 +460,10 @@
       background: rgba(0, 0, 0, 0.2);
       margin-bottom: 15px;
       table-layout: fixed;
+    }
+    .light-mode .work-table, .light-mode .details-table {
+      box-shadow: 0 0 8px rgba(0, 0, 0, 0.2); /* Тень в светлом режиме */
+      background: rgba(255, 255, 255, 0.2);
     }
     .work-table th, .work-table td,
     .details-table th, .details-table td {
@@ -362,6 +478,9 @@
     .work-table th, .details-table th {
       background-color: rgba(50, 50, 50, 0.7);
     }
+    .light-mode .work-table th, .light-mode .details-table th {
+      background-color: rgba(200, 200, 200, 0.7); /* Светлый фон заголовков в светлом режиме */
+    }
     .indicators {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
@@ -370,6 +489,9 @@
     hr {
       border: 1px solid var(--neon-blue);
       margin: 10px 0;
+    }
+    .light-mode hr {
+      border: 1px solid #000000; /* Черная линия в светлом режиме */
     }
     .section-header {
       display: flex;
@@ -382,6 +504,9 @@
       font-size: 0.9em;
       margin-left: 10px;
       color: rgba(255, 255, 255, 0.9);
+    }
+    .light-mode .section-header .duplicate-info {
+      color: rgba(0, 0, 0, 0.9); /* Черный текст в светлом режиме */
     }
     .row { margin-top: 10px; }
     .button-group {
@@ -445,6 +570,12 @@
       <li><a href="#">Мийка</a></li>
       <li><a href="#">Шиномонтаж</a></li>
       <li><a href="#">Контакти</a></li>
+      <li>
+        <button id="themeToggle" class="theme-toggle-btn">
+          <img src="img/dark_mode_icon.png" alt="Dark Mode" id="themeIcon" style="width: 24px; height: 24px; vertical-align: middle; margin-right: 5px;" />
+          Темний режим
+        </button>
+      </li>
       <li><a href="#">Вийти</a></li>
     </ul>
     <img src="img/logo.png" alt="Логотип" class="sidebar-logo" />
@@ -946,30 +1077,104 @@
       }
     }
 
+    // Функция для обновления текста меню
+    function updateMenuText() {
+      const sidebar = document.getElementById("sidebar");
+      const menuToggle = document.querySelector('.menu-toggle');
+      const menuText = menuToggle.querySelector('.vinh-menu-text');
+      const logo = menuToggle.querySelector('img');
+      const logoContainer = document.querySelector('.logo-container');
+
+      if (sidebar.classList.contains("active")) {
+        menuText.innerHTML = 'X';
+        menuText.style.fontSize = '35px';
+        logo.style.opacity = '1';
+        logoContainer.classList.remove('scrolled');
+      } else {
+        if (window.scrollY > 300) {
+          menuText.innerHTML = 'E<br><div class="address"></div>';
+          menuText.style.fontSize = '35px';
+          logo.style.opacity = '0';
+          logoContainer.classList.add('scrolled');
+        } else {
+          menuText.innerHTML = 'AVALON SERVICE<br><div class="address">Дальницька 45</div>';
+          menuText.style.fontSize = '24px';
+          logo.style.opacity = '1';
+          logoContainer.classList.remove('scrolled');
+        }
+      }
+    }
+
+    // Функция для обновления theme-color в зависимости от темы
+    function updateThemeColor() {
+      const metaThemeColor = document.querySelector('meta[name="theme-color"]');
+      if (document.body.classList.contains("light-mode")) {
+        metaThemeColor.setAttribute("content", "#FFFFFF"); // Белый для светлого режима
+      } else {
+        metaThemeColor.setAttribute("content", "#000000"); // Черный для темного режима
+      }
+    }
+
     document.addEventListener("DOMContentLoaded", function() {
+      // Функция переключения темы
+      function toggleTheme() {
+        const body = document.body;
+        const themeIcon = document.getElementById("themeIcon");
+        const themeButton = document.getElementById("themeToggle");
+
+        body.classList.toggle("light-mode");
+
+        if (body.classList.contains("light-mode")) {
+          themeIcon.src = "img/light_mode_icon.png";
+          themeButton.childNodes[2].textContent = "Світлий режим";
+          localStorage.setItem("theme", "light");
+        } else {
+          themeIcon.src = "img/dark_mode_icon.png";
+          themeButton.childNodes[2].textContent = "Темний режим";
+          localStorage.setItem("theme", "dark");
+        }
+
+        updateThemeColor(); // Обновляем theme-color
+      }
+
+      // Восстановление темы
+      const savedTheme = localStorage.getItem("theme");
+      const themeButton = document.getElementById("themeToggle");
+      const themeIcon = document.getElementById("themeIcon");
+      if (savedTheme === "light") {
+        document.body.classList.add("light-mode");
+        themeIcon.src = "img/light_mode_icon.png";
+        themeButton.childNodes[2].textContent = "Світлий режим";
+      } else {
+        themeIcon.src = "img/dark_mode_icon.png";
+        themeButton.childNodes[2].textContent = "Темний режим";
+      }
+      updateThemeColor(); // Устанавливаем начальный theme-color
+
+      if (themeButton) {
+        const hammerTheme = new Hammer(themeButton);
+        hammerTheme.on("tap", toggleTheme);
+      }
+
+      // Обработчики для бокового меню
       const menuButton = document.getElementById("menuButton");
       const sidebar = document.getElementById("sidebar");
       const closeSidebar = document.getElementById("closeSidebar");
       const menuToggle = document.querySelector('.menu-toggle');
-      const menuText = menuToggle.querySelector('.vinh-menu-text');
 
       if (menuButton && sidebar) {
         const hammerMenu = new Hammer(menuButton);
         hammerMenu.on("tap", () => {
           sidebar.classList.toggle("active");
           menuToggle.classList.toggle("active");
-          if (sidebar.classList.contains("active")) {
-            menuText.innerHTML = 'X';
-          } else {
-            menuText.innerHTML = 'AVALON SERVICE<br><div class="address">Дальницька 45</div>';
-          }
+          updateMenuText();
         });
 
         document.addEventListener("click", (event) => {
           if (!sidebar.contains(event.target) && !menuButton.contains(event.target)) {
             sidebar.classList.remove("active");
             menuToggle.classList.remove("active");
-            menuText.innerHTML = 'AVALON SERVICE<br><div class="address">Дальницька 45</div>';
+            updateMenuText();
           }
         });
 
@@ -978,25 +1183,13 @@
           hammerClose.on("tap", () => {
             sidebar.classList.remove("active");
             menuToggle.classList.remove("active");
-            menuText.innerHTML = 'AVALON SERVICE<br><div class="address">Дальницька 45</div>';
+            updateMenuText();
           });
         }
       }
 
       window.addEventListener('scroll', () => {
-        const logo = menuToggle.querySelector('img');
-        const logoContainer = document.querySelector('.logo-container');
-        if (window.scrollY > 300 && !sidebar.classList.contains("active")) {
-          menuText.innerHTML = 'E<br><div class="address"></div>';
-          menuText.style.fontSize = '35px';
-          logo.style.opacity = '0';
-          logoContainer.classList.add('scrolled');
-        } else if (!sidebar.classList.contains("active")) {
-          menuText.innerHTML = 'AVALON SERVICE<br><div class="address">Дальницька 45</div>';
-          menuText.style.fontSize = '24px';
-          logo.style.opacity = '1';
-          logoContainer.classList.remove('scrolled');
-        }
+        updateMenuText();
       });
 
       function updateDuplicates() {
@@ -1071,7 +1264,8 @@
 
         container.querySelectorAll(".add-row-btn").forEach((btn) => {
           if (!btn.dataset.hammerInitialized) {
-            const addRow = () => {
+            const hammerBtn = new Hammer(btn);
+            hammerBtn.on("tap", () => {
               const tableBody = container.querySelector(".details-table tbody");
               if (tableBody) {
                 const rowCount = tableBody.rows.length;
@@ -1093,488 +1287,285 @@
                   <td><input type="checkbox" class="checkbox-red square-checkbox" /></td>
                 `;
                 tableBody.appendChild(newRow);
-                const newTextarea = newRow.querySelector("textarea");
-                newTextarea.addEventListener("input", () => autoGrow(newTextarea));
                 attachCheckboxListeners(container);
+                newRow.querySelector("textarea").addEventListener("input", () => autoGrow(newRow.querySelector("textarea")));
               }
-            };
-            const hammerBtn = new Hammer(btn);
-            hammerBtn.on("tap", addRow);
+            });
             btn.dataset.hammerInitialized = "true";
           }
         });
 
         container.querySelectorAll(".remove-row-btn").forEach((btn) => {
           if (!btn.dataset.hammerInitialized) {
-            const removeRow = () => {
+            const hammerBtn = new Hammer(btn);
+            hammerBtn.on("tap", () => {
               const tableBody = container.querySelector(".details-table tbody");
               if (tableBody && tableBody.rows.length > 1) {
-                tableBody.removeChild(tableBody.lastElementChild);
-                Array.from(tableBody.rows).forEach((row, index) => {
-                  row.cells[0].textContent = index + 1;
-                });
+                tableBody.deleteRow(-1);
               }
-            };
-            const hammerBtn = new Hammer(btn);
-            hammerBtn.on("tap", removeRow);
+            });
             btn.dataset.hammerInitialized = "true";
           }
         });
 
         container.querySelectorAll(".add-work-row-btn").forEach((btn) => {
           if (!btn.dataset.hammerInitialized) {
-            const addWorkRow = () => {
-              const tbody = container.querySelector(".work-table tbody");
-              if (tbody) {
-                const newRow = tbody.lastElementChild.cloneNode(true);
-                newRow.querySelectorAll("input, textarea").forEach((el) => {
-                  el.value = "";
-                  if (el.tagName === "TEXTAREA") {
-                    el.style.height = "auto";
-                    el.rows = 1;
-                  }
-                });
-                tbody.appendChild(newRow);
-                newRow.querySelectorAll(".part-price, .work-price").forEach((input) => {
-                  if (!input.dataset.eventInitialized) {
-                    input.addEventListener("input", () => recalculateTotal(container));
-                    input.addEventListener("change", () => recalculateTotal(container));
-                    const hammerInput = new Hammer(input);
-                    hammerInput.on("tap", () => recalculateTotal(container));
-                    input.dataset.eventInitialized = "true";
-                  }
-                });
-                recalculateTotal(container);
-              }
-            };
             const hammerBtn = new Hammer(btn);
-            hammerBtn.on("tap", addWorkRow);
+            hammerBtn.on("tap", () => {
+              const tableBody = container.querySelector(".work-table tbody");
+              if (tableBody) {
+                const newRow = document.createElement("tr");
+                newRow.innerHTML = `
+                  <td>
+                    <textarea
+                      class="form-control"
+                      rows="1"
+                      oninput="autoGrow(this)"
+                      style="overflow:hidden; resize:none;"
+                    ></textarea>
+                  </td>
+                  <td><input type="number" class="form-control part-price" step="0.01" min="0" /></td>
+                  <td><input type="number" class="form-control work-price" step="0.01" min="0" /></td>
+                `;
+                tableBody.appendChild(newRow);
+                reinitializeOrderEventsForContainer(container);
+                newRow.querySelector("textarea").addEventListener("input", () => autoGrow(newRow.querySelector("textarea")));
+              }
+            });
             btn.dataset.hammerInitialized = "true";
           }
         });
 
         container.querySelectorAll(".remove-work-row-btn").forEach((btn) => {
           if (!btn.dataset.hammerInitialized) {
-            const removeWorkRow = () => {
-              const tbody = container.querySelector(".work-table tbody");
-              if (tbody && tbody.rows.length > 1) {
-                tbody.removeChild(tbody.lastElementChild);
+            const hammerBtn = new Hammer(btn);
+            hammerBtn.on("tap", () => {
+              const tableBody = container.querySelector(".work-table tbody");
+              if (tableBody && tableBody.rows.length > 1) {
+                tableBody.deleteRow(-1);
                 recalculateTotal(container);
               }
-            };
-            const hammerBtn = new Hammer(btn);
-            hammerBtn.on("tap", removeWorkRow);
+            });
             btn.dataset.hammerInitialized = "true";
           }
         });
 
-        const sendAdminBtn = container.querySelector("#sendAdminBtn");
-        if (sendAdminBtn && !sendAdminBtn.dataset.hammerInitialized) {
-          const hammerBtn = new Hammer(sendAdminBtn);
-          hammerBtn.on("tap", () => collectAllDataAndSendToTelegram("save", container));
-          sendAdminBtn.dataset.hammerInitialized = "true";
-        }
-
-        const sendPartsBtn = container.querySelector("#sendPartsBtn");
-        if (sendPartsBtn && !sendPartsBtn.dataset.hammerInitialized) {
-          const hammerBtn = new Hammer(sendPartsBtn);
-          hammerBtn.on("tap", () => collectAllDataAndSendToTelegram("parts", container));
-          sendPartsBtn.dataset.hammerInitialized = "true";
-        }
-
-        const addOrderBtn = container.querySelector("#addOrderBtn");
-        if (addOrderBtn && !addOrderBtn.dataset.hammerInitialized) {
-          const addOrder = () => {
-            const sectionIds = [
-              "vinh-container",
-              "indicators-container",
-              "defects-container",
-              "work-container",
-              "control-signatures-container"
-            ];
-            const newOrder = document.createElement("div");
-            newOrder.classList.add("order");
-            sectionIds.forEach((id) => {
-              const originalSection = document.getElementById(id);
-              if (originalSection) {
-                const clone = originalSection.cloneNode(true);
-                clone.removeAttribute("id");
-                clone.querySelectorAll("input, textarea").forEach((el) => {
-                  if (el.type === "checkbox") el.checked = false;
-                  else el.value = "";
-                  if (el.tagName === "TEXTAREA") {
-                    el.style.height = "auto";
-                    el.rows = 1;
-                  }
-                });
-                newOrder.appendChild(clone);
-              }
-            });
-            const orderButtons1 = document.createElement("div");
-            orderButtons1.className = "button-group-row";
-            orderButtons1.innerHTML = `
-              <button id="sendAdminBtn" type="button" class="btn btn-primary btn-neon">Зберегти</button>
-              <button type="button" class="btn btn-primary btn-small" id="addOrderBtn">Додати НАРЯД-ЗАМОВЛЕННЯ</button>
-            `;
-            const orderButtons2 = document.createElement("div");
-            orderButtons2.className = "button-group-row";
-            orderButtons2.innerHTML = `
-              <button type="button" class="btn btn-primary btn-small" id="createLinkBtn">Створити посилання</button>
-              <button type="button" class="btn btn-primary btn-small" id="screenshotBtn">Скріншот</button>
-            `;
-            const linkContainer = document.createElement("div");
-            linkContainer.className = "generated-link-container";
-            linkContainer.innerHTML = `
-              <label>Згенероване посилання:</label>
-              <input type="text" class="form-control" readonly style="margin-top: 5px;" />
-              <button type="button" class="btn btn-primary btn-small" style="margin-top: 5px;">Копіювати посилання</button>
-            `;
-            newOrder.appendChild(orderButtons1);
-            newOrder.appendChild(orderButtons2);
-            newOrder.appendChild(linkContainer);
-
-            document.querySelector("form").appendChild(newOrder);
-            reinitializeOrderEventsForContainer(newOrder);
-            attachCheckboxListeners(newOrder);
-            attachLegendListeners(newOrder);
-          };
-          const hammerBtn = new Hammer(addOrderBtn);
-          hammerBtn.on("tap", addOrder);
-          addOrderBtn.dataset.hammerInitialized = "true";
-        }
-
-        const createLinkBtn = container.querySelector("#createLinkBtn");
-        if (createLinkBtn && !createLinkBtn.dataset.hammerInitialized) {
-          const hammerBtn = new Hammer(createLinkBtn);
-          hammerBtn.on("tap", () => createShareableLink(container));
-          createLinkBtn.dataset.hammerInitialized = "true";
-        }
-
-        const copyLinkBtn = container.querySelector(".generated-link-container button");
-        if (copyLinkBtn && !copyLinkBtn.dataset.hammerInitialized) {
-          const copyLink = () => {
-            const linkInput = container.querySelector(".generated-link-container input");
-            if (linkInput) {
-              linkInput.select();
-              document.execCommand("copy");
-              alert("Посилання скопійовано в буфер обміну!");
-            }
-          };
-          const hammerBtn = new Hammer(copyLinkBtn);
-          hammerBtn.on("tap", copyLink);
-          copyLinkBtn.dataset.hammerInitialized = "true";
-        }
-
-        const screenshotBtn = container.querySelector("#screenshotBtn");
-        if (screenshotBtn && !screenshotBtn.dataset.hammerInitialized) {
-          const takeScreenshot = async () => {
-            try {
-              const canvas = await html2canvas(document.body, {
-                scale: window.devicePixelRatio,
-                width: document.documentElement.scrollWidth,
-                height: document.documentElement.scrollHeight,
-                useCORS: true,
-                scrollX: 0,
-                scrollY: 0
-              });
-              const imageData = canvas.toDataURL("image/png");
-              const response = await fetch(imageData);
-              const blob = await response.blob();
-              const formData = new FormData();
-              formData.append("chat_id", DISCUSSION_GROUP_CHAT_ID);
-              formData.append("document", blob, "screenshot.png");
-              formData.append("reply_to_message_id", REPLY_TO_MESSAGE_ID);
-
-              const data = collectFormData(container);
-              const caption = `
-Ім'я клієнта: ${data.clientName || ""}
-Телефон: ${data.phone || ""}
-VIN номер: ${data.vin || ""}
-Модель авто: ${data.carModel || ""}
-Рік випуску: ${data.year || ""}
-Номерний знак: ${data.plate || ""}
-Пробіг (км): ${data.mileage || ""}
-`.trim();
-              formData.append("caption", caption);
-
-              const telegramResponse = await fetch(
-                `https://api.telegram.org/bot${BOT_TOKEN}/sendDocument`,
-                { method: "POST", body: formData }
-              );
-              const result = await telegramResponse.json();
-              if (result.ok) {
-                alert("Скріншот успішно надіслано в Telegram як документ!");
-              } else {
-                throw new Error(result.description);
-              }
-            } catch (error) {
-              console.error("Помилка:", error);
-              alert("Помилка при надсиланні скріншота: " + error.message);
-            }
-          };
-          const hammerBtn = new Hammer(screenshotBtn);
-          hammerBtn.on("tap", takeScreenshot);
-          screenshotBtn.dataset.hammerInitialized = "true";
-        }
+        attachLegendListeners(container);
+        attachCheckboxListeners(container);
       }
 
-      const originalOrder = document.querySelector(".order");
-      if (originalOrder) {
-        reinitializeOrderEventsForContainer(originalOrder);
-        attachCheckboxListeners(originalOrder);
-        attachLegendListeners(originalOrder);
-        restoreFormData(originalOrder);
-        recalculateTotal(originalOrder);
-      }
+      document.querySelectorAll(".section").forEach((container) => {
+        reinitializeOrderEventsForContainer(container);
+      });
 
-      function collectFormData(container) {
-        const data = {};
-        container.querySelectorAll("input, textarea").forEach((el) => {
-          if (el.id) {
-            data[el.id] = (el.type === "checkbox") ? el.checked : el.value;
-          }
-        });
-        const details = [];
-        container.querySelectorAll(".details-table tbody tr").forEach((row, idx) => {
-          const partName = row.cells[1]?.querySelector("textarea")?.value || "";
-          const wear = row.cells[2]?.querySelector("input")?.checked || false;
-          const looseness = row.cells[3]?.querySelector("input")?.checked || false;
-          const recReplace = row.cells[4]?.querySelector("input")?.checked || false;
-          const critReplace = row.cells[5]?.querySelector("input")?.checked || false;
-          details.push({ idx, partName, wear, looseness, recReplace, critReplace });
-        });
-        data.details = details;
-
-        const works = [];
-        container.querySelectorAll(".work-table tbody tr").forEach((row) => {
-          const partName = row.cells[0]?.querySelector("textarea")?.value || "";
-          const partPrice = row.cells[1]?.querySelector("input")?.value || "";
-          const workPrice = row.cells[2]?.querySelector("input")?.value || "";
-          works.push({ partName, partPrice, workPrice });
-        });
-        data.works = works;
-        return data;
-      }
-
-      async function collectAllDataAndSendToTelegram(mode, container) {
-        const data = collectFormData(container);
-        const totalText = container.querySelector(".work-total")?.innerHTML || "Загальна сума: 0 UAH";
+      function collectAllDataAndSendToTelegram(mode = "full") {
+        const clientName = document.getElementById("clientName")?.value || "";
+        const phone = document.getElementById("phone")?.value || "";
+        const vin = document.getElementById("vin")?.value || "";
+        const carModel = document.getElementById("carModel")?.value || "";
+        const year = document.getElementById("year")?.value || "";
+        const plate = document.getElementById("plate")?.value || "";
+        const mileage = document.getElementById("mileage")?.value || "";
+        const workList = document.getElementById("workList")?.value || "";
 
         const indicators = [];
-        const mapInd = {
-          checkEngine: "Check Engine",
-          battery: "Battery",
-          oil: "Oil",
-          coolant: "Coolant",
-          tpms: "TPMS",
-          airbag: "Airbag",
-          abs: "ABS",
-          esp: "ESP",
-          brakeWear: "Brake Wear"
+        ["checkEngine", "battery", "oil", "coolant", "tpms", "airbag", "abs", "esp", "brakeWear"].forEach(id => {
+          const el = document.getElementById(id);
+          if (el && el.checked) indicators.push(id);
+        });
+
+        const defects = {
+          ptk_percent: document.getElementById("ptk_percent")?.value || "",
+          ztk_percent: document.getElementById("ztk_percent")?.value || "",
+          ptd_mm: document.getElementById("ptd_mm")?.value || "",
+          ztd_mm: document.getElementById("ztd_mm")?.value || "",
+          brakeFluid: document.getElementById("brakeFluid")?.value || "",
+          antifreeze: document.getElementById("antifreeze")?.value || "",
+          engineOil: document.getElementById("engineOil")?.value || "",
+          transmissionOil: document.getElementById("transmissionOil")?.value || "",
+          notes: document.getElementById("notes")?.value || "",
+          parts: []
         };
-        for (const key in mapInd) {
-          if (data[key]) indicators.push(mapInd[key]);
+
+        const partsTable = document.querySelector("#defects-container .details-table tbody");
+        if (partsTable) {
+          partsTable.querySelectorAll("tr").forEach(row => {
+            const partName = row.querySelector("textarea")?.value || "";
+            const statuses = [];
+            if (row.querySelector(".checkbox-green")?.checked) statuses.push("Знос");
+            if (row.querySelector(".checkbox-black")?.checked) statuses.push("Люфт");
+            if (row.querySelector(".checkbox-yellow")?.checked) statuses.push("Рекомендується заміна");
+            if (row.querySelector(".checkbox-red")?.checked) statuses.push("Критична заміна");
+            defects.parts.push({ name: partName, statuses });
+          });
         }
 
-        const checks = [];
-        if (data.checkParts) checks.push("Контрольна обтяжка встановлених запчастин");
-        if (data.tightenWheels) checks.push(`Затягування колісних болтів ${data.nmValue || ""} Nm`);
-        if (data.managerSignature) checks.push("Підпис менеджера");
-        if (data.clientSignature) checks.push("Підпис клієнта: Я прочитав і приймаю");
+        const workItems = [];
+        const workTable = document.querySelector("#work-container .work-table tbody");
+        if (workTable) {
+          workTable.querySelectorAll("tr").forEach(row => {
+            const partName = row.querySelector("textarea")?.value || "";
+            const partPrice = row.querySelector(".part-price")?.value || "0";
+            const workPrice = row.querySelector(".work-price")?.value || "0";
+            workItems.push({ name: partName, partPrice, workPrice });
+          });
+        }
 
-        let message;
-        if (mode === "save") {
-          message = `
-Збережено:
-Ім'я клієнта: ${data.clientName || ""}
-Телефон: ${data.phone || ""}
-VIN: ${data.vin || ""}
-Модель: ${data.carModel || ""}
-Рік: ${data.year || ""}
-Номер: ${data.plate || ""}
-Пробіг: ${  data.mileage || ""}
-Бажані роботи: ${data.workList || ""}
-Індикатори: ${indicators.join(", ") || "(немає)"}
+        const controlSignatures = {
+          checkParts: document.getElementById("checkParts")?.checked || false,
+          tightenWheels: document.getElementById("tightenWheels")?.checked || false,
+          nmValue: document.getElementById("nmValue")?.value || "",
+          managerSignature: document.getElementById("managerSignature")?.checked || false,
+          clientSignature: document.getElementById("clientSignature")?.checked || false
+        };
 
-Акт дефектів:
-- передні колодки(%): ${data.ptk_percent || ""}
-- задні колодки(%): ${data.ztk_percent || ""}
-- передні диски(мм): ${data.ptd_mm || ""}
-- задні диски(мм): ${data.ztd_mm || ""}
-- гальмівна рідина: ${data.brakeFluid || ""}
-- охолоджуюча рідина: ${data.antifreeze || ""}
-- моторна олива: ${data.engineOil || ""}
-- олива в трансмісії: ${data.transmissionOil || ""}
+        let message = "";
+        if (mode === "full") {
+          message += `<b>Нова заявка</b>\n\n`;
+          message += `<b>Клієнт:</b> ${clientName}\n`;
+          message += `<b>Телефон:</b> ${phone}\n`;
+          message += `<b>VIN:</b> ${vin}\n`;
+          message += `<b>Модель авто:</b> ${carModel}\n`;
+          message += `<b>Рік випуску:</b> ${year}\n`;
+          message += `<b>Номерний знак:</b> ${plate}\n`;
+          message += `<b>Пробіг:</b> ${mileage} км\n`;
+          message += `<b>Перелік бажаних робіт:</b> ${workList}\n\n`;
 
-Деталі:
-${
-  data.details
-    .map((d) => {
-      const flags = [
-        d.wear ? "Знос" : "",
-        d.looseness ? "Люфт" : "",
-        d.recReplace ? "Рек. заміна" : "",
-        d.critReplace ? "Критична заміна" : ""
-      ].filter(Boolean).join(", ");
-      return `#${d.idx + 1} ${d.partName} [${flags}]`;
-    })
-    .join("\n") || "(немає)"
-}
+          message += `<b>Індикатори:</b> ${indicators.length > 0 ? indicators.join(", ") : "Немає"}\n\n`;
 
-Дод. примітки: ${data.notes || ""}
+          message += `<b>Акт дефектів:</b>\n`;
+          message += `Передні гальмівні колодки: ${defects.ptk_percent}%\n`;
+          message += `Задні гальмівні колодки: ${defects.ztk_percent}%\n`;
+          message += `Передні гальмівні диски: ${defects.ptd_mm} мм\n`;
+          message += `Задні гальмівні диски: ${defects.ztd_mm} мм\n`;
+          message += `Гальмівна рідина: ${defects.brakeFluid}\n`;
+          message += `Охолоджуюча рідина: ${defects.antifreeze}\n`;
+          message += `Моторна олива: ${defects.engineOil}\n`;
+          message += `Олива в трансмісії: ${defects.transmissionOil}\n\n`;
 
-ЗАЯВКА НА РОБОТИ:
-${
-  data.works
-    .map((w) => `- ${w.partName} | запчастина: ${w.partPrice} | робота: ${w.workPrice}`)
-    .join("\n") || "(немає)"
-}
-${totalText}
+          message += `<b>Запчастини та вузли:</b>\n`;
+          defects.parts.forEach((part, index) => {
+            message += `${index + 1}. ${part.name} (${part.statuses.join(", ")})\n`;
+          });
+          message += `\n<b>Додаткові примітки:</b> ${defects.notes}\n\n`;
 
-Контрольні позначки: ${checks.join(", ") || "(немає)"}
-`.trim();
+          message += `<b>Заявка на виконання робіт:</b>\n`;
+          workItems.forEach((item, index) => {
+            message += `${index + 1}. ${item.name} (Запчастина: ${item.partPrice} UAH, Робота: ${item.workPrice} UAH)\n`;
+          });
+
+          message += `\n<b>Контрольні позначки:</b>\n`;
+          message += `Контрольна обтяжка: ${controlSignatures.checkParts ? "Так" : "Ні"}\n`;
+          message += `Затягування коліс: ${controlSignatures.tightenWheels ? "Так" : "Ні"} (${controlSignatures.nmValue} Нм)\n`;
+          message += `Підпис менеджера: ${controlSignatures.managerSignature ? "Так" : "Ні"}\n`;
+          message += `Підпис клієнта: ${controlSignatures.clientSignature ? "Так" : "Ні"}\n`;
         } else if (mode === "parts") {
-          const partNames = data.details
-            .map(d => d.partName)
-            .filter(name => name.trim() !== "");
-          message = `
-Модель авто: ${data.carModel || "(не вказано)"}
-Рік: ${data.year || "(не вказано)"}
-VIN: ${data.vin || "(не вказано)"}
-- передні колодки(%): ${data.ptk_percent || "(не вказано)"}
-- задні колодки(%): ${data.ztk_percent || "(не вказано)"}
-- передні диски(мм): ${data.ptd_mm || "(не вказано)"}
-- задні диски(мм): ${data.ztd_mm || "(не вказано)"}
-- олива в трансмісії: ${data.transmissionOil || "(не вказано)"}
-
-Назва запчастини або вузла:
-${
-  partNames.length > 0
-    ? partNames.map((name, index) => `${index + 1}: ${name}`).join("\n")
-    : "Немає запчастин"
-}
-`.trim();
+          message += `<b>Запчастини для замовлення:</b>\n`;
+          message += `<b>VIN:</b> ${vin}\n`;
+          message += `<b>Модель авто:</b> ${carModel}\n`;
+          message += `<b>Рік випуску:</b> ${year}\n\n`;
+          defects.parts.forEach((part, index) => {
+            if (part.statuses.includes("Рекомендується заміна") || part.statuses.includes("Критична заміна")) {
+              message += `${index + 1}. ${part.name} (${part.statuses.join(", ")})\n`;
+            }
+          });
+          message += `\n<b>Додаткові примітки:</b> ${defects.notes}\n`;
         }
 
-        try {
-          const chatId = (mode === "parts") ? ADMIN_PARTS_CHAT_ID : ADMIN_CHAT_ID;
-          const textResponse = await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {
+        const url = `https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`;
+        const chatId = mode === "parts" ? ADMIN_PARTS_CHAT_ID : ADMIN_CHAT_ID;
+
+        fetch(url, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            chat_id: chatId,
+            text: message,
+            parse_mode: "HTML",
+            reply_to_message_id: REPLY_TO_MESSAGE_ID
+          })
+        }).then(response => response.json()).then(data => {
+          if (data.ok) {
+            alert("Дані успішно надіслані!");
+          } else {
+            alert("Помилка при відправці: " + data.description);
+          }
+        }).catch(error => {
+          alert("Помилка: " + error.message);
+        });
+
+        if (selectedTechPassportFile && mode === "full") {
+          const formData = new FormData();
+          formData.append("chat_id", chatId);
+          formData.append("photo", selectedTechPassportFile);
+          formData.append("caption", `Фото техпаспорта для VIN: ${vin}`);
+
+          fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendPhoto`, {
             method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ chat_id: chatId, text: message })
+            body: formData
+          }).then(response => response.json()).then(data => {
+            if (!data.ok) {
+              alert("Помилка при відправці фото: " + data.description);
+            }
+          }).catch(error => {
+            alert("Помилка при відправці фото: " + error.message);
           });
-          const textResult = await textResponse.json();
-          if (!textResult.ok) {
-            throw new Error("Помилка надсилання тексту: " + textResult.description);
-          }
-
-          if (selectedTechPassportFile) {
-            const formData = new FormData();
-            formData.append("chat_id", chatId);
-            formData.append("photo", selectedTechPassportFile);
-            formData.append("caption", "Фото техпаспорта для: " + (data.clientName || "Невідомий клієнт"));
-            const photoResponse = await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendPhoto`, {
-              method: "POST",
-              body: formData
-            });
-            const photoResult = await photoResponse.json();
-            if (!photoResult.ok) {
-              throw new Error("Помилка надсилання фото: " + photoResult.description);
-            }
-          }
-
-          if (mode === "save") {
-            const canvas = await html2canvas(document.body, {
-              scale: window.devicePixelRatio,
-              width: document.documentElement.scrollWidth,
-              height: document.documentElement.scrollHeight,
-              useCORS: true,
-              scrollX: 0,
-              scrollY: 0
-            });
-            const imageData = canvas.toDataURL("image/png");
-            const response = await fetch(imageData);
-            const blob = await response.blob();
-
-            const formData = new FormData();
-            formData.append("chat_id", ADMIN_CHAT_ID);
-            formData.append("document", blob, "screenshot.png");
-            formData.append("caption", `Збережено для ${data.clientName || "Невідомий клієнт"}`);
-
-            const telegramResponse = await fetch(
-              `https://api.telegram.org/bot${BOT_TOKEN}/sendDocument`,
-              { method: "POST", body: formData }
-            );
-            const result = await telegramResponse.json();
-            if (!result.ok) {
-              throw new Error("Помилка надсилання скріншота: " + result.description);
-            }
-          }
-
-          alert("Дані успішно надіслано в Telegram!");
-        } catch (err) {
-          console.error("Помилка:", err);
-          alert("Помилка при надсиланні: " + err.message);
         }
       }
 
-      function createShareableLink(container) {
-        const data = collectFormData(container);
-        const jsonData = JSON.stringify(data);
-        const encodedData = encodeURIComponent(jsonData);
-        const currentUrl = window.location.href.split('?')[0];
-        const shareableLink = `${currentUrl}?formData=${encodedData}`;
-        const linkContainer = container.querySelector(".generated-link-container");
-        const linkInput = linkContainer.querySelector("input");
-        linkContainer.style.display = "block";
-        linkInput.value = shareableLink;
-      }
+      document.getElementById("sendAdminBtn")?.addEventListener("click", () => {
+        collectAllDataAndSendToTelegram("full");
+      });
 
-      function restoreFormData(container) {
-        const urlParams = new URLSearchParams(window.location.search);
-        const formData = urlParams.get("formData");
-        if (formData) {
-          const decodedData = JSON.parse(decodeURIComponent(formData));
-          container.querySelectorAll("input, textarea").forEach((el) => {
-            if (el.id && decodedData[el.id] !== undefined) {
-              if (el.type === "checkbox") el.checked = decodedData[el.id];
-              else el.value = decodedData[el.id];
-              if (el.tagName === "TEXTAREA") autoGrow(el);
-            }
-          });
-          const detailsTable = container.querySelector(".details-table tbody");
-          if (detailsTable && decodedData.details) {
-            detailsTable.innerHTML = "";
-            decodedData.details.forEach((item, idx) => {
-              const newRow = detailsTable.insertRow();
-              newRow.innerHTML = `
-                <td>${idx + 1}</td>
-                <td><textarea class="form-control" name="part${idx + 1}" oninput="autoGrow(this)" style="overflow:hidden; resize:none;" rows="1">${item.partName}</textarea></td>
-                <td><input type="checkbox" class="checkbox-green square-checkbox" ${item.wear ? "checked" : ""} /></td>
-                <td><input type="checkbox" class="checkbox-black square-checkbox" ${item.looseness ? "checked" : ""} /></td>
-                <td><input type="checkbox" class="checkbox-yellow square-checkbox" ${item.recReplace ? "checked" : ""} /></td>
-                <td><input type="checkbox" class="checkbox-red square-checkbox" ${item.critReplace ? "checked" : ""} /></td>
-              `;
-              const newTextarea = newRow.querySelector("textarea");
-              newTextarea.addEventListener("input", () => autoGrow(newTextarea));
-            });
-          }
-          const workTable = container.querySelector(".work-table tbody");
-          if (workTable && decodedData.works) {
-            workTable.innerHTML = "";
-            decodedData.works.forEach((item) => {
-              const newRow = workTable.insertRow();
-              newRow.innerHTML = `
-                <td><textarea class="form-control" rows="1" oninput="autoGrow(this)" style="overflow:hidden; resize:none;">${item.partName}</textarea></td>
-                <td><input type="number" class="form-control part-price" step="0.01" min="0" value="${item.partPrice}" /></td>
-                <td><input type="number" class="form-control work-price" step="0.01" min="0" value="${item.workPrice}" /></td>
-              `;
-              const newTextarea = newRow.querySelector("textarea");
-              newTextarea.addEventListener("input", () => autoGrow(newTextarea));
-            });
-            recalculateTotal(container);
-          }
-        }
+      document.getElementById("sendPartsBtn")?.addEventListener("click", () => {
+        collectAllDataAndSendToTelegram("parts");
+      });
+
+      document.getElementById("createLinkBtn")?.addEventListener("click", () => {
+        const data = {
+          clientName: document.getElementById("clientName")?.value || "",
+          phone: document.getElementById("phone")?.value || "",
+          vin: document.getElementById("vin")?.value || "",
+          carModel: document.getElementById("carModel")?.value || "",
+          year: document.getElementById("year")?.value || "",
+          plate: document.getElementById("plate")?.value || "",
+          mileage: document.getElementById("mileage")?.value || "",
+          workList: document.getElementById("workList")?.value || ""
+        };
+        const queryString = new URLSearchParams(data).toString();
+        const link = `${window.location.origin}${window.location.pathname}?${queryString}`;
+        const linkInput = document.getElementById("generatedLink");
+        linkInput.value = link;
+        document.querySelector(".generated-link-container").style.display = "block";
+      });
+
+      document.getElementById("copyLinkBtn")?.addEventListener("click", () => {
+        const linkInput = document.getElementById("generatedLink");
+        linkInput.select();
+        document.execCommand("copy");
+        alert("Посилання скопійовано!");
+      });
+
+      document.getElementById("screenshotBtn")?.addEventListener("click", () => {
+        html2canvas(document.querySelector(".container")).then(canvas => {
+          const link = document.createElement("a");
+          link.download = "screenshot.png";
+          link.href = canvas.toDataURL();
+          link.click();
+        });
+      });
+
+      const urlParams = new URLSearchParams(window.location.search);
+      if (urlParams.has("clientName")) {
+        document.getElementById("clientName").value = urlParams.get("clientName");
+        document.getElementById("phone").value = urlParams.get("phone");
+        document.getElementById("vin").value = urlParams.get("vin");
+        document.getElementById("carModel").value = urlParams.get("carModel");
+        document.getElementById("year").value = urlParams.get("year");
+        document.getElementById("plate").value = urlParams.get("plate");
+        document.getElementById("mileage").value = urlParams.get("mileage");
+        document.getElementById("workList").value = urlParams.get("workList");
+        updateDuplicates();
       }
     });
   </script>
