@@ -15,7 +15,6 @@
       --glass-bg: rgba(255,255,255,0.1);
       --glass-blur: 10px;
       --glass-border: rgba(255,255,255,0.3);
-
       --btn-gradient: linear-gradient(45deg, #ff6e00, #ff9500);
       --btn-hover-gradient: linear-gradient(45deg, #ff4500, #af3f00);
     }
@@ -30,7 +29,6 @@
       color: var(--white);
       overflow-x: hidden;
     }
-
     /* Стили для бокового меню (Sidebar) в стиле Glassmorphism */
     .sidebar {
       position: fixed;
@@ -73,7 +71,6 @@
     .sidebar ul li a:hover {
       color: var(--mars-orange-light);
     }
-
     /* Кнопка-триггер для бокового меню */
     .menu-toggle {
       position: fixed;
@@ -90,7 +87,6 @@
       width: 30px;
       height: 30px;
     }
-
     /* Мелкие элементы */
     .btn-small {
       font-size: 14px !important;
@@ -138,7 +134,6 @@
     .checkbox-red:checked {
       accent-color: red;
     }
-
     .glass-card {
       background: var(--glass-bg);
       border-radius: 20px;
@@ -149,7 +144,6 @@
       margin: 20px;
       box-shadow: 0 8px 32px rgba(0,0,0,0.3);
     }
-
     /* Пример анимированного «радужного» текста */
     .rainbow-text {
       animation: rainbowText 20s linear infinite;
@@ -161,14 +155,12 @@
       75%  { text-shadow: 0 0 5px #af3f00; }
       100% { text-shadow: 0 0 5px #ff6e00; }
     }
-
     .header {
       display: flex;
       justify-content: space-between;
       align-items: center;
       margin-bottom: 20px;
     }
-
     /* Инпуты (Form-control) в стиле Glassmorphism + оранжевый акцент */
     .form-control {
       background: rgba(255,255,255,0.1);
@@ -184,7 +176,6 @@
       border-color: rgba(255,165,0,0.7);
       box-shadow: 0 0 8px rgba(255,140,0,0.7);
     }
-
     /* Кнопка отправки (Primary) */
     .btn-primary {
       background: var(--btn-gradient);
@@ -244,7 +235,6 @@
       50% { background-position: 100% 50%; }
       100% { background-position: 0% 50%; }
     }
-
     /* Таблицы (общее оформление) */
     .work-table, .details-table {
       width: 100%;
@@ -264,7 +254,6 @@
     .work-table th, .details-table th {
       background-color: rgba(100, 40, 0, 0.7);
     }
-
     /* Блок индикаторов (сетка) */
     .indicators {
       display: grid;
@@ -275,7 +264,6 @@
       border: 1px solid var(--mars-orange-light);
       margin: 10px 0;
     }
-
     /* Адаптивность */
     @media (max-width: 768px) {
       .sidebar {
@@ -881,6 +869,7 @@
 
     /* Кнопка sendPartsBtn -> отправка данных в Telegram */
     document.getElementById('sendPartsBtn').addEventListener("click", () => {
+      // Переменные объявляются локально, чтобы избежать дублирования
       const clientName = document.getElementById('clientName')?.value || "";
       const phone = document.getElementById('phone')?.value || "";
       const vin = document.getElementById('vin')?.value || "";
@@ -907,19 +896,18 @@
         }
       });
 
-      const message =
-        Имя клиента: ${clientName}\n +
-        Телефон: ${phone}\n +
-        VIN: ${vin}\n +
-        Модель: ${carModel}\n +
-        Год: ${year}\n +
-        Номер: ${plate}\n +
-        Пробег: ${mileage}\n +
-        Желаемые работы: ${workList}\n +
-        Индикаторы: ${indicators.join(", ")}\n +
-        Запчасти (акт дефектов): ${partNames.join(", ")};
+      const message = `Имя клиента: ${clientName}
+Телефон: ${phone}
+VIN: ${vin}
+Модель: ${carModel}
+Год: ${year}
+Номер: ${plate}
+Пробег: ${mileage}
+Желаемые работы: ${workList}
+Индикаторы: ${indicators.join(", ")}
+Запчасти (акт дефектов): ${partNames.join(", ")}`;
 
-      fetch(https://api.telegram.org/bot${BOT_TOKEN}/sendMessage, {
+      fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
