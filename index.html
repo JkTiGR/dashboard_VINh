@@ -3,24 +3,13 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  
-  <!-- Название вкладки -->
   <title>Панель керування VINh AUTOSERVICE</title>
-  
-  <!-- Favicon -->
   <link rel="icon" type="image/x-icon" href="favicon.ico" />
-  
-  <!-- Поддержка PWA (манифест, цветовая тема для Android, иконка для iOS) -->
   <link rel="manifest" href="manifest.json" />
-  <meta name="theme-color" content="#ffffff" />
-  <!-- iOS-телефонам нужно apple-touch-icon -->
+  <meta name="theme-color" content="#000000" /> <!-- Черный цвет для темного режима -->
   <link rel="apple-touch-icon" href="img/icons/apple-touch-icon-180.png" />
-
-  <!-- Шрифт + Bootstrap -->
   <link href="https://fonts.googleapis.com/css2?family=Share+Tech_Mono&subset=cyrillic&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" />
-
-  <!-- Скрипты -->
   <script src="https://cdn.jsdelivr.net/npm/tesseract.js@v2.1.5/dist/tesseract.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/hammer.js/2.0.8/hammer.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
@@ -47,7 +36,21 @@
       --prism-opacity: 0.8;
       --prism-blur: 8px;
       --animation-duration: 10s;
+      --spin-duration: 12s;
       --bs-body-color: #ffffff;
+    }
+    /* Переменные для светлого режима */
+    :root.light-mode {
+      --bg-dark: #FFFFFF; /* Белый фон */
+      --neon-cyan: #00B7EB;
+      --neon-turquoise: #00D4B8;
+      --neon-blue: #1E90FF;
+      --neon-pink: #FF69B4;
+      --white: #000000; /* Черный текст */
+      --glass-bg: rgba(255, 255, 255, 0.3);
+      --glass-border: rgba(0, 0, 0, 0.1);
+      --btn-gradient: linear-gradient(45deg, #00B7EB, #FF69B4);
+      --bs-body-color: #000000; /* Черный цвет текста */
     }
     html, body {
       margin: 0;
@@ -67,6 +70,20 @@
       50%  { background-position: 100% 50%; }
       100% { background-position: 0% 50%; }
     }
+    /* Светлый режим */
+    .light-mode {
+      margin: 0;
+      padding: 0;
+      min-height: 100vh;
+      background: linear-gradient(102deg, #66688b, #ffffff, #737d95, #c5a4c3);
+      background-size: 200% 200%;
+      animation: gradientAnimation 15s ease infinite;
+      font-family: 'Share Tech Mono', monospace;
+      color: #000000;
+      overflow-x: hidden;
+      -webkit-user-select: none;
+      user-select: none;
+    }
     h1, h2, h3, h4 {
       text-shadow: 0 0 5px var(--neon-cyan),
                    0 0 10px var(--neon-cyan),
@@ -74,8 +91,10 @@
       letter-spacing: 1px;
       margin: 0;
     }
-
-    /* Сайдбар */
+    .light-mode h1, .light-mode h2, .light-mode h3, .light-mode h4 {
+      text-shadow: none; /* Убираем тень в светлом режиме */
+      color: #000000; /* Черный цвет текста */
+    }
     .sidebar {
       position: fixed; top: 0; right: -300px;
       width: 300px; height: 100vh;
@@ -87,6 +106,12 @@
       padding: 20px;
       transition: right 0.3s ease, opacity 0.3s ease;
       z-index: 1100;
+      perspective: 1000px; /* Для 3D-эффекта логотипа */
+    }
+    .light-mode .sidebar {
+      background: var(--glass-bg);
+      border: 1px solid var(--glass-border);
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
     }
     .sidebar.active {
       right: 0; animation: fadeIn 0.3s;
@@ -105,6 +130,9 @@
       font-size: 18px;
       transition: color 0.3s;
     }
+    .light-mode .sidebar ul li a {
+      color: var(--white); /* Черный текст в светлом режиме */
+    }
     .sidebar ul li a:hover {
       color: var(--neon-turquoise);
     }
@@ -114,21 +142,69 @@
       font-size: 24px; color: var(--white);
       cursor: pointer;
     }
-
-    /* Кнопка меню (справа, logo, текст) */
+    .light-mode .close-sidebar {
+      color: var(--white); /* Черный цвет в светлом режиме */
+    }
+    .sidebar-logo {
+      display: block;
+      margin: 20px auto 0;
+      width: 50px;
+      height: 50px;
+      animation: spin var(--spin-duration) linear infinite, glow 6s ease-in-out infinite;
+      transition: opacity 0.3s ease;
+    }
+    .sidebar.active .sidebar-logo {
+      opacity: 1;
+    }
+    .sidebar:not(.active) .sidebar-logo {
+      opacity: 0;
+    }
+    /* Анимация вращения только вокруг оси Y */
+    @keyframes spin {
+      0% {
+        transform: rotateY(0deg);
+      }
+      100% {
+        transform: rotateY(360deg);
+      }
+    }
+    /* Эффект освещения с использованием drop-shadow */
+    @keyframes glow {
+      0% {
+        filter: drop-shadow(10px 0 20px rgba(0, 247, 255, 0.5))
+                drop-shadow(-10px 0 10px rgba(0, 0, 0, 0.3));
+      }
+      25% {
+        filter: drop-shadow(0 10px 20px rgba(0, 247, 255, 0.5))
+                drop-shadow(0 -10px 10px rgba(0, 0, 0, 0.3));
+      }
+      50% {
+        filter: drop-shadow(-10px 0 20px rgba(0, 247, 255, 0.5))
+                drop-shadow(10px 0 10px rgba(0, 0, 0, 0.3));
+      }
+      75% {
+        filter: drop-shadow(0 -10px 20px rgba(0, 247, 255, 0.5))
+                drop-shadow(0 10px 10px rgba(0, 0, 0, 0.3));
+      }
+      100% {
+        filter: drop-shadow(10px 0 20px rgba(0, 247, 255, 0.5))
+                drop-shadow(-10px 0 10px rgba(0, 0, 0, 0.3));
+      }
+    }
     .menu-toggle {
       position: fixed; top: 10px; right: 10px;
       z-index: 1200;
       display: flex; align-items: center;
       transition: transform 0.3s ease;
+      perspective: 1000px; /* Для 3D-эффекта логотипа */
     }
     .menu-toggle button {
       background: transparent; border: none; cursor: pointer;
     }
-    .menu-toggle img {
-      width: 70px; height: 70px;
+    .menu-toggle img.logo {
+      width: 55px; height: 55px;
       margin-right: 10px;
-      transition: all 0.3s ease;
+      animation: spin var(--spin-duration) linear infinite, glow 6s ease-in-out infinite;
     }
     .vinh-menu-text {
       font-family: 'Passager', sans-serif;
@@ -137,13 +213,25 @@
       transition: font-size 0.3s ease;
       display: flex; flex-direction: column; align-items: flex-end;
     }
+    .light-mode .vinh-menu-text {
+      color: var(--white); /* Черный текст в светлом режиме */
+      text-shadow: none; /* Убираем тень в светлом режиме */
+    }
     .vinh-menu-text .address {
       font-size: 0.5em;
       color: rgba(255, 255, 255, 0.9);
       margin-top: 2px;
     }
-
-    /* Логотип слева */
+    .light-mode .vinh-menu-text .address {
+      color: rgba(0, 0, 0, 0.9); /* Черный адрес в светлом режиме */
+    }
+    .menu-toggle.active .vinh-menu-text {
+      font-size: 35px;
+      line-height: 1;
+    }
+    .menu-toggle.active .vinh-menu-text .address {
+      display: none;
+    }
     .logo-container {
       position: fixed; top: 0px; left: -400px;
       display: flex; align-items: center;
@@ -155,20 +243,19 @@
       box-shadow: 0 1px 2px rgba(174, 0, 255, 0.3);
       transition: left 0.3s ease;
       z-index: 1200;
+      perspective: 1000px; /* Для 3D-эффекта логотипа */
     }
     .logo-container.scrolled { left: 0px; }
     .logo-container img {
       width: 40px; height: 40px;
       margin-right: 5px;
+      animation: spin var(--spin-duration) linear infinite, glow 6s ease-in-out infinite;
     }
     .logo-container .vinh-menu-text { font-size: 20px; }
-
     .btn-small {
       font-size: 14px !important;
       padding: 5px 10px !important;
     }
-
-    /* Square checkbox + псевдоэлемент ✔ */
     .square-checkbox {
       -webkit-appearance: none;
       appearance: none;
@@ -180,7 +267,11 @@
       cursor: pointer;
       background: rgba(255, 255, 255, 0.1);
       transition: all 0.2s ease;
-      position: relative; /* для псевдоэлемента */
+      position: relative;
+    }
+    .light-mode .square-checkbox {
+      border: 1px solid var(--white); /* Черная граница в светлом режиме */
+      background: rgba(0, 0, 0, 0.1);
     }
     .square-checkbox:checked {
       transform: scale(1.1);
@@ -195,7 +286,6 @@
       font-size: 12px;
       font-weight: bold;
     }
-
     .legend-square {
       display: inline-block;
       width: 16px; height: 16px;
@@ -203,6 +293,9 @@
       margin-right: 5px;
       border: 1px solid var(--white);
       cursor: pointer;
+    }
+    .light-mode .legend-square {
+      border: 1px solid var(--white); /* Черная граница в светлом режиме */
     }
     .legend-green { background-color: green; }
     .legend-black { background-color: black; }
@@ -213,8 +306,6 @@
     .checkbox-black:checked   { background-color: black   !important; border-color: #fff !important; }
     .checkbox-yellow:checked  { background-color: yellow  !important; border-color: #fff !important; }
     .checkbox-red:checked     { background-color: red     !important; border-color: #fff !important; }
-
-    /* Стеклянные карточки */
     .glass-card {
       background: var(--glass-bg);
       border-radius: 20px;
@@ -225,6 +316,11 @@
       box-shadow: 0 8px 32px rgba(0, 247, 255, 0.2);
       opacity: 0; animation: fadeInCard 0.5s ease-out forwards;
     }
+    .light-mode .glass-card {
+      background: var(--glass-bg);
+      border: 1px solid var(--glass-border);
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+    }
     .glass-card:nth-child(1) { animation-delay: 0.1s; }
     .glass-card:nth-child(2) { animation-delay: 0.2s; }
     .glass-card:nth-child(3) { animation-delay: 0.3s; }
@@ -233,8 +329,52 @@
       to   { opacity: 1; transform: translateY(0); }
     }
     #indicators-container.glass-card,
-    #control-signatures-container.glass-card {
-      opacity: 1; animation: none; transform: translateY(0);
+    /* Контрольные подписи */
+    #control-signatures-container {
+      background: var(--glass-bg);
+      border-radius: 20px;
+      padding: 15px;
+      backdrop-filter: blur(var(--glass-blur));
+      border: 1px solid var(--glass-border);
+      margin: 20px 10px;
+      box-shadow: 0 8px 32px rgba(0, 247, 255, 0.2);
+    }
+
+    #control-signatures-container h4 {
+      margin: 0;
+      padding-bottom: 10px;
+      border-bottom: 1px solid var(--glass-border);
+      font-size: 18px;
+      text-align: center;
+    }
+
+    /* Стилизация каждой строки подписи */
+    #control-signatures-container > div {
+      display: flex;
+      align-items: center;
+      margin-top: 10px;
+    }
+
+    /* Убираем отступ у первой строки */
+    #control-signatures-container > div:first-child {
+      margin-top: 0;
+    }
+
+    /* Чекбоксы и подписи */
+    #control-signatures-container input[type="checkbox"] {
+      margin-right: 5px;
+    }
+
+    #control-signatures-container label {
+      flex: 1;
+      /* При необходимости можно добавить дополнительные отступы или выравнивание */
+    }
+
+    /* Если в строке есть поле для ввода, например, для Нм */
+    #control-signatures-container .nm-input {
+      display: inline-block;
+      width: 80px;
+      margin-left: 5px;
     }
 
     .rainbow-text { animation: rainbowText 20s linear infinite; }
@@ -245,8 +385,11 @@
       75%  { text-shadow: 0 0 5px #a6c1ee; }
       100% { text-shadow: 0 0 5px #a1c4fd; }
     }
-
-    /* Поля ввода */
+    .light-mode .rainbow-text {
+      animation: none; /* Убираем анимацию в светлом режиме */
+      text-shadow: none;
+      color: #000000;
+    }
     .form-control {
       background: rgba(0, 0, 0, 0.3);
       backdrop-filter: blur(5px);
@@ -264,13 +407,21 @@
       box-shadow: 0 0 5px var(--neon-cyan);
       animation: rainbowGlow 3s infinite;
     }
+    .light-mode .form-control {
+      background: rgba(255, 255, 255, 0.3);
+      color: #000;
+      border: 1px solid rgba(0, 0, 0, 0.3);
+    }
+    .light-mode .form-control:focus {
+      background: rgba(255, 255, 255, 0.3);
+      border-color: var(--neon-cyan);
+      box-shadow: 0 0 5px var(--neon-cyan);
+    }
     @keyframes rainbowGlow {
       0%   { box-shadow: 0 0 2px #edffd8, 0 0 3px #ff0000, 0 0 4px #0011ff, 0 0 5px #005eff; }
       50%  { box-shadow: 0 0 2px #ff0000, 0 0 3px #0011ff, 0 0 4px #005eff, 0 0 5px #edffd8; }
       100% { box-shadow: 0 0 2px #edffd8, 0 0 3px #ff0000, 0 0 4px #0011ff, 0 0 5px #005eff; }
     }
-
-    /* Кнопки */
     .btn-primary {
       background: var(--btn-gradient);
       border: none;
@@ -283,6 +434,9 @@
       transition: all 0.3s ease;
       box-shadow: 0 0 12px rgba(0, 247, 255, 0.3);
       touch-action: manipulation;
+    }
+    .light-mode .btn-primary {
+      color: #fff; /* Белый текст кнопки в светлом режиме */
     }
     .btn-primary:hover {
       box-shadow: 0 4px 15px rgba(0, 247, 255, 0.4);
@@ -334,7 +488,6 @@
       50%  { background-position: 100% 50%; }
       100% { background-position: 0% 50%; }
     }
-
     .btn-neon:hover {
       box-shadow: 0 4px 15px rgba(0, 247, 255, 0.4);
       transform: translateY(-2px);
@@ -343,8 +496,23 @@
       transform: translateY(1px);
       box-shadow: 0 2px 10px rgba(0, 247, 255, 0.2);
     }
-
-    /* Таблицы */
+    .theme-toggle-btn {
+      background: transparent;
+      border: none;
+      color: var(--white);
+      font-size: 18px;
+      font-family: 'Share Tech Mono', monospace;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      transition: color 0.3s;
+    }
+    .light-mode .theme-toggle-btn {
+      color: var(--white); /* Черный текст в светлом режиме */
+    }
+    .theme-toggle-btn:hover {
+      color: var(--neon-turquoise);
+    }
     .work-table, .details-table {
       width: 100%;
       border: none;
@@ -354,6 +522,10 @@
       background: rgba(0, 0, 0, 0.2);
       margin-bottom: 15px;
       table-layout: fixed;
+    }
+    .light-mode .work-table, .light-mode .details-table {
+      box-shadow: 0 0 8px rgba(0, 0, 0, 0.2); /* Тень в светлом режиме */
+      background: rgba(255, 255, 255, 0.2);
     }
     .work-table th, .work-table td,
     .details-table th, .details-table td {
@@ -368,6 +540,9 @@
     .work-table th, .details-table th {
       background-color: rgba(50, 50, 50, 0.7);
     }
+    .light-mode .work-table th, .light-mode .details-table th {
+      background-color: rgba(200, 200, 200, 0.7); /* Светлый фон заголовков в светлом режиме */
+    }
     .indicators {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
@@ -376,6 +551,9 @@
     hr {
       border: 1px solid var(--neon-blue);
       margin: 10px 0;
+    }
+    .light-mode hr {
+      border: 1px solid #000000; /* Черная линия в светлом режиме */
     }
     .section-header {
       display: flex;
@@ -388,6 +566,9 @@
       font-size: 0.9em;
       margin-left: 10px;
       color: rgba(255, 255, 255, 0.9);
+    }
+    .light-mode .section-header .duplicate-info {
+      color: rgba(0, 0, 0, 0.9); /* Черный текст в светлом режиме */
     }
     .row { margin-top: 10px; }
     .button-group {
@@ -406,8 +587,6 @@
       text-align: center;
       display: none;
     }
-
-    /* Адаптив под iPad */
     @media only screen
            and (min-device-width: 768px) and (max-device-width: 1024px)
            and (min-device-height: 1024px) and (max-device-height: 1536px)
@@ -453,8 +632,15 @@
       <li><a href="#">Мийка</a></li>
       <li><a href="#">Шиномонтаж</a></li>
       <li><a href="#">Контакти</a></li>
+      <li>
+        <button id="themeToggle" class="theme-toggle-btn">
+          <img src="img/dark_mode_icon.png" alt="Dark Mode" id="themeIcon" style="width: 24px; height: 24px; vertical-align: middle; margin-right: 5px;" />
+          Темний режим
+        </button>
+      </li>
       <li><a href="#">Вийти</a></li>
     </ul>
+    <img src="img/logo.png" alt="Логотип" class="sidebar-logo" />
   </div>
 
   <!-- Кнопка открытия бокового меню -->
@@ -481,7 +667,6 @@
   <div class="container" style="padding-top: 60px;">
     <form style="width: 100%;">
       <div class="order">
-        
         <!-- Блок (vinh-container) -->
         <div id="vinh-container" style="margin: 0px;">
           <div class="row">
@@ -823,14 +1008,15 @@
                     style="overflow:hidden; resize:none;"
                   ></textarea>
                 </td>
-                <!-- step=0.01, чтобы можно было вводить копейки -->
                 <td><input type="number" class="form-control part-price" step="0.01" min="0" /></td>
                 <td><input type="number" class="form-control work-price" step="0.01" min="0" /></td>
               </tr>
             </tbody>
           </table>
           <div class="work-total" style="margin-top: 10px; text-align: right">
-            Загальна сума: 0 UAH
+            Запчастини: 0.00 UAH<br>
+            Роботи: 0.00 UAH<br>
+            <strong>Загальна сума: 0.00 UAH</strong>
           </div>
           <div class="button-group">
             <button type="button" class="btn btn-primary btn-small add-work-row-btn">Додати рядок</button>
@@ -845,17 +1031,13 @@
             <input type="checkbox" class="square-checkbox" id="checkParts" />
             <label for="checkParts">Контрольна обтяжка встановлених запчастин</label>
           </div>
-          <div style="margin-top: 5px">
+          <label class="checkbox-wrapper">
             <input type="checkbox" class="square-checkbox" id="tightenWheels" />
-            <label for="tightenWheels">Затягування колісних болтів</label>
-            <input
-              type="text"
-              class="form-control"
-              style="width: 80px; display: inline-block; vertical-align: middle"
-              id="nmValue"
-            />
-            <span style="margin-left: 5px">Нм</span>
-          </div>
+            <span>Затягування колісних болтів</span>
+            <input type="text" class="form-control nm-input" id="nmValue" />
+            <span>Нм</span>
+          </label>          
+          
           <div style="margin-top: 10px">
             <input type="checkbox" class="square-checkbox" id="managerSignature" />
             <label for="managerSignature">Підпис менеджера</label>
@@ -866,7 +1048,7 @@
           </div>
         </div>
 
-        <!-- Кнопки: Сохранить / Добавить Наряд / Создать ссылку / Скриншот -->
+        <!-- Кнопки -->
         <div class="button-group-row">
           <button id="sendAdminBtn" type="button" class="btn btn-primary btn-neon">
             Зберегти
@@ -884,7 +1066,6 @@
           </button>
         </div>
 
-        <!-- Здесь появится сгенерированная ссылка -->
         <div class="generated-link-container">
           <label for="generatedLink">Згенероване посилання:</label>
           <input
@@ -908,15 +1089,15 @@
   </div>
 
   <script>
-    /* === Константы бота и чатов === */
-    const BOT_TOKEN              = 'ВАШ_BOT_TOKEN';
-    const ADMIN_CHAT_ID          = '-1002239976197'; /* куда отправлять при «Зберегти» */
-    const ADMIN_PARTS_CHAT_ID    = '-1002393963726'; /* куда отправлять запчасти */
-    const DISCUSSION_GROUP_CHAT_ID = '-1002239976197'; /* куда идет скриншот (кнопка «Скріншот») */
-    const REPLY_TO_MESSAGE_ID    = 'https://t.me/+VHtWYaAVbTg3ODUy';
-
-    /* Храним файл (техпаспорт) */
+    const BOT_TOKEN = '8099553216:AAEE3Ctou3yY4ddwVbXiUfHgfT7PeZyUyhA';
+    const ADMIN_CHAT_ID = '-1002239976197';
+    const ADMIN_PARTS_CHAT_ID = '-1002393963726';
+    const DISCUSSION_GROUP_CHAT_ID = '-1002239976197';
+    const REPLY_TO_MESSAGE_ID = 'https://t.me/+VHtWYaAVbTg3ODUy';
+  
     let selectedTechPassportFile = null;
+  
+    // Обработка выбора файла техпаспорта
     function handleTechPassportFileSelected(input) {
       const infoBlock = document.getElementById("selectedTechFileName");
       if (!input.files || !input.files.length) {
@@ -927,60 +1108,160 @@
       selectedTechPassportFile = input.files[0];
       if (infoBlock) infoBlock.textContent = "Обрано: " + selectedTechPassportFile.name;
     }
-
-    /* Автоувеличение textarea */
+  
+    // Автоматическое увеличение высоты текстового поля
     function autoGrow(element) {
       element.style.height = "auto";
       element.style.height = element.scrollHeight + "px";
     }
-
-    /* При скролле меняем меню / лого */
-    window.addEventListener('scroll', () => {
-      const menuToggle    = document.querySelector('.menu-toggle');
-      const menuText      = menuToggle.querySelector('.vinh-menu-text');
-      const logo          = menuToggle.querySelector('img');
-      const logoContainer = document.querySelector('.logo-container');
-      if (window.scrollY > 300) {
-        menuText.innerHTML      = 'E<br><div class="address"></div>';
-        menuText.style.fontSize = '35px';
-        logo.style.opacity      = '0';
-        logoContainer.classList.add('scrolled');
-      } else {
-        menuText.innerHTML      = 'AVALON SERVICE<br><div class="address">Дальницька 45</div>';
-        menuText.style.fontSize = '24px';
-        logo.style.opacity      = '1';
-        logoContainer.classList.remove('scrolled');
+  
+    // Пересчет итоговой суммы в таблице работ
+    function recalculateTotal(container) {
+      const tableBody = container.querySelector(".work-table tbody");
+      let totalParts = 0;
+      let totalLabor = 0;
+  
+      tableBody.querySelectorAll("tr").forEach(row => {
+        const partPrice = parseFloat(row.querySelector(".part-price")?.value || 0) || 0;
+        const laborPrice = parseFloat(row.querySelector(".work-price")?.value || 0) || 0;
+        totalParts += partPrice;
+        totalLabor += laborPrice;
+      });
+  
+      const totalSum = totalParts + totalLabor;
+      const totalDisplay = container.querySelector(".work-total");
+      if (totalDisplay) {
+        totalDisplay.innerHTML = `
+          Запчастини: ${totalParts.toLocaleString('uk-UA', {minimumFractionDigits: 2})} UAH<br>
+          Роботи: ${totalLabor.toLocaleString('uk-UA', {minimumFractionDigits: 2})} UAH<br>
+          <strong>Загальна сума: ${totalSum.toLocaleString('uk-UA', {minimumFractionDigits: 2})} UAH</strong>
+        `;
       }
-    });
-
-    /* Основная логика */
+    }
+  
+    // Обновление текста меню в зависимости от состояния
+    function updateMenuText() {
+      const sidebar = document.getElementById("sidebar");
+      const menuToggle = document.querySelector('.menu-toggle');
+      const menuText = menuToggle.querySelector('.vinh-menu-text');
+      const logo = menuToggle.querySelector('img');
+      const logoContainer = document.querySelector('.logo-container');
+  
+      if (sidebar.classList.contains("active")) {
+        menuText.innerHTML = 'X';
+        menuText.style.fontSize = '35px';
+        logo.style.opacity = '1';
+        logoContainer.classList.remove('scrolled');
+      } else {
+        if (window.scrollY > 300) {
+          menuText.innerHTML = 'E<br><div class="address"></div>';
+          menuText.style.fontSize = '35px';
+          logo.style.opacity = '0';
+          logoContainer.classList.add('scrolled');
+        } else {
+          menuText.innerHTML = 'AVALON SERVICE<br><div class="address">Дальницька 45</div>';
+          menuText.style.fontSize = '24px';
+          logo.style.opacity = '1';
+          logoContainer.classList.remove('scrolled');
+        }
+      }
+    }
+  
+    // Обновление meta theme-color в зависимости от темы
+    function updateThemeColor() {
+      const metaThemeColor = document.querySelector('meta[name="theme-color"]');
+      if (document.body.classList.contains("light-mode")) {
+        metaThemeColor.setAttribute("content", "#FFFFFF"); // Белый для светлого режима
+      } else {
+        metaThemeColor.setAttribute("content", "#000000"); // Черный для темного режима
+      }
+    }
+  
     document.addEventListener("DOMContentLoaded", function() {
-      /* Открытие/закрытие бокового меню через Hammer.js */
-      const menuButton   = document.getElementById("menuButton");
-      const sidebar      = document.getElementById("sidebar");
+      // Функция переключения темы
+      function toggleTheme() {
+        const body = document.body;
+        const themeIcon = document.getElementById("themeIcon");
+        const themeButton = document.getElementById("themeToggle");
+  
+        body.classList.toggle("light-mode");
+  
+        if (body.classList.contains("light-mode")) {
+          themeIcon.src = "img/light_mode_icon.png";
+          themeButton.childNodes[2].textContent = "Світлий режим";
+          localStorage.setItem("theme", "light");
+        } else {
+          themeIcon.src = "img/dark_mode_icon.png";
+          themeButton.childNodes[2].textContent = "Темний режим";
+          localStorage.setItem("theme", "dark");
+        }
+  
+        updateThemeColor(); // Обновляем theme-color
+      }
+  
+      // Восстановление темы из localStorage
+      const savedTheme = localStorage.getItem("theme");
+      const themeButton = document.getElementById("themeToggle");
+      const themeIcon = document.getElementById("themeIcon");
+      if (savedTheme === "light") {
+        document.body.classList.add("light-mode");
+        themeIcon.src = "img/light_mode_icon.png";
+        themeButton.childNodes[2].textContent = "Світлий режим";
+      } else {
+        themeIcon.src = "img/dark_mode_icon.png";
+        themeButton.childNodes[2].textContent = "Темний режим";
+      }
+      updateThemeColor(); // Устанавливаем начальный theme-color
+  
+      // Обработчик для кнопки переключения темы
+      if (themeButton) {
+        const hammerTheme = new Hammer(themeButton);
+        hammerTheme.on("tap", toggleTheme);
+      }
+  
+      // Обработчики для бокового меню
+      const menuButton = document.getElementById("menuButton");
+      const sidebar = document.getElementById("sidebar");
       const closeSidebar = document.getElementById("closeSidebar");
-
+      const menuToggle = document.querySelector('.menu-toggle');
+  
       if (menuButton && sidebar) {
         const hammerMenu = new Hammer(menuButton);
-        hammerMenu.on("tap", () => sidebar.classList.toggle("active"));
+        hammerMenu.on("tap", () => {
+          sidebar.classList.toggle("active");
+          menuToggle.classList.toggle("active");
+          updateMenuText();
+        });
+  
         document.addEventListener("click", (event) => {
           if (!sidebar.contains(event.target) && !menuButton.contains(event.target)) {
             sidebar.classList.remove("active");
+            menuToggle.classList.remove("active");
+            updateMenuText();
           }
         });
+  
         if (closeSidebar) {
           const hammerClose = new Hammer(closeSidebar);
-          hammerClose.on("tap", () => sidebar.classList.remove("active"));
+          hammerClose.on("tap", () => {
+            sidebar.classList.remove("active");
+            menuToggle.classList.remove("active");
+            updateMenuText();
+          });
         }
       }
-
-      /* Дублирование VIN/модель/год/номер */
+  
+      // Обновление текста меню при прокрутке
+      window.addEventListener('scroll', () => {
+        updateMenuText();
+      });
+  
+      // Обновление дублирующих данных (VIN, модель, год, номер)
       function updateDuplicates() {
-        const vinValue       = document.getElementById("vin")?.value || "";
-        const carModelValue  = document.getElementById("carModel")?.value || "";
-        const yearValue      = document.getElementById("year")?.value || "";
-        const plateValue     = document.getElementById("plate")?.value || "";
-
+        const vinValue = document.getElementById("vin")?.value || "";
+        const carModelValue = document.getElementById("carModel")?.value || "";
+        const yearValue = document.getElementById("year")?.value || "";
+        const plateValue = document.getElementById("plate")?.value || "";
         ["vin_defects", "vin_work"].forEach(id => {
           document.getElementById(id).textContent = vinValue;
         });
@@ -994,39 +1275,14 @@
           document.getElementById(id).textContent = plateValue;
         });
       }
+  
       ["vin", "carModel", "year", "plate"].forEach((id) => {
         const el = document.getElementById(id);
         if (el) el.addEventListener("input", updateDuplicates);
       });
       updateDuplicates();
-
-      /* Функция пересчёта калькулятора в work-table */
-      function recalcWorkTableForContainer(container) {
-        const rows = container.querySelectorAll(".work-table tbody tr");
-        let total = 0;
-        rows.forEach((row) => {
-          // parseFloat
-          // Если хотите поддерживать запятую как разделитель: 
-          // let p = (row.querySelector(".part-price")?.value || "0").replace(",", ".");
-          // let w = (row.querySelector(".work-price")?.value || "0").replace(",", ".");
-          // const partPrice = parseFloat(p) || 0;
-          // const workPrice = parseFloat(w) || 0;
-
-          const partPrice = parseFloat(row.querySelector(".part-price")?.value || "0") || 0;
-          const workPrice = parseFloat(row.querySelector(".work-price")?.value || "0") || 0;
-          total += partPrice + workPrice;
-        });
-        const workTotal = container.querySelector(".work-total");
-        if (workTotal) {
-          /* Форматируем как 0.00 */
-          workTotal.textContent = `Загальна сума: ${total.toLocaleString('uk-UA', {
-            minimumFractionDigits: 2,
-            maximumFractionDigits: 2
-          })} UAH`;
-        }
-      }
-
-      /* Ставим клики по легендам (галочки) */
+  
+      // Привязка обработчиков для легенд таблицы
       function attachLegendListeners(container) {
         const legendsInThead = container.querySelectorAll('.details-table thead .legend-square');
         legendsInThead.forEach(legend => {
@@ -1051,34 +1307,32 @@
           });
         });
       }
-
-      /* Подключаем чекбоксы (дефекты) */
+  
+      // Привязка обработчиков для чекбоксов
       function attachCheckboxListeners(container) {
         const rows = container.querySelectorAll('.details-table tbody tr');
         rows.forEach(row => {
           const checkboxes = row.querySelectorAll('input[type="checkbox"]');
           checkboxes.forEach(chk => {
-            chk.addEventListener('change', () => {
-              // нет доп. логики, оставим как есть
-            });
+            chk.addEventListener('change', () => {});
           });
         });
       }
-
-      /* (Re)инициализация событий для блока .order */
+  
+      // Инициализация событий для контейнера заказа
       function reinitializeOrderEventsForContainer(container) {
-        /* Ловим поля в work-table */
+        // Обработчики для пересчета суммы
         container.querySelectorAll(".part-price, .work-price").forEach((input) => {
           if (!input.dataset.eventInitialized) {
-            input.addEventListener("input",  () => recalcWorkTableForContainer(container));
-            input.addEventListener("change", () => recalcWorkTableForContainer(container));
+            input.addEventListener("input", () => recalculateTotal(container));
+            input.addEventListener("change", () => recalculateTotal(container));
             const hammerInput = new Hammer(input);
-            hammerInput.on("tap", () => recalcWorkTableForContainer(container));
+            hammerInput.on("tap", () => recalculateTotal(container));
             input.dataset.eventInitialized = "true";
           }
         });
-
-        /* "Додати рядок" в таблице дефектов */
+  
+        // Добавление строки в таблицу дефектов
         container.querySelectorAll(".add-row-btn").forEach((btn) => {
           if (!btn.dataset.hammerInitialized) {
             const addRow = () => {
@@ -1113,15 +1367,14 @@
             btn.dataset.hammerInitialized = "true";
           }
         });
-
-        /* "Видалити рядок" в таблице дефектов */
+  
+        // Удаление строки из таблицы дефектов
         container.querySelectorAll(".remove-row-btn").forEach((btn) => {
           if (!btn.dataset.hammerInitialized) {
             const removeRow = () => {
               const tableBody = container.querySelector(".details-table tbody");
               if (tableBody && tableBody.rows.length > 1) {
                 tableBody.removeChild(tableBody.lastElementChild);
-                /* Перенумеруем */
                 Array.from(tableBody.rows).forEach((row, index) => {
                   row.cells[0].textContent = index + 1;
                 });
@@ -1132,8 +1385,8 @@
             btn.dataset.hammerInitialized = "true";
           }
         });
-
-        /* "Додати рядок" в work-table */
+  
+        // Добавление строки в таблицу работ
         container.querySelectorAll(".add-work-row-btn").forEach((btn) => {
           if (!btn.dataset.hammerInitialized) {
             const addWorkRow = () => {
@@ -1150,14 +1403,14 @@
                 tbody.appendChild(newRow);
                 newRow.querySelectorAll(".part-price, .work-price").forEach((input) => {
                   if (!input.dataset.eventInitialized) {
-                    input.addEventListener("input",  () => recalcWorkTableForContainer(container));
-                    input.addEventListener("change", () => recalcWorkTableForContainer(container));
+                    input.addEventListener("input", () => recalculateTotal(container));
+                    input.addEventListener("change", () => recalculateTotal(container));
                     const hammerInput = new Hammer(input);
-                    hammerInput.on("tap", () => recalcWorkTableForContainer(container));
+                    hammerInput.on("tap", () => recalculateTotal(container));
                     input.dataset.eventInitialized = "true";
                   }
                 });
-                recalcWorkTableForContainer(container);
+                recalculateTotal(container);
               }
             };
             const hammerBtn = new Hammer(btn);
@@ -1165,15 +1418,15 @@
             btn.dataset.hammerInitialized = "true";
           }
         });
-
-        /* "Видалити рядок" в work-table */
+  
+        // Удаление строки из таблицы работ
         container.querySelectorAll(".remove-work-row-btn").forEach((btn) => {
           if (!btn.dataset.hammerInitialized) {
             const removeWorkRow = () => {
               const tbody = container.querySelector(".work-table tbody");
               if (tbody && tbody.rows.length > 1) {
                 tbody.removeChild(tbody.lastElementChild);
-                recalcWorkTableForContainer(container);
+                recalculateTotal(container);
               }
             };
             const hammerBtn = new Hammer(btn);
@@ -1181,24 +1434,24 @@
             btn.dataset.hammerInitialized = "true";
           }
         });
-
-        /* Кнопка "Зберегти" -> отправка в TG + скриншот */
+  
+        // Отправка данных администратору
         const sendAdminBtn = container.querySelector("#sendAdminBtn");
         if (sendAdminBtn && !sendAdminBtn.dataset.hammerInitialized) {
           const hammerBtn = new Hammer(sendAdminBtn);
           hammerBtn.on("tap", () => collectAllDataAndSendToTelegram("save", container));
           sendAdminBtn.dataset.hammerInitialized = "true";
         }
-
-        /* Кнопка "Надіслати запчастини" -> отправка в TG (parts) */
+  
+        // Отправка данных о запчастях
         const sendPartsBtn = container.querySelector("#sendPartsBtn");
         if (sendPartsBtn && !sendPartsBtn.dataset.hammerInitialized) {
           const hammerBtn = new Hammer(sendPartsBtn);
           hammerBtn.on("tap", () => collectAllDataAndSendToTelegram("parts", container));
           sendPartsBtn.dataset.hammerInitialized = "true";
         }
-
-        /* "Добавить заказ" -> клон контейнера .order */
+  
+        // Добавление нового наряд-заказа
         const addOrderBtn = container.querySelector("#addOrderBtn");
         if (addOrderBtn && !addOrderBtn.dataset.hammerInitialized) {
           const addOrder = () => {
@@ -1227,7 +1480,6 @@
                 newOrder.appendChild(clone);
               }
             });
-            /* Кнопки под клоном */
             const orderButtons1 = document.createElement("div");
             orderButtons1.className = "button-group-row";
             orderButtons1.innerHTML = `
@@ -1250,7 +1502,7 @@
             newOrder.appendChild(orderButtons1);
             newOrder.appendChild(orderButtons2);
             newOrder.appendChild(linkContainer);
-
+  
             document.querySelector("form").appendChild(newOrder);
             reinitializeOrderEventsForContainer(newOrder);
             attachCheckboxListeners(newOrder);
@@ -1260,16 +1512,16 @@
           hammerBtn.on("tap", addOrder);
           addOrderBtn.dataset.hammerInitialized = "true";
         }
-
-        /* "Створити посилання" -> кодируем JSON в URL */
+  
+        // Создание ссылки для шаринга
         const createLinkBtn = container.querySelector("#createLinkBtn");
         if (createLinkBtn && !createLinkBtn.dataset.hammerInitialized) {
           const hammerBtn = new Hammer(createLinkBtn);
           hammerBtn.on("tap", () => createShareableLink(container));
           createLinkBtn.dataset.hammerInitialized = "true";
         }
-
-        /* "Копировать ссылку" в блоке .generated-link-container */
+  
+        // Копирование ссылки
         const copyLinkBtn = container.querySelector(".generated-link-container button");
         if (copyLinkBtn && !copyLinkBtn.dataset.hammerInitialized) {
           const copyLink = () => {
@@ -1284,40 +1536,40 @@
           hammerBtn.on("tap", copyLink);
           copyLinkBtn.dataset.hammerInitialized = "true";
         }
-
-        /* "Скріншот" -> отправить в DISCUSSION_GROUP_CHAT_ID */
+  
+        // Создание скриншота и отправка в Telegram
         const screenshotBtn = container.querySelector("#screenshotBtn");
         if (screenshotBtn && !screenshotBtn.dataset.hammerInitialized) {
           const takeScreenshot = async () => {
             try {
               const canvas = await html2canvas(document.body, {
                 scale: window.devicePixelRatio,
-                width:  document.documentElement.scrollWidth,
+                width: document.documentElement.scrollWidth,
                 height: document.documentElement.scrollHeight,
                 useCORS: true,
                 scrollX: 0,
                 scrollY: 0
               });
               const imageData = canvas.toDataURL("image/png");
-              const response  = await fetch(imageData);
-              const blob      = await response.blob();
-              const formData  = new FormData();
+              const response = await fetch(imageData);
+              const blob = await response.blob();
+              const formData = new FormData();
               formData.append("chat_id", DISCUSSION_GROUP_CHAT_ID);
               formData.append("document", blob, "screenshot.png");
               formData.append("reply_to_message_id", REPLY_TO_MESSAGE_ID);
-
+  
               const data = collectFormData(container);
               const caption = `
-Ім'я клієнта: ${data.clientName || ""}
-Телефон: ${data.phone || ""}
-VIN номер: ${data.vin || ""}
-Модель авто: ${data.carModel || ""}
-Рік випуску: ${data.year || ""}
-Номерний знак: ${data.plate || ""}
-Пробіг (км): ${data.mileage || ""}
-`.trim();
+  Ім'я клієнта: ${data.clientName || ""}
+  Телефон: ${data.phone || ""}
+  VIN номер: ${data.vin || ""}
+  Модель авто: ${data.carModel || ""}
+  Рік випуску: ${data.year || ""}
+  Номерний знак: ${data.plate || ""}
+  Пробіг (км): ${data.mileage || ""}
+  `.trim();
               formData.append("caption", caption);
-
+  
               const telegramResponse = await fetch(
                 `https://api.telegram.org/bot${BOT_TOKEN}/sendDocument`,
                 { method: "POST", body: formData }
@@ -1338,17 +1590,18 @@ VIN номер: ${data.vin || ""}
           screenshotBtn.dataset.hammerInitialized = "true";
         }
       }
-
-      /* Инициализируем .order */
+  
+      // Инициализация событий для оригинального заказа
       const originalOrder = document.querySelector(".order");
       if (originalOrder) {
         reinitializeOrderEventsForContainer(originalOrder);
         attachCheckboxListeners(originalOrder);
         attachLegendListeners(originalOrder);
         restoreFormData(originalOrder);
+        recalculateTotal(originalOrder);
       }
-
-      /* Сбор формы в объект */
+  
+      // Сбор данных из формы
       function collectFormData(container) {
         const data = {};
         container.querySelectorAll("input, textarea").forEach((el) => {
@@ -1358,18 +1611,18 @@ VIN номер: ${data.vin || ""}
         });
         const details = [];
         container.querySelectorAll(".details-table tbody tr").forEach((row, idx) => {
-          const partName    = row.cells[1]?.querySelector("textarea")?.value || "";
-          const wear        = row.cells[2]?.querySelector("input")?.checked || false;
-          const looseness   = row.cells[3]?.querySelector("input")?.checked || false;
-          const recReplace  = row.cells[4]?.querySelector("input")?.checked || false;
+          const partName = row.cells[1]?.querySelector("textarea")?.value || "";
+          const wear = row.cells[2]?.querySelector("input")?.checked || false;
+          const looseness = row.cells[3]?.querySelector("input")?.checked || false;
+          const recReplace = row.cells[4]?.querySelector("input")?.checked || false;
           const critReplace = row.cells[5]?.querySelector("input")?.checked || false;
           details.push({ idx, partName, wear, looseness, recReplace, critReplace });
         });
         data.details = details;
-
+  
         const works = [];
         container.querySelectorAll(".work-table tbody tr").forEach((row) => {
-          const partName  = row.cells[0]?.querySelector("textarea")?.value || "";
+          const partName = row.cells[0]?.querySelector("textarea")?.value || "";
           const partPrice = row.cells[1]?.querySelector("input")?.value || "";
           const workPrice = row.cells[2]?.querySelector("input")?.value || "";
           works.push({ partName, partPrice, workPrice });
@@ -1377,113 +1630,110 @@ VIN номер: ${data.vin || ""}
         data.works = works;
         return data;
       }
-
-      /* Отправка данных в TG */
+  
+      // Отправка данных в Telegram
       async function collectAllDataAndSendToTelegram(mode, container) {
-        const data      = collectFormData(container);
-        const totalText = container.querySelector(".work-total")?.textContent || "Загальна сума: 0 UAH";
-
+        const data = collectFormData(container);
+        const totalText = container.querySelector(".work-total")?.innerHTML || "Загальна сума: 0 UAH";
+  
         const indicators = [];
         const mapInd = {
           checkEngine: "Check Engine",
-          battery:     "Battery",
-          oil:         "Oil",
-          coolant:     "Coolant",
-          tpms:        "TPMS",
-          airbag:      "Airbag",
-          abs:         "ABS",
-          esp:         "ESP",
-          brakeWear:   "Brake Wear"
+          battery: "Battery",
+          oil: "Oil",
+          coolant: "Coolant",
+          tpms: "TPMS",
+          airbag: "Airbag",
+          abs: "ABS",
+          esp: "ESP",
+          brakeWear: "Brake Wear"
         };
         for (const key in mapInd) {
           if (data[key]) indicators.push(mapInd[key]);
         }
-
+  
         const checks = [];
-        if (data.checkParts)     checks.push("Контрольна обтяжка встановлених запчастин");
-        if (data.tightenWheels)  checks.push(`Затягування колісних болтів ${data.nmValue || ""} Nm`);
+        if (data.checkParts) checks.push("Контрольна обтяжка встановлених запчастин");
+        if (data.tightenWheels) checks.push(`Затягування колісних болтів ${data.nmValue || ""} Nm`);
         if (data.managerSignature) checks.push("Підпис менеджера");
-        if (data.clientSignature)  checks.push("Підпис клієнта: Я прочитав і приймаю");
-
+        if (data.clientSignature) checks.push("Підпис клієнта: Я прочитав і приймаю");
+  
         let message;
         if (mode === "save") {
-          // "Сохранить" -> отправляем текст + сразу делаем скриншот
           message = `
-Збережено:
-Ім'я клієнта: ${data.clientName || ""}
-Телефон: ${data.phone || ""}
-VIN: ${data.vin || ""}
-Модель: ${data.carModel || ""}
-Рік: ${data.year || ""}
-Номер: ${data.plate || ""}
-Пробіг: ${data.mileage || ""}
-Бажані роботи: ${data.workList || ""}
-Індикатори: ${indicators.join(", ") || "(немає)"}
-
-Акт дефектів:
-- передні колодки(%): ${data.ptk_percent || ""}
-- задні колодки(%): ${data.ztk_percent || ""}
-- передні диски(мм): ${data.ptd_mm || ""}
-- задні диски(мм): ${data.ztd_mm || ""}
-- гальмівна рідина: ${data.brakeFluid || ""}
-- охолоджуюча рідина: ${data.antifreeze || ""}
-- моторна олива: ${data.engineOil || ""}
-- олива в трансмісії: ${data.transmissionOil || ""}
-
-Деталі:
-${
-  data.details
-    .map((d) => {
-      const flags = [
-        d.wear        ? "Знос" : "",
-        d.looseness   ? "Люфт" : "",
-        d.recReplace  ? "Рек. заміна" : "",
-        d.critReplace ? "Критична заміна" : ""
-      ].filter(Boolean).join(", ");
-      return `#${d.idx + 1} ${d.partName} [${flags}]`;
-    })
-    .join("\n") || "(немає)"
-}
-
-Дод. примітки: ${data.notes || ""}
-
-ЗАЯВКА НА РОБОТИ:
-${
-  data.works
-    .map((w) => `- ${w.partName} | запчастина: ${w.partPrice} | робота: ${w.workPrice}`)
-    .join("\n") || "(немає)"
-}
-${totalText}
-
-Контрольні позначки: ${checks.join(", ") || "(немає)"}
-`.trim();
+  Збережено:
+  Ім'я клієнта: ${data.clientName || ""}
+  Телефон: ${data.phone || ""}
+  VIN: ${data.vin || ""}
+  Модель: ${data.carModel || ""}
+  Рік: ${data.year || ""}
+  Номер: ${data.plate || ""}
+  Пробіг: ${data.mileage || ""}
+  Бажані роботи: ${data.workList || ""}
+  Індикатори: ${indicators.join(", ") || "(немає)"}
+  
+  Акт дефектів:
+  - передні колодки(%): ${data.ptk_percent || ""}
+  - задні колодки(%): ${data.ztk_percent || ""}
+  - передні диски(мм): ${data.ptd_mm || ""}
+  - задні диски(мм): ${data.ztd_mm || ""}
+  - гальмівна рідина: ${data.brakeFluid || ""}
+  - охолоджуюча рідина: ${data.antifreeze || ""}
+  - моторна олива: ${data.engineOil || ""}
+  - олива в трансмісії: ${data.transmissionOil || ""}
+  
+  Деталі:
+  ${
+    data.details
+      .map((d) => {
+        const flags = [
+          d.wear ? "Знос" : "",
+          d.looseness ? "Люфт" : "",
+          d.recReplace ? "Рек. заміна" : "",
+          d.critReplace ? "Критична заміна" : ""
+        ].filter(Boolean).join(", ");
+        return `#${d.idx + 1} ${d.partName} [${flags}]`;
+      })
+      .join("\n") || "(немає)"
+  }
+  
+  Дод. примітки: ${data.notes || ""}
+  
+  ЗАЯВКА НА РОБОТИ:
+  ${
+    data.works
+      .map((w) => `- ${w.partName} | запчастина: ${w.partPrice} | робота: ${w.workPrice}`)
+      .join("\n") || "(немає)"
+  }
+  ${totalText}
+  
+  Контрольні позначки: ${checks.join(", ") || "(немає)"}
+  `.trim();
         } else if (mode === "parts") {
-          // "Надіслати запчастини"
           const partNames = data.details
             .map(d => d.partName)
             .filter(name => name.trim() !== "");
           message = `
-Модель авто: ${data.carModel || "(не вказано)"}
-Рік: ${data.year || "(не вказано)"}
-VIN: ${data.vin || "(не вказано)"}
-- передні колодки(%): ${data.ptk_percent || "(не вказано)"}
-- задні колодки(%): ${data.ztk_percent || "(не вказано)"}
-- передні диски(мм): ${data.ptd_mm || "(не вказано)"}
-- задні диски(мм): ${data.ztd_mm || "(не вказано)"}
-- олива в трансмісії: ${data.transmissionOil || "(не вказано)"}
-
-Назва запчастини або вузла:
-${
-  partNames.length > 0
-    ? partNames.map((name, index) => `${index + 1}: ${name}`).join("\n")
-    : "Немає запчастин"
-}
-`.trim();
+  Модель авто: ${data.carModel || "(не вказано)"}
+  Рік: ${data.year || "(не вказано)"}
+  VIN: ${data.vin || "(не вказано)"}
+  - передні колодки(%): ${data.ptk_percent || "(не вказано)"}
+  - задні колодки(%): ${data.ztk_percent || "(не вказано)"}
+  - передні диски(мм): ${data.ptd_mm || "(не вказано)"}
+  - задні диски(мм): ${data.ztd_mm || "(не вказано)"}
+  - олива в трансмісії: ${data.transmissionOil || "(не вказано)"}
+  
+  Назва запчастини або вузла:
+  ${
+    partNames.length > 0
+      ? partNames.map((name, index) => `${index + 1}: ${name}`).join("\n")
+      : "Немає запчастин"
+  }
+  `.trim();
         }
-
+  
         try {
           const chatId = (mode === "parts") ? ADMIN_PARTS_CHAT_ID : ADMIN_CHAT_ID;
-          // 1) Отправляем текст
           const textResponse = await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
@@ -1493,8 +1743,7 @@ ${
           if (!textResult.ok) {
             throw new Error("Помилка надсилання тексту: " + textResult.description);
           }
-
-          // 2) Если есть файл техпаспорта, отправляем фото
+  
           if (selectedTechPassportFile) {
             const formData = new FormData();
             formData.append("chat_id", chatId);
@@ -1509,26 +1758,25 @@ ${
               throw new Error("Помилка надсилання фото: " + photoResult.description);
             }
           }
-
-          // 3) Если это режим "save", делаем еще скриншот и отправляем
+  
           if (mode === "save") {
             const canvas = await html2canvas(document.body, {
               scale: window.devicePixelRatio,
-              width:  document.documentElement.scrollWidth,
+              width: document.documentElement.scrollWidth,
               height: document.documentElement.scrollHeight,
               useCORS: true,
               scrollX: 0,
               scrollY: 0
             });
             const imageData = canvas.toDataURL("image/png");
-            const response  = await fetch(imageData);
-            const blob      = await response.blob();
-
+            const response = await fetch(imageData);
+            const blob = await response.blob();
+  
             const formData = new FormData();
             formData.append("chat_id", ADMIN_CHAT_ID);
             formData.append("document", blob, "screenshot.png");
             formData.append("caption", `Збережено для ${data.clientName || "Невідомий клієнт"}`);
-
+  
             const telegramResponse = await fetch(
               `https://api.telegram.org/bot${BOT_TOKEN}/sendDocument`,
               { method: "POST", body: formData }
@@ -1538,34 +1786,33 @@ ${
               throw new Error("Помилка надсилання скріншота: " + result.description);
             }
           }
-
+  
           alert("Дані успішно надіслано в Telegram!");
         } catch (err) {
           console.error("Помилка:", err);
           alert("Помилка при надсиланні: " + err.message);
         }
       }
-
-      /* "Створити посилання" -> JSON => ?formData=... */
+  
+      // Создание ссылки для шаринга
       function createShareableLink(container) {
-        const data       = collectFormData(container);
-        const jsonData   = JSON.stringify(data);
-        const encodedData= encodeURIComponent(jsonData);
+        const data = collectFormData(container);
+        const jsonData = JSON.stringify(data);
+        const encodedData = encodeURIComponent(jsonData);
         const currentUrl = window.location.href.split('?')[0];
         const shareableLink = `${currentUrl}?formData=${encodedData}`;
         const linkContainer = container.querySelector(".generated-link-container");
-        const linkInput     = linkContainer.querySelector("input");
+        const linkInput = linkContainer.querySelector("input");
         linkContainer.style.display = "block";
         linkInput.value = shareableLink;
       }
-
-      /* Восстановление данных из ?formData=... */
+  
+      // Восстановление данных формы из URL
       function restoreFormData(container) {
         const urlParams = new URLSearchParams(window.location.search);
-        const formData  = urlParams.get("formData");
+        const formData = urlParams.get("formData");
         if (formData) {
           const decodedData = JSON.parse(decodeURIComponent(formData));
-          // восстанавливаем input/textarea
           container.querySelectorAll("input, textarea").forEach((el) => {
             if (el.id && decodedData[el.id] !== undefined) {
               if (el.type === "checkbox") el.checked = decodedData[el.id];
@@ -1573,7 +1820,6 @@ ${
               if (el.tagName === "TEXTAREA") autoGrow(el);
             }
           });
-          // детали
           const detailsTable = container.querySelector(".details-table tbody");
           if (detailsTable && decodedData.details) {
             detailsTable.innerHTML = "";
@@ -1581,105 +1827,34 @@ ${
               const newRow = detailsTable.insertRow();
               newRow.innerHTML = `
                 <td>${idx + 1}</td>
-                <td>
-                  <textarea
-                    class="form-control"
-                    oninput="autoGrow(this)"
-                    style="overflow:hidden; resize:none;"
-                    rows="1"
-                  >${item.partName}</textarea>
-                </td>
-                <td><input type="checkbox" class="checkbox-green square-checkbox" ${item.wear        ? "checked" : ""} /></td>
-                <td><input type="checkbox" class="checkbox-black square-checkbox" ${item.looseness   ? "checked" : ""} /></td>
-                <td><input type="checkbox" class="checkbox-yellow square-checkbox" ${item.recReplace ? "checked" : ""} /></td>
-                <td><input type="checkbox" class="checkbox-red square-checkbox" ${item.critReplace  ? "checked" : ""} /></td>
-              `;
-            });
-            attachCheckboxListeners(container);
-          }
-          // работы
-          const worksTable = container.querySelector(".work-table tbody");
-          if (worksTable && decodedData.works) {
-            worksTable.innerHTML = "";
-            decodedData.works.forEach((item) => {
-              const newRow = worksTable.insertRow();
-              newRow.innerHTML = `
-                <td>
-                  <textarea
-                    class="form-control"
-                    rows="1"
-                    oninput="autoGrow(this)"
-                    style="overflow:hidden; resize:none;"
-                  >${item.partName}</textarea>
-                </td>
-                <td><input type="number" class="form-control part-price" value="${item.partPrice}" step="0.01" min="0" /></td>
-                <td><input type="number" class="form-control work-price" value="${item.workPrice}" step="0.01" min="0" /></td>
-              `;
-            });
-            recalcWorkTableForContainer(container);
-          }
-          updateDuplicates();
-        }
-      }
-
-      /* Cохранение в localStorage (при вводе) */
-      function saveToLocalStorage() {
-        const data = collectFormData(document.querySelector(".order"));
-        localStorage.setItem('formData', JSON.stringify(data));
-      }
-      /* Восстановление из localStorage */
-      function restoreFromLocalStorage() {
-        const savedData = localStorage.getItem('formData');
-        if (savedData) {
-          const data      = JSON.parse(savedData);
-          const container = document.querySelector(".order");
-          container.querySelectorAll("input, textarea").forEach((el) => {
-            if (el.id && data[el.id] !== undefined) {
-              if (el.type === "checkbox") el.checked = data[el.id];
-              else el.value = data[el.id];
-              if (el.tagName === "TEXTAREA") autoGrow(el);
-            }
-          });
-          const detailsTable = container.querySelector(".details-table tbody");
-          if (detailsTable && data.details) {
-            detailsTable.innerHTML = "";
-            data.details.forEach((item, idx) => {
-              const newRow = detailsTable.insertRow();
-              newRow.innerHTML = `
-                <td>${idx + 1}</td>
-                <td><textarea class="form-control" oninput="autoGrow(this)" style="overflow:hidden; resize:none;" rows="1">${item.partName}</textarea></td>
+                <td><textarea class="form-control" name="part${idx + 1}" oninput="autoGrow(this)" style="overflow:hidden; resize:none;" rows="1">${item.partName}</textarea></td>
                 <td><input type="checkbox" class="checkbox-green square-checkbox" ${item.wear ? "checked" : ""} /></td>
                 <td><input type="checkbox" class="checkbox-black square-checkbox" ${item.looseness ? "checked" : ""} /></td>
                 <td><input type="checkbox" class="checkbox-yellow square-checkbox" ${item.recReplace ? "checked" : ""} /></td>
                 <td><input type="checkbox" class="checkbox-red square-checkbox" ${item.critReplace ? "checked" : ""} /></td>
               `;
+              const newTextarea = newRow.querySelector("textarea");
+              newTextarea.addEventListener("input", () => autoGrow(newTextarea));
             });
-            attachCheckboxListeners(container);
           }
-          const worksTable = container.querySelector(".work-table tbody");
-          if (worksTable && data.works) {
-            worksTable.innerHTML = "";
-            data.works.forEach((item) => {
-              const newRow = worksTable.insertRow();
+          const workTable = container.querySelector(".work-table tbody");
+          if (workTable && decodedData.works) {
+            workTable.innerHTML = "";
+            decodedData.works.forEach((item) => {
+              const newRow = workTable.insertRow();
               newRow.innerHTML = `
                 <td><textarea class="form-control" rows="1" oninput="autoGrow(this)" style="overflow:hidden; resize:none;">${item.partName}</textarea></td>
-                <td><input type="number" class="form-control part-price" value="${item.partPrice}" step="0.01" min="0" /></td>
-                <td><input type="number" class="form-control work-price" value="${item.workPrice}" step="0.01" min="0" /></td>
+                <td><input type="number" class="form-control part-price" step="0.01" min="0" value="${item.partPrice}" /></td>
+                <td><input type="number" class="form-control work-price" step="0.01" min="0" value="${item.workPrice}" /></td>
               `;
+              const newTextarea = newRow.querySelector("textarea");
+              newTextarea.addEventListener("input", () => autoGrow(newTextarea));
             });
-            recalcWorkTableForContainer(container);
+            recalculateTotal(container);
           }
-          updateDuplicates();
         }
       }
-
-      /* Навешиваем автосохранение при вводе */
-      document.querySelectorAll("input, textarea").forEach((el) => {
-        el.addEventListener("input", saveToLocalStorage);
-      });
-      // restoreFromLocalStorage(); // Если хотите восстанавливать при загрузке
     });
   </script>
 </body>
 </html>
-
