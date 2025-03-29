@@ -1006,6 +1006,7 @@
             </thead>
             <tbody>
               <tr>
+<<<<<<< HEAD
                 <td><input type="text" class="form-control"></td>
                 <td><input type="number" class="form-control part-price"></td>
                 <td><input type="number" class="form-control work-price"></td>
@@ -1014,6 +1015,27 @@
           </table>
           <div class="work-total" style="margin-top:10px;text-align:right;">Общая сумма: 0</div>
           <div style="margin-top:10px; display:flex; justify-content:space-between; align-items:center;">
+=======
+                <td>
+                  <textarea
+                    class="form-control"
+                    rows="1"
+                    oninput="autoGrow(this)"
+                    style="overflow:hidden; resize:none;"
+                  ></textarea>
+                </td>
+                <td><input type="number" class="form-control part-price" step="0.01" min="0" /></td>
+                <td><input type="number" class="form-control work-price" step="0.01" min="0" /></td>
+              </tr>
+            </tbody>
+          </table>
+          <div class="work-total" style="margin-top: 10px; text-align: right">
+            Запчастини: 0.00 UAH<br>
+            Роботи: 0.00 UAH<br>
+            <strong>Загальна сума: 0.00 UAH</strong>
+          </div>
+          <div class="button-group">
+>>>>>>> c5575f000e4c49796ae68c82094a3a9364e33d76
             <button type="button" class="btn btn-primary btn-small add-work-row-btn">Додати рядок</button>
             <button type="button" class="btn btn-danger btn-small btn-neon remove-work-row-btn">Удалить строку</button>
           </div>
@@ -1852,4 +1874,8 @@
     });
   </script>
 </body>
+<<<<<<< HEAD
 </html>
+=======
+</html>
+>>>>>>> c5575f000e4c49796ae68c82094a3a9364e33d76
