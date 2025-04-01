@@ -1,7 +1,7 @@
 {
   "name": "AVALON SERVICE",
   "short_name": "Avalon",
-  "start_url": "/index.html",
+  "start_url": "https://jktigr.github.io/VINh_service_Tab/",
   "display": "standalone",
   "background_color": "#000000",
   "theme_color": "#000000",
