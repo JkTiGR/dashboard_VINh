@@ -14,6 +14,9 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/hammer.js/2.0.8/hammer.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/i18next@23.15.1/dist/umd/i18next.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/recharts@2.12.7/dist/recharts.umd.js"></script>
   <script>
     if ('serviceWorker' in navigator) {
       navigator.serviceWorker.register('/service-worker.js')
@@ -47,32 +50,22 @@
       --bs-body-color: #ffffff;
     }
     :root.light-mode {
-      /* Вместо очень ярких переходов делаем приглушённые тона */
-      --bg-dark: #E4E6EA; /* Основной светлый фон */
-      --neon-cyan: #7A7D88; /* Приглушённые оттенки для светлого режима */
+      --bg-dark: #E4E6EA;
+      --neon-cyan: #7A7D88;
       --neon-turquoise: #9EA0A5;
       --neon-blue: #6B6E79;
       --neon-pink: #A4A4A4;
-      --white: #000000; /* Текст преимущественно тёмный */
-      --glass-bg: rgba(255, 255, 255, 0.4); /* Чуть более плотное «стекло» */
+      --white: #000000;
+      --glass-bg: rgba(255, 255, 255, 0.4);
       --glass-border: rgba(0, 0, 0, 0.1);
-      --btn-gradient: linear-gradient(45deg, #b0b0b0, #d2d2d2); /* Спокойный градиент для кнопок */
-      --bs-body-color: #000000; /* Тёмный цвет текста */
+      --btn-gradient: linear-gradient(45deg, #b0b0b0, #d2d2d2);
+      --bs-body-color: #000000;
     }
-
-    /* Чтобы фон был ближе к вашему скриншоту, используем нейтральный градиент */
     .light-mode {
       margin: 0;
       padding: 0;
       min-height: 100vh;
-      /* Небольшая серо-фиолетовая палитра */
-      background: linear-gradient(
-        102deg,
-        #e1e2e6,
-        #f0f0f2,
-        #c7c9d0,
-        #eeeeee
-      );
+      background: linear-gradient(102deg, #e1e2e6, #f0f0f2, #c7c9d0, #eeeeee);
       background-size: 200% 200%;
       animation: gradientAnimation 15s ease infinite;
       font-family: 'Share Tech Mono', monospace;
@@ -81,7 +74,6 @@
       -webkit-user-select: none;
       user-select: none;
     }
-
     html, body {
       margin: 0;
       padding: 0;
@@ -123,7 +115,8 @@
       box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
     }
     .sidebar.active {
-      right: 0; animation: fadeIn 0.3s;
+      right: 0;
+      animation: fadeIn 0.3s;
     }
     @keyframes fadeIn {
       from { opacity: 0; }
@@ -340,26 +333,12 @@
       backdrop-filter: blur(var(--glass-blur));
       border: 1px solid var(--glass-border);
       margin-bottom: 15px;
-      box-shadow: 0 8px 32px rgba(0, 247, 255, 0.2);
-      opacity: 0;
-      animation: fadeInCard 0.5s ease-out forwards;
+      box-shadow: 0 8px 32px rgba(0,247,255,0.2);
     }
     .light-mode .glass-card {
       background: var(--glass-bg);
       border: 1px solid var(--glass-border);
-      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
-    }
-    .glass-card:nth-child(1) { animation-delay: 0.1s; }
-    .glass-card:nth-child(2) { animation-delay: 0.2s; }
-    .glass-card:nth-child(3) { animation-delay: 0.3s; }
-    @keyframes fadeInCard {
-      from { opacity: 0; transform: translateY(20px); }
-      to   { opacity: 1; transform: translateY(0); }
-    }
-    .no-entry-animation {
-      animation: none !important;
-      opacity: 1 !important;
-      transform: translateY(0) !important;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.1);
     }
     #indicators-container.glass-card,
     #control-signatures-container {
@@ -369,7 +348,7 @@
       backdrop-filter: blur(var(--glass-blur));
       border: 1px solid var(--glass-border);
       margin: 20px 10px;
-      box-shadow: 0 8px 32px rgba(0, 247, 255, 0.2);
+      box-shadow: 0 8px 32px rgba(0,247,255,0.2);
     }
     #control-signatures-container h4 {
       margin: 0;
@@ -411,210 +390,6 @@
       color: #000000;
     }
     .form-control {
-      background: rgba(0, 0, 0, 0.3);
-      backdrop-filter: blur(5px);
-      color: #fff;
-      border: 1px solid rgba(255, 255, 255, 0.3);
-      border-radius: 10px;
-      font-size: 14px;
-      padding: 8px;
-      -webkit-user-select: auto;
-      user-select: auto;
-      width: 100%;
-    }
-    .form-control:focus {
-      background: rgba(0, 0, 0, 0.3);
-      border-color: var(--neon-cyan);
-      box-shadow: 0 0 5px var(--neon-cyan);
-      animation: rainbowGlow 3s infinite;
-    }
-    .light-mode .form-control {
-      background: rgba(255, 255, 255, 0.3);
-      color: #000;
-      border: 1px solid rgba(0, 0, 0, 0.3);
-    }
-    .light-mode .form-control:focus {
-      background: rgba(255, 255, 255, 0.3);
-      border-color: var(--neon-cyan);
-      box-shadow: 0 0 5px var(--neon-cyan);
-    }
-    @keyframes rainbowGlow {
-      0%   { box-shadow: 0 0 2px #edffd8, 0 0 3px #ff0000, 0 0 4px #0011ff, 0 0 5px #005eff; }
-      50%  { box-shadow: 0 0 2px #ff0000, 0 0 3px #0011ff, 0 0 4px #005eff, 0 0 5px #edffd8; }
-      100% { box-shadow: 0 0 2px #edffd8, 0 0 3px #ff0000, 0 0 4px #0011ff, 0 0 5px #005eff; }
-    }
-    .btn-primary {
-      background: var(--btn-gradient);
-      border: none;
-      font-weight: bold;
-      color: #fff;
-      padding: 8px 16px;
-      font-size: 16px;
-      border-radius: 12px;
-      cursor: pointer;
-      transition: all 0.3s ease;
-      box-shadow: 0 0 12px rgba(0, 247, 255, 0.3);
-      touch-action: manipulation;
-    }
-    .light-mode .btn-primary {
-      color: #fff;
-    }
-    .btn-primary:hover {
-      box-shadow: 0 4px 15px rgba(0, 247, 255, 0.4);
-      transform: translateY(-2px);
-    }
-    .btn-primary:active {
-      transform: translateY(1px);
-      box-shadow: 0 2px 10px rgba(0, 247, 255, 0.2);
-    }
-    .btn-danger {
-      background: linear-gradient(45deg, #ff3000, #cc0000);
-      border: none;
-      font-weight: bold;
-      color: #fff;
-      padding: 6px 12px;
-      font-size: 14px;
-      border-radius: 12px;
-      cursor: pointer;
-      transition: all 0.3s ease;
-      box-shadow: 0 0 10px rgba(255, 0, 0, 0.4);
-      touch-action: manipulation;
-    }
-    .btn-danger:hover {
-      background: linear-gradient(45deg, #d60000, #7f0000);
-      box-shadow: 0 4px 15px rgba(255, 0, 0, 0.6);
-      transform: translateY(-2px);
-    }
-    .btn-danger:active {
-      transform: translateY(1px);
-      box-shadow: 0 2px 10px rgba(255, 0, 0, 0.2);
-    }
-    .btn-neon {
-      position: relative;
-      overflow: hidden;
-      outline: none;
-      transition: all 0.3s ease;
-    }
-    .btn-neon::before {
-      content: "";
-      position: absolute;
-      top: -2px;
-      left: -2px;
-      width: calc(100% + 4px);
-      height: calc(100% + 4px);
-      border-radius: 12px;
-      z-index: -1;
-      background: var(--prism-colors);
-      background-size: 400%;
-      filter: blur(var(--prism-blur));
-      opacity: var(--prism-opacity);
-      animation: prismGlow var(--animation-duration) infinite linear;
-    }
-    @keyframes prismGlow {
-      0%   { background-position: 0% 50%; }
-      50%  { background-position: 100% 50%; }
-      100% { background-position: 0% 50%; }
-    }
-    .btn-neon:hover {
-      box-shadow: 0 4px 15px rgba(0, 247, 255, 0.4);
-      transform: translateY(-2px);
-    }
-    .btn-neon:active {
-      transform: translateY(1px);
-      box-shadow: 0 2px 10px rgba(0, 247, 255, 0.2);
-    }
-    .theme-toggle-btn {
-      background: transparent;
-      border: none;
-      color: var(--white);
-      font-size: 18px;
-      font-family: 'Share Tech Mono', monospace;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      transition: color 0.3s;
-    }
-    .light-mode .theme-toggle-btn {
-      color: var(--white);
-    }
-    .theme-toggle-btn:hover {
-      color: var(--neon-turquoise);
-    }
-    .work-table, .details-table {
-      width: 100%;
-      border: none;
-      border-radius: 8px;
-      overflow: hidden;
-      box-shadow: 0 0 8px rgba(0, 247, 255, 0.5);
-      background: rgba(0, 0, 0, 0.2);
-      margin-bottom: 15px;
-      table-layout: fixed;
-    }
-    .light-mode .work-table, .light-mode .details-table {
-      box-shadow: 0 0 8px rgba(0, 0, 0, 0.2);
-      background: rgba(255, 255, 255, 0.2);
-    }
-    .work-table th, .work-table td,
-    .details-table th, .details-table td {
-      border: none;
-      padding: 5px;
-      text-align: center;
-      font-size: 14px;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      white-space: nowrap;
-    }
-    .work-table th, .details-table th {
-      background-color: rgba(50, 50, 50, 0.7);
-    }
-    .light-mode .work-table th, .light-mode .details-table th {
-      background-color: rgba(200, 200, 200, 0.7);
-    }
-    .indicators {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
-      gap: 10px;
-    }
-    hr {
-      border: 1px solid var(--neon-blue);
-      margin: 10px 0;
-    }
-    .light-mode hr {
-      border: 1px solid #000000;
-    }
-    .section-header {
-      display: flex;
-      justify-content: flex-end;
-      align-items: center;
-      margin-bottom: 10px;
-      flex-wrap: wrap;
-    }
-    .section-header .duplicate-info {
-      font-size: 0.9em;
-      margin-left: 10px;
-      color: rgba(255, 255, 255, 0.9);
-    }
-    .light-mode .section-header .duplicate-info {
-      color: rgba(0, 0, 0, 0.9);
-    }
-    .row { margin-top: 10px; }
-    /* Разметка трёх колонок */
-    .row.pc-content { display: flex; }
-    .first-col { margin-right: auto; }
-    .second-col { margin: 0 10px; }
-    .third-col { margin-left: auto; }
-    /* Glassmorphism для карточек */
-    .glass-card {
-      background: var(--glass-bg);
-      border-radius: 20px;
-      padding: 15px;
-      margin-bottom: 15px;
-      backdrop-filter: blur(var(--glass-blur));
-      border: 1px solid var(--glass-border);
-      box-shadow: 0 8px 32px rgba(0, 247, 255, 0.2);
-    }
-    /* Стили для форм и таблиц */
-    .form-control {
       background: rgba(0,0,0,0.3);
       backdrop-filter: blur(5px);
       color: #fff;
@@ -622,11 +397,12 @@
       border-radius: 10px;
       font-size: 14px;
       padding: 8px;
-      width: 100%;
       -webkit-user-select: auto;
       user-select: auto;
+      width: 100%;
     }
     .form-control:focus {
+      background: rgba(0,0,0,0.3);
       border-color: var(--neon-cyan);
       box-shadow: 0 0 5px var(--neon-cyan);
       animation: rainbowGlow 3s infinite;
@@ -777,7 +553,6 @@
       text-align: center;
       display: none;
     }
-    /* Стили для блока "Чертеж автомобіля" */
     .blueprint-container {
       width: 100%;
       margin: 20px 0;
@@ -805,54 +580,142 @@
     .clearBtn { background-color: #ff9800; }
     .saveBtn { background-color: #2196F3; }
     .okBtn { background-color: #9C27B0; }
-    /* Новая разметка для трёх колонок */
-    .row.pc-content {
-      display: flex;
-      flex-wrap: wrap;
-    }
-    /* Первая колонка: Инфо об автомобілі и Чертеж */
+    .row.pc-content { display: flex; flex-wrap: wrap; }
     .first-col { flex: 1; min-width: 300px; }
-    /* Вторая колонка: Індикатори и Акт дефектів */
     .second-col { flex: 1; min-width: 300px; margin: 0 10px; }
-    /* Третья колонка: Заява, Контрольні позначки и Операції */
     .third-col { flex: 1; min-width: 300px; }
-    /* Дополнительные отступы для колонок */
     .col-divider { padding: 0 10px; }
-    /* Дополнительный блок для кнопок (Операції) */
-    .operations-block {
-      margin-top: 10px;
+    .operations-block { margin-top: 10px; }
+    #loginModal .modal-content {
+      background: var(--glass-bg);
+      backdrop-filter: blur(var(--glass-blur));
+      border: 1px solid var(--glass-border);
+      color: var(--white);
+    }
+    .light-mode #loginModal .modal-content {
+      background: var(--glass-bg);
+      color: var(--white);
+    }
+    .analytics-section {
+      margin-top: 20px;
+      padding: 20px;
+      background: var(--glass-bg);
+      border-radius: 20px;
+      backdrop-filter: blur(var(--glass-blur));
+      border: 1px solid var(--glass-border);
+      box-shadow: 0 8px 32px rgba(0,247,255,0.2);
+    }
+    .language-selector {
+      position: fixed;
+      top: 10px;
+      left: 10px;
+      z-index: 1200;
+    }
+    .language-selector select {
+      background: var(--glass-bg);
+      border: 1px solid var(--glass-border);
+      color: var(--white);
+      padding: 5px;
+      border-radius: 5px;
+      font-family: 'Share Tech Mono', monospace;
     }
   </style>
 </head>
 <body>
-  <!-- Боковое меню -->
+  <!-- Language Selector -->
+  <div class="language-selector">
+    <select id="languageSelector">
+      <option value="uk">UA</option>
+      <option value="ru">RU</option>
+      <option value="vi">VN</option>
+      <option value="zh">ZH</option>
+    </select>
+  </div>
+
+  <!-- Login Modal -->
+  <div class="modal fade" id="loginModal" tabindex="-1" aria-labelledby="loginModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="loginModalLabel" data-i18n="login_title">Увійти</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <form id="loginForm">
+            <div class="mb-3">
+              <label for="loginPlate" class="form-label" data-i18n="plate_number">Номерний знак</label>
+              <input type="text" class="form-control" id="loginPlate" required>
+            </div>
+            <div class="mb-3">
+              <label for="loginPassword" class="form-label" data-i18n="password">Пароль</label>
+              <input type="password" class="form-control" id="loginPassword" required>
+            </div>
+            <button type="submit" class="btn btn-primary" data-i18n="login">Увійти</button>
+          </form>
+          <div class="mt-3">
+            <button type="button" class="btn btn-link" id="showRegisterForm" data-i18n="register">Зареєструватися</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Register Modal -->
+  <div class="modal fade" id="registerModal" tabindex="-1" aria-labelledby="registerModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="registerModalLabel" data-i18n="register_title">Реєстрація</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <form id="registerForm">
+            <div class="mb-3">
+              <label for="registerPlate" class="form-label" data-i18n="plate_number">Номерний знак</label>
+              <input type="text" class="form-control" id="registerPlate" required>
+            </div>
+            <div class="mb-3">
+              <label for="registerPassword" class="form-label" data-i18n="password">Пароль</label>
+              <input type="password" class="form-control" id="registerPassword" required>
+            </div>
+            <button type="submit" class="btn btn-primary" data-i18n="register">Зареєструватися</button>
+          </form>
+          <div class="mt-3">
+            <button type="button" class="btn btn-link" id="showLoginForm" data-i18n="login">Увійти</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Бокове меню -->
   <div id="sidebar" class="sidebar">
     <button class="close-sidebar" id="closeSidebar">×</button>
     <ul>
-      <li><a href="#">Додому</a></li>
+      <li><a href="#" data-i18n="home">Додому</a></li>
       <li>
-        <a href="https://calendar.google.com/calendar/embed?src=jediservice.ua%40gmail.com&ctz=Europe%2FKiev" target="_blank">
+        <a href="https://calendar.google.com/calendar/embed?src=jediservice.ua%40gmail.com&ctz=Europe%2FKiev" target="_blank" data-i18n="schedule">
           Розклад
         </a>
       </li>
-      <li><a href="#">Діагностика</a></li>
-      <li><a href="#">Ремонт</a></li>
-      <li><a href="#">Запчастини</a></li>
-      <li><a href="#">Мийка</a></li>
-      <li><a href="#">Шиномонтаж</a></li>
-      <li><a href="#">Контакти</a></li>
+      <li><a href="#" data-i18n="diagnostics">Діагностика</a></li>
+      <li><a href="#" data-i18n="repair">Ремонт</a></li>
+      <li><a href="parts.html" id="partsLink" data-i18n="parts">Запчастини</a></li>
+      <li><a href="#" data-i18n="wash">Мийка</a></li>
+      <li><a href="#" data-i18n="tire">Шиномонтаж</a></li>
+      <li><a href="#" data-i18n="contacts">Контакти</a></li>
       <li>
         <button id="themeToggle" class="theme-toggle-btn">
           <img src="img/dark_mode_icon.png" alt="Dark Mode" id="themeIcon" style="width:24px;height:24px; vertical-align: middle; margin-right: 5px;" />
-          Темний режим
+          <span data-i18n="dark_mode">Темний режим</span>
         </button>
       </li>
-      <li><a href="#">Вийти</a></li>
+      <li><a href="#" id="logoutLink" data-i18n="logout">Вийти</a></li>
     </ul>
     <img src="img/logo.png" alt="Логотип" class="sidebar-logo" />
   </div>
 
-  <!-- Кнопка открытия бокового меню -->
+  <!-- Кнопка відкриття бокового меню -->
   <div class="menu-toggle">
     <img src="img/logo.png" alt="Логотип" class="logo" />
     <button id="menuButton">
@@ -863,7 +726,7 @@
     </button>
   </div>
 
-  <!-- Логотип-ссылка слева -->
+  <!-- Логотип-силка зліва -->
   <div class="logo-container">
     <img src="img/logo.png" alt="Логотип" class="logo" />
     <span class="vinh-menu-text">
@@ -872,29 +735,29 @@
     </span>
   </div>
 
-  <!-- Основной контент в контейнере -->
-  <div class="container-fluid" style="padding-top: 60px;">
+  <!-- Основний контент -->
+  <div class="container-fluid" style="padding-top: 60px;" id="dashboardContent" style="display: none;">
     <form style="width: 100%;">
       <div class="row pc-content">
-        <!-- Первая колонка: Інфо об автомобілі и Чертеж -->
+        <!-- Перша колонка: Інфо про автомобіль та Чертеж -->
         <div class="col-md-4 first-col">
           <div id="vinh-container" class="glass-card">
-            <h4>Інфо об автомобілі</h4>
+            <h4 data-i18n="car_info">Інфо об автомобілі</h4>
             <div class="row">
               <div class="col-6">
-                <label for="clientName">Ім'я клієнта:</label>
+                <label for="clientName" data-i18n="client_name">Ім'я клієнта:</label>
                 <input type="text" id="clientName" class="form-control" />
               </div>
               <div class="col-6">
-                <label for="phone">Телефон:</label>
+                <label for="phone" data-i18n="phone">Телефон:</label>
                 <input type="text" id="phone" class="form-control" pattern="[0-9]*" inputmode="numeric" />
               </div>
             </div>
             <div class="row">
               <div class="col-10">
-                <label for="vin">VIN номер:</label>
+                <label for="vin" data-i18n="vin_number">VIN номер:</label>
                 <div class="position-relative">
-                  <input type="text" id="vin" class="form-control" pattern="[A-Z0-9]*" style="text-transform: uppercase; padding-right: 40px;" oninput="this.value=this.value.toUpperCase();" placeholder="Введіть VIN" />
+                  <input type="text" id="vin" class="form-control" pattern="[A-Z0-9]*" style="text-transform: uppercase; padding-right: 40px;" oninput="this.value = this.value.toUpperCase();" placeholder="Введіть VIN" />
                   <a href="https://lens.google.com/" target="_blank" title="Відкрити Google Об'єктив (Web)" style="position: absolute; top: 50%; right: 8px; transform: translateY(-50%);">
                     <img src="img/google_lens.png" alt="Google Lens" style="width: 24px; height: 24px; cursor: pointer;" />
                   </a>
@@ -910,46 +773,46 @@
             </div>
             <div class="row">
               <div class="col-6">
-                <label for="carModel">Модель авто:</label>
-                <input type="text" id="carModel" class="form-control" pattern="[A-Z]+" style="text-transform: uppercase;" oninput="this.value=this.value.toUpperCase();" />
+                <label for="carModel" data-i18n="car_model">Модель авто:</label>
+                <input type="text" id="carModel" class="form-control" pattern="[A-Z]+" style="text-transform: uppercase" oninput="this.value = this.value.toUpperCase();" />
               </div>
               <div class="col-6">
-                <label for="year">Рік випуску:</label>
+                <label for="year" data-i18n="year">Рік випуску:</label>
                 <input type="text" id="year" class="form-control" pattern="[0-9]*" inputmode="numeric" />
               </div>
             </div>
             <div class="row">
               <div class="col-6">
-                <label for="plate">Номерний знак:</label>
-                <input type="text" id="plate" class="form-control" style="text-transform: uppercase;" oninput="this.value=this.value.replace(/\s+/g, '').toUpperCase();" />
+                <label for="plate" data-i18n="plate_number">Номерний знак:</label>
+                <input type="text" id="plate" class="form-control" style="text-transform: uppercase" oninput="this.value = this.value.replace(/\s+/g, '').toUpperCase();" />
               </div>
               <div class="col-6">
-                <label for="mileage">Пробіг (км):</label>
+                <label for="mileage" data-i18n="mileage">Пробіг (км):</label>
                 <input type="text" id="mileage" class="form-control" pattern="[0-9]*" inputmode="numeric" />
               </div>
             </div>
             <div>
-              <label for="workList">Перелік бажаних робіт:</label>
+              <label for="workList" data-i18n="work_list">Перелік бажаних робіт:</label>
               <textarea class="form-control" id="workList" rows="3" oninput="autoGrow(this)"></textarea>
             </div>
           </div>
           <div class="glass-card mt-2">
-            <h4>Чертеж автомобіля</h4>
+            <h4 data-i18n="paint_defects">Дефекти лакофарбового покриття</h4>
             <div class="blueprint-container">
-              <img class="blueprintPreview" src="img/blueprintImg.png" alt="Чертёж автомобіля" style="display: block; max-width: 100%;" />
+              <img class="blueprintPreview" src="img/blueprintImg.png" alt="Дефекти лакофарбового покриття" style="display: block; max-width: 100%;" />
               <canvas class="blueprintCanvas" style="display: none; border: 1px solid #ccc;"></canvas>
               <div class="blueprint-buttons mt-2 d-flex gap-2">
-                <button type="button" class="editBtn btn btn-primary btn-small">відзначити</button>
-                <button type="button" class="clearBtn btn btn-danger btn-small">Очистити</button>
-                <button type="button" class="okBtn btn btn-success btn-small">зберегти</button>
+                <button type="button" class="editBtn btn btn-primary btn-small" data-i18n="mark">відзначити</button>
+                <button type="button" class="clearBtn btn btn-danger btn-small" data-i18n="clear">Очистити</button>
+                <button type="button" class="okBtn btn btn-success btn-small" data-i18n="save">зберегти</button>
               </div>
             </div>
           </div>
         </div>
-        <!-- Вторая колонка: Індикатори и Акт дефектів автомобіля -->
+        <!-- Друга колонка: Індикатори та Акт дефектів автомобіля -->
         <div class="col-md-4 second-col">
           <div class="glass-card">
-            <h4>Індикатори</h4>
+            <h4 data-i18n="indicators">Індикатори</h4>
             <div class="indicators">
               <div class="form-check">
                 <input type="checkbox" id="checkEngine" class="form-check-input" />
@@ -1008,52 +871,52 @@
             </div>
           </div>
           <div class="glass-card mt-2">
-            <h4>Акт дефектів автомобіля</h4>
+            <h4 data-i18n="defects_report">Акт дефектів автомобіля</h4>
             <div class="row">
               <div class="col-6">
-                <label for="ptk_percent">Передні колодки (%):</label>
+                <label for="ptk_percent" data-i18n="front_brake_pads">Передні колодки (%):</label>
                 <input type="text" id="ptk_percent" class="form-control" pattern="[0-9]*" inputmode="numeric" />
               </div>
               <div class="col-6">
-                <label for="ztk_percent">Задні колодки (%):</label>
+                <label for="ztk_percent" data-i18n="rear_brake_pads">Задні колодки (%):</label>
                 <input type="text" id="ztk_percent" class="form-control" pattern="[0-9]*" inputmode="numeric" />
               </div>
             </div>
             <div class="row">
               <div class="col-6">
-                <label for="ptd_mm">Передні диски (мм):</label>
+                <label for="ptd_mm" data-i18n="front_brake_discs">Передні диски (мм):</label>
                 <input type="text" id="ptd_mm" class="form-control" pattern="[0-9]*" inputmode="numeric" />
               </div>
               <div class="col-6">
-                <label for="ztd_mm">Задні диски (мм):</label>
+                <label for="ztd_mm" data-i18n="rear_brake_discs">Задні диски (мм):</label>
                 <input type="text" id="ztd_mm" class="form-control" pattern="[0-9]*" inputmode="numeric" />
               </div>
             </div>
             <div class="row">
               <div class="col-6">
-                <label for="brakeFluid">Гальмівна рідина:</label>
+                <label for="brakeFluid" data-i18n="brake_fluid">Гальмівна рідина:</label>
                 <input type="text" id="brakeFluid" class="form-control" />
               </div>
               <div class="col-6">
-                <label for="antifreeze">Охолоджуюча рідина:</label>
+                <label for="antifreeze" data-i18n="coolant">Охолоджуюча рідина:</label>
                 <input type="text" id="antifreeze" class="form-control" />
               </div>
             </div>
             <div class="row">
               <div class="col-6">
-                <label for="engineOil">Моторна олива:</label>
-                <input type="text" id="engineOil" class="form-control" />
+                <label for="engineOil" data-i18n="engine_oil">Моторна олива:</label>
+                <input type="text" id="engineOil" class="form-control" placeholder="Рек. заміна масла кожні 8000-10 000 км" />
               </div>
               <div class="col-6">
-                <label for="transmissionOil">Олива в трансмісії:</label>
-                <input type="text" id="transmissionOil" class="form-control" />
+                <label for="transmissionOil" data-i18n="transmission_oil">Олива в трансмісії:</label>
+                <input type="text" id="transmissionOil" class="form-control" placeholder="Обслуговування раз на 60–80 тис. км" />
               </div>
             </div>
             <table class="details-table" style="margin-top: 10px; width: 100%;">
               <thead>
                 <tr>
                   <th style="width: 5%">#</th>
-                  <th style="width: 60%">Назва запчастини або вузла</th>
+                  <th style="width: 60%" data-i18n="part_name">Назва запчастини або вузла</th>
                   <th style="width: 10%">
                     <span class="legend-square legend-green" data-checkbox-class="checkbox-green"></span>
                   </th>
@@ -1082,31 +945,31 @@
               </tbody>
             </table>
             <div class="d-flex justify-content-between mt-2">
-              <button type="button" class="btn btn-primary btn-small" onclick="addDefectRow()">Додати рядок</button>
-              <button type="button" class="btn btn-danger btn-small" onclick="removeDefectRow()">Видалити рядок</button>
+              <button type="button" class="btn btn-primary btn-small" onclick="addDefectRow()" data-i18n="add_row">Додати рядок</button>
+              <button type="button" class="btn btn-danger btn-small" onclick="removeDefectRow()" data-i18n="remove_row">Видалити рядок</button>
             </div>
             <div class="table-legend text-end" style="margin-top: 5px;">
-              <span class="legend-square legend-green" data-checkbox-class="checkbox-green"></span> Знос
-              <span class="legend-square legend-black ms-2" data-checkbox-class="checkbox-black"></span> Люфт
-              <span class="legend-square legend-yellow ms-2" data-checkbox-class="checkbox-yellow"></span> Рекомендується заміна
-              <span class="legend-square legend-red ms-2" data-checkbox-class="checkbox-red"></span> Критична заміна
+              <span class="legend-square legend-green" data-checkbox-class="checkbox-green"></span><span data-i18n="wear">Знос</span>
+              <span class="legend-square legend-black ms-2" data-checkbox-class="checkbox-black"></span><span data-i18n="backlash">Люфт</span>
+              <span class="legend-square legend-yellow ms-2" data-checkbox-class="checkbox-yellow"></span><span data-i18n="recommended">Рекомендується заміна</span>
+              <span class="legend-square legend-red ms-2" data-checkbox-class="checkbox-red"></span><span data-i18n="critical">Критична заміна</span>
             </div>
             <div>
-              <label for="notes">Додаткові примітки:</label>
+              <label for="notes" data-i18n="additional_notes">Додаткові примітки:</label>
               <textarea class="form-control" id="notes" rows="3" oninput="autoGrow(this)"></textarea>
             </div>
           </div>
         </div>
-        <!-- Третья колонка: Заява, Контрольні позначки та підписи, Операції -->
+        <!-- Третя колонка: Перелік виконаних робіт, Контрольні позначки та підписи, Операції -->
         <div class="col-md-4 third-col">
           <div class="glass-card">
-            <h2 class="rainbow-text">Заява на виконання робіт</h2>
+            <h2 class="rainbow-text" data-i18n="work_performed">Перелік виконаних робіт</h2>
             <table class="work-table">
               <thead>
                 <tr>
-                  <th style="width: 45%">Назва запчастини або вузла</th>
-                  <th style="width: 20%">Ціна запчастини</th>
-                  <th style="width: 20%">Ціна роботи</th>
+                  <th style="width: 45%" data-i18n="part_name">Назва запчастини або вузла</th>
+                  <th style="width: 20%" data-i18n="part_price">Ціна запчастини</th>
+                  <th style="width: 20%" data-i18n="work_price">Ціна роботи</th>
                 </tr>
               </thead>
               <tbody id="workTableBody">
@@ -1114,520 +977,1102 @@
                   <td>
                     <textarea class="form-control" rows="1" oninput="autoGrow(this)" style="resize: none; overflow: hidden;"></textarea>
                   </td>
-                  <td><input type="number" class="form-control part-price" step="0.01" min="0" /></td>
-                  <td><input type="number" class="form-control work-price" step="0.01" min="0" /></td>
+                  <td><input type="number" class="form-control part-price" step="0.01" min="0" oninput="recalculateTotal(document.querySelector('.third-col'))" /></td>
+                  <td><input type="number" class="form-control work-price" step="0.01" min="0" oninput="recalculateTotal(document.querySelector('.third-col'))" /></td>
                 </tr>
               </tbody>
             </table>
             <div class="d-flex justify-content-between mt-2">
-              <button type="button" class="btn btn-primary btn-small" onclick="addWorkRow()">Додати рядок</button>
-              <button type="button" class="btn btn-danger btn-small" onclick="removeWorkRow()">Видалити рядок</button>
+              <button type="button" class="btn btn-primary btn-small" onclick="addWorkRow()" data-i18n="add_row">Додати рядок</button>
+              <button type="button" class="btn btn-danger btn-small" onclick="removeWorkRow()" data-i18n="remove_row">Видалити рядок</button>
             </div>
             <div class="work-total text-end" style="margin-top: 10px;">
-              Запчастини: 0.00 UAH<br>
-              Роботи: 0.00 UAH<br>
-              <strong>Загальна сума: 0.00 UAH</strong>
+              <span data-i18n="parts">Запчастини</span>: 0.00 UAH<br>
+              <span data-i18n="labor">Роботи</span>: 0.00 UAH<br>
+              <strong><span data-i18n="total">Загальна сума</span>: 0.00 UAH</strong>
             </div>
           </div>
           <div class="glass-card mt-2">
-            <h4>Контрольні позначки та підписи</h4>
+            <h4 data-i18n="control_signatures">Контрольні позначки та підписи</h4>
             <div>
               <input type="checkbox" class="square-checkbox" id="checkParts" />
-              <label for="checkParts">Контрольна обтяжка запчастин</label>
+              <label for="checkParts" data-i18n="check_parts">Контрольна обтяжка запчастин</label>
             </div>
             <label class="checkbox-wrapper d-flex align-items-center gap-2">
               <input type="checkbox" class="square-checkbox" id="tightenWheels" />
-              <span>Затягування болтів</span>
+              <span data-i18n="tighten_bolts">Затягування болтів</span>
               <input type="text" class="form-control nm-input" id="nmValue" style="width: 80px;" />
               <span>Нм</span>
             </label>
             <div class="mt-2">
               <input type="checkbox" class="square-checkbox" id="managerSignature" />
-              <label for="managerSignature">Підпис менеджера</label>
+              <label for="managerSignature" data-i18n="manager_signature">Підпис менеджера</label>
             </div>
             <div class="mt-2">
               <input type="checkbox" class="square-checkbox" id="clientSignature" />
-              <label for="clientSignature">Підпис клієнта: Я прочитав і приймаю</label>
+              <label for="clientSignature" data-i18n="client_signature">Підпис клієнта: Я прочитав і приймаю</label>
             </div>
           </div>
-          <!-- Новый блок для кнопок "Операції" -->
           <div class="glass-card mt-2 operations-block">
-            <h4>Операції</h4>
+            <h4 data-i18n="operations">Операції</h4>
             <div class="d-flex flex-wrap gap-2">
-              <button id="sendAdminBtn" type="button" class="btn btn-primary btn-neon">Зберегти</button>
-              <button id="addOrderBtn" type="button" class="btn btn-primary btn-small">Додати НАРЯД-ЗАМОВЛЕННЯ</button>
-              <button id="createLinkBtn" type="button" class="btn btn-primary btn-small">Створити посилання</button>
-              <button id="screenshotBtn" type="button" class="btn btn-primary btn-small">Скріншот</button>
-              <button id="printBtn" type="button" class="btn btn-primary btn-small">Печать</button>
+              <button id="sendAdminBtn" type="button" class="btn btn-primary btn-neon" data-i18n="save">Зберегти</button>
+              <button id="addOrderBtn" type="button" class="btn btn-primary btn-small" data-i18n="add_order">Додати НАРЯД-ЗАМОВЛЕННЯ</button>
+              <button id="createLinkBtn" type="button" class="btn btn-primary btn-small" data-i18n="create_link">Створити посилання</button>
+              <button id="screenshotBtn" type="button" class="btn btn-primary btn-small" data-i18n="screenshot">Скріншот</button>
+              <button id="printBtn" type="button" class="btn btn-primary btn-small" data-i18n="print">Печать</button>
             </div>
           </div>
         </div>
       </div>
       <div class="generated-link-container text-center mt-2">
         <div class="col-12">
-          <label for="generatedLink">Згенероване посилання:</label>
+          <label for="generatedLink" data-i18n="generated_link">Згенероване посилання:</label>
         </div>
         <div class="col-12">
           <input type="text" id="generatedLink" class="form-control" readonly style="margin-top: 5px;" />
         </div>
         <div class="col-12 mt-2">
-          <button id="copyLinkBtn" type="button" class="btn btn-primary btn-small">Копіювати посилання</button>
+          <button id="copyLinkBtn" type="button" class="btn btn-primary btn-small" data-i18n="copy_link">Копіювати посилання</button>
         </div>
       </div>
     </form>
+
+    <!-- Analytics Section (Admin Only) -->
+    <div class="analytics-section" id="analyticsSection" style="display: none;">
+      <h4 data-i18n="analytics">Аналітика</h4>
+      <div id="visitsChart" style="height: 300px;"></div>
+      <div id="costsChart" style="height: 300px; margin-top: 20px;"></div>
+    </div>
   </div>
-
-<!-- Скрипты для работы с формой, темами, PDF и скриншотами -->
-<script>
-  const BOT_TOKEN = '8099553216:AAEE3Ctou3yY4ddwVbXiUfHgfT7PeZyUyhA';
-  const ADMIN_CHAT_ID = '-1002239976197';
-  const ADMIN_PARTS_CHAT_ID = '-1002393963726';
-  const DISCUSSION_GROUP_CHAT_ID = '-1002239976197';
-  const REPLY_TO_MESSAGE_ID = 'https://t.me/+VHtWYaAVbTg3ODUy';
-  const ID_TELEGRAM_PDF = '-1002687911856';
-
-  let selectedTechPassportFile = null;
-
-  function handleTechPassportFileSelected(input) {
-    const infoBlock = document.getElementById("selectedTechFileName");
-    if (!input.files || !input.files.length) {
-      selectedTechPassportFile = null;
-      if (infoBlock) infoBlock.textContent = "";
-      return;
-    }
-    selectedTechPassportFile = input.files[0];
-    if (infoBlock) infoBlock.textContent = "Обрано: " + selectedTechPassportFile.name;
-  }
-
-  function autoGrow(element) {
-    element.style.height = "auto";
-    element.style.height = element.scrollHeight + "px";
-  }
-
-  function addDefectRow() {
-    const tbody = document.getElementById('defectsTableBody');
-    const rowCount = tbody.children.length + 1;
-    const newRow = document.createElement('tr');
-    newRow.innerHTML = `
-      <td>${rowCount}</td>
-      <td><textarea class="form-control" name="part${rowCount}" oninput="autoGrow(this)" rows="1" style="resize: none; overflow: hidden;"></textarea></td>
-      <td><input type="checkbox" class="checkbox-green square-checkbox" /></td>
-      <td><input type="checkbox" class="checkbox-black square-checkbox" /></td>
-      <td><input type="checkbox" class="checkbox-yellow square-checkbox" /></td>
-      <td><input type="checkbox" class="checkbox-red square-checkbox" /></td>
-    `;
-    tbody.appendChild(newRow);
-  }
-
-  function removeDefectRow() {
-    const tbody = document.getElementById('defectsTableBody');
-    if (tbody.children.length > 1) {
-      tbody.removeChild(tbody.lastChild);
-    }
-  }
-
-  function addWorkRow() {
-    const tbody = document.getElementById('workTableBody');
-    const newRow = document.createElement('tr');
-    newRow.innerHTML = `
-      <td><textarea class="form-control" rows="1" oninput="autoGrow(this)" style="resize: none; overflow: hidden;"></textarea></td>
-      <td><input type="number" class="form-control part-price" step="0.01" min="0" oninput="recalculateTotal(document.querySelector('.third-col'))" /></td>
-      <td><input type="number" class="form-control work-price" step="0.01" min="0" oninput="recalculateTotal(document.querySelector('.third-col'))" /></td>
-    `;
-    tbody.appendChild(newRow);
-    recalculateTotal(document.querySelector('.third-col'));
-  }
-
-  function removeWorkRow() {
-    const tbody = document.getElementById('workTableBody');
-    if (tbody.children.length > 1) {
-      tbody.removeChild(tbody.lastChild);
-      recalculateTotal(document.querySelector('.third-col'));
-    }
-  }
-
-  function recalculateTotal(container) {
-    const tableBody = container.querySelector(".work-table tbody");
-    let totalParts = 0, totalLabor = 0;
-    tableBody.querySelectorAll("tr").forEach(row => {
-      const partPrice = parseFloat(row.querySelector(".part-price")?.value || 0) || 0;
-      const laborPrice = parseFloat(row.querySelector(".work-price")?.value || 0) || 0;
-      totalParts += partPrice;
-      totalLabor += laborPrice;
-    });
-    const totalSum = totalParts + totalLabor;
-    const totalDisplay = container.querySelector(".work-total");
-    if (totalDisplay) {
-      totalDisplay.innerHTML = `
-        Запчастини: ${totalParts.toLocaleString('uk-UA', {minimumFractionDigits: 2})} UAH<br>
-        Роботи: ${totalLabor.toLocaleString('uk-UA', {minimumFractionDigits: 2})} UAH<br>
-        <strong>Загальна сума: ${totalSum.toLocaleString('uk-UA', {minimumFractionDigits: 2})} UAH</strong>
-      `;
-    }
-  }
-
-  function updateMenuText() {
-    const sidebar = document.getElementById("sidebar");
-    const menuToggle = document.querySelector('.menu-toggle');
-    const menuText = menuToggle.querySelector('.vinh-menu-text');
-    const logo = menuToggle.querySelector('img');
-    const logoContainer = document.querySelector('.logo-container');
-    if (sidebar.classList.contains("active")) {
-      menuText.innerHTML = 'X';
-      menuText.style.fontSize = '35px';
-      logo.style.opacity = '1';
-      logoContainer.classList.remove('scrolled');
-    } else {
-      if (window.scrollY > 300) {
-        menuText.innerHTML = 'E<br><div class="address"></div>';
-        menuText.style.fontSize = '35px';
-        logo.style.opacity = '0';
-        logoContainer.classList.add('scrolled');
-      } else {
-        menuText.innerHTML = 'VINh SERVICE<br><div class="address">Дальницька 45</div>';
-        menuText.style.fontSize = '24px';
-        logo.style.opacity = '1';
-        logoContainer.classList.remove('scrolled');
-      }
-    }
-  }
-
-  function updateThemeColor() {
-    const metaThemeColor = document.querySelector('meta[name="theme-color"]');
-    if (document.body.classList.contains("light-mode")) {
-      metaThemeColor.setAttribute("content", "#FFFFFF");
-    } else {
-      metaThemeColor.setAttribute("content", "#000000");
-    }
-  }
-
-  function initializeCanvas(container) {
-    const canvas = container.querySelector('.blueprintCanvas');
-    const ctx = canvas.getContext('2d');
-    const img = container.querySelector('.blueprintPreview');
-    const editBtn = container.querySelector('.editBtn');
-    const clearBtn = container.querySelector('.clearBtn');
-    const okBtn = container.querySelector('.okBtn');
+  <script>
+    const BOT_TOKEN = '8099553216:AAEE3Ctou3yY4ddwVbXiUfHgfT7PeZyUyhA';
+    const ADMIN_CHAT_ID = '-1002239976197';
+    const ADMIN_PARTS_CHAT_ID = '-1002393963726';
+    const DISCUSSION_GROUP_CHAT_ID = '-1002239976197';
+    const REPLY_TO_MESSAGE_ID = 'https://t.me/+VHtWYaAVbTg3ODUy';
+    const ID_TELEGRAM_PDF = '-1002687911856';
+  
+    // S3 Configuration (Replace with your actual S3 credentials)
+    const S3_ENDPOINT = 'https://your-s3-endpoint';
+    const S3_ACCESS_KEY = 'your-access-key';
+    const S3_SECRET_KEY = 'your-secret-key';
+    const S3_BUCKET = 'your-bucket-name';
+  
+    let selectedTechPassportFile = null;
+    let currentUser = null;
     let isDrawing = false;
     let lastX = 0;
     let lastY = 0;
-
-    if (!editBtn || !clearBtn || !okBtn) {
-      console.error("One or more buttons not found in container:", container);
-      return;
-    }
-
-    canvas.width = img.width;
-    canvas.height = img.height;
-    img.onload = () => { ctx.drawImage(img, 0, 0, canvas.width, canvas.height); };
-    if (img.complete) { ctx.drawImage(img, 0, 0, canvas.width, canvas.height); }
-
-    canvas.addEventListener('mousedown', (e) => {
-      isDrawing = true;
-      const rect = canvas.getBoundingClientRect();
-      lastX = (e.clientX - rect.left) * (canvas.width / rect.width);
-      lastY = (e.clientY - rect.top) * (canvas.height / rect.height);
-    });
-    canvas.addEventListener('mousemove', (e) => {
-      if (!isDrawing) return;
-      const rect = canvas.getBoundingClientRect();
-      const x = (e.clientX - rect.left) * (canvas.width / rect.width);
-      const y = (e.clientY - rect.top) * (canvas.height / rect.height);
-      ctx.beginPath();
-      ctx.moveTo(lastX, lastY);
-      ctx.lineTo(x, y);
-      ctx.strokeStyle = 'red';
-      ctx.lineWidth = 2;
-      ctx.stroke();
-      lastX = x;
-      lastY = y;
-    });
-    canvas.addEventListener('mouseup', () => { isDrawing = false; });
-    canvas.addEventListener('mouseout', () => { isDrawing = false; });
-
-    editBtn.addEventListener('click', () => {
-      img.style.display = 'none';
-      canvas.style.display = 'block';
-      ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
-    });
-    clearBtn.addEventListener('click', () => {
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-      ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
-    });
-    okBtn.addEventListener('click', () => {
-      img.src = canvas.toDataURL('image/png');
-      img.style.display = 'block';
-      canvas.style.display = 'none';
-    });
-  }
-
-  function collectFormData(container) {
-    const data = {};
-    data.clientName = container.querySelector("#clientName")?.value || "";
-    data.phone = container.querySelector("#phone")?.value || "";
-    data.vin = container.querySelector("#vin")?.value || "";
-    data.carModel = container.querySelector("#carModel")?.value || "";
-    data.year = container.querySelector("#year")?.value || "";
-    data.plate = container.querySelector("#plate")?.value || "";
-    data.mileage = container.querySelector("#mileage")?.value || "";
-    data.workList = container.querySelector("#workList")?.value || "";
-    data.checkEngine = container.querySelector("#checkEngine")?.checked || false;
-    data.battery = container.querySelector("#battery")?.checked || false;
-    data.oil = container.querySelector("#oil")?.checked || false;
-    data.coolant = container.querySelector("#coolant")?.checked || false;
-    data.tpms = container.querySelector("#tpms")?.checked || false;
-    data.airbag = container.querySelector("#airbag")?.checked || false;
-    data.abs = container.querySelector("#abs")?.checked || false;
-    data.esp = container.querySelector("#esp")?.checked || false;
-    data.brakeWear = container.querySelector("#brakeWear")?.checked || false;
-    data.ptk_percent = container.querySelector("#ptk_percent")?.value || "";
-    data.ztk_percent = container.querySelector("#ztk_percent")?.value || "";
-    data.ptd_mm = container.querySelector("#ptd_mm")?.value || "";
-    data.ztd_mm = container.querySelector("#ztd_mm")?.value || "";
-    data.brakeFluid = container.querySelector("#brakeFluid")?.value || "";
-    data.antifreeze = container.querySelector("#antifreeze")?.value || "";
-    data.engineOil = container.querySelector("#engineOil")?.value || "";
-    data.transmissionOil = container.querySelector("#transmissionOil")?.value || "";
-    data.notes = container.querySelector("#notes")?.value || "";
-    data.defects = [];
-    const defectRows = container.querySelectorAll(".details-table tbody tr");
-    defectRows.forEach(row => {
-      const defect = {
-        part: row.querySelector("textarea")?.value || "",
-        wear: row.querySelector(".checkbox-green")?.checked || false,
-        play: row.querySelector(".checkbox-black")?.checked || false,
-        recommendReplace: row.querySelector(".checkbox-yellow")?.checked || false,
-        criticalReplace: row.querySelector(".checkbox-red")?.checked || false
-      };
-      data.defects.push(defect);
-    });
-    data.workItems = [];
-    const workRows = container.querySelectorAll(".work-table tbody tr");
-    workRows.forEach(row => {
-      const workItem = {
-        part: row.querySelector("textarea")?.value || "",
-        partPrice: row.querySelector(".part-price")?.value || "",
-        workPrice: row.querySelector(".work-price")?.value || ""
-      };
-      data.workItems.push(workItem);
-    });
-    data.checkParts = container.querySelector("#checkParts")?.checked || false;
-    data.tightenWheels = container.querySelector("#tightenWheels")?.checked || false;
-    data.nmValue = container.querySelector("#nmValue")?.value || "";
-    data.managerSignature = container.querySelector("#managerSignature")?.checked || false;
-    data.clientSignature = container.querySelector("#clientSignature")?.checked || false;
-    const blueprintCanvas = container.querySelector('.blueprintCanvas');
-    data.blueprintImage = blueprintCanvas ? blueprintCanvas.toDataURL('image/png') : "";
-    return data;
-  }
-
-  async function collectAllDataAndSendToTelegram(type, container) {
-    const data = collectFormData(container);
-    let message = "";
-    if (type === "save") {
-      message = `
-📋 **Наряд-замовлення**
-
-👤 **Ім'я клієнта:** ${data.clientName}
-📞 **Телефон:** ${data.phone}
-🔢 **VIN номер:** ${data.vin}
-🚗 **Модель авто:** ${data.carModel}
-📅 **Рік випуску:** ${data.year}
-📜 **Номерний знак:** ${data.plate}
-🛞 **Пробіг (км):** ${data.mileage}
-📝 **Перелік бажаних робіт:** ${data.workList}
-
-⚠️ **Індикатори:**
-- Check Engine: ${data.checkEngine ? "✅" : "❌"}
-- Battery: ${data.battery ? "✅" : "❌"}
-- Oil: ${data.oil ? "✅" : "❌"}
-- Coolant: ${data.coolant ? "✅" : "❌"}
-- TPMS: ${data.tpms ? "✅" : "❌"}
-- Airbag: ${data.airbag ? "✅" : "❌"}
-- ABS: ${data.abs ? "✅" : "❌"}
-- ESP: ${data.esp ? "✅" : "❌"}
-- Brake Wear: ${data.brakeWear ? "✅" : "❌"}
-
-🔍 **Акт дефектів:**
-- Передні колодки (%): ${data.ptk_percent}
-- Задні колодки (%): ${data.ztk_percent}
-- Передні диски (мм): ${data.ptd_mm}
-- Задні диски (мм): ${data.ztd_mm}
-- Гальмівна рідина: ${data.brakeFluid}
-- Охолоджуюча рідина: ${data.antifreeze}
-- Моторна олива: ${data.engineOil}
-- Олива в трансмісії: ${data.transmissionOil}
-
-**Таблиця дефектів:**
-${data.defects.map((defect, index) => `
-${index + 1}. ${defect.part}
-   - Знос: ${defect.wear ? "✅" : "❌"}
-   - Люфт: ${defect.play ? "✅" : "❌"}
-   - Рекомендується заміна: ${defect.recommendReplace ? "✅" : "❌"}
-   - Критична заміна: ${defect.criticalReplace ? "✅" : "❌"}
-`).join("")}
-
-📝 **Додаткові примітки:** ${data.notes}
-
-🔧 **Заявка на виконання робіт:**
-${data.workItems.map((item, index) => `
-${index + 1}. ${item.part}
-   - Ціна запчастини: ${item.partPrice} UAH
-   - Ціна роботи: ${item.workPrice} UAH
-`).join("")}
-
-✅ **Контрольні позначки та підписи:**
-- Контрольна обтяжка: ${data.checkParts ? "✅" : "❌"}
-- Затягування болтів: ${data.tightenWheels ? "${data.nmValue} Нм ✅" : "❌"}
-- Підпис менеджера: ${data.managerSignature ? "✅" : "❌"}
-- Підпис клієнта: ${data.clientSignature ? "✅" : "❌"}
-      `.trim();
-
-      const formData = new FormData();
-      formData.append("chat_id", ADMIN_CHAT_ID);
-      formData.append("text", message);
-      formData.append("parse_mode", "Markdown");
-
-      if (selectedTechPassportFile) {
-        formData.append("document", selectedTechPassportFile);
+  
+    // i18n Initialization
+    i18next.init({
+      lng: 'uk',
+      resources: {
+        uk: {
+          translation: {
+            login_title: "Увійти",
+            register_title: "Реєстрація",
+            plate_number: "Номерний знак",
+            password: "Пароль",
+            login: "Увійти",
+            register: "Зареєструватися",
+            home: "Додому",
+            schedule: "Розклад",
+            diagnostics: "Діагностика",
+            repair: "Ремонт",
+            parts: "Запчастини",
+            wash: "Мийка",
+            tire: "Шиномонтаж",
+            contacts: "Контакти",
+            dark_mode: "Темний режим",
+            light_mode: "Світлий режим",
+            logout: "Вийти",
+            car_info: "Інфо об автомобілі",
+            client_name: "Ім'я клієнта:",
+            phone: "Телефон:",
+            vin_number: "VIN номер:",
+            car_model: "Модель авто:",
+            year: "Рік випуску:",
+            mileage: "Пробіг (км):",
+            work_list: "Перелік бажаних робіт:",
+            paint_defects: "Дефекти лакофарбового покриття",
+            mark: "відзначити",
+            clear: "Очистити",
+            save: "зберегти",
+            indicators: "Індикатори",
+            defects_report: "Акт дефектів автомобіля",
+            front_brake_pads: "Передні колодки (%):",
+            rear_brake_pads: "Задні колодки (%):",
+            front_brake_discs: "Передні диски (мм):",
+            rear_brake_discs: "Задні диски (мм):",
+            brake_fluid: "Гальмівна рідина:",
+            coolant: "Охолоджуюча рідина:",
+            engine_oil: "Моторна олива:",
+            transmission_oil: "Олива в трансмісії:",
+            part_name: "Назва запчастини або вузла",
+            wear: "Знос",
+            backlash: "Люфт",
+            recommended: "Рекомендується заміна",
+            critical: "Критична заміна",
+            additional_notes: "Додаткові примітки:",
+            add_row: "Додати рядок",
+            remove_row: "Видалити рядок",
+            work_performed: "Перелік виконаних робіт",
+            part_price: "Ціна запчастини",
+            work_price: "Ціна роботи",
+            parts: "Запчастини",
+            labor: "Роботи",
+            total: "Загальна сума",
+            control_signatures: "Контрольні позначки та підписи",
+            check_parts: "Контрольна обтяжка запчастин",
+            tighten_bolts: "Затягування болтів",
+            manager_signature: "Підпис менеджера",
+            client_signature: "Підпис клієнта: Я прочитав і приймаю",
+            operations: "Операції",
+            save: "Зберегти",
+            add_order: "Додати НАРЯД-ЗАМОВЛЕННЯ",
+            create_link: "Створити посилання",
+            screenshot: "Скріншот",
+            print: "Печать",
+            generated_link: "Згенероване посилання:",
+            copy_link: "Копіювати посилання",
+            analytics: "Аналітика",
+            order: "Наряд-Замовлення",
+            blueprint_caption: "Чертеж для наряд-замовлення",
+            tech_passport_caption: "Фото техпаспорта для наряд-замовлення",
+            full_form_data: "Повні дані форми",
+            unknown: "Невідомо"
+          }
+        },
+        ru: {
+          translation: {
+            login_title: "Войти",
+            register_title: "Регистрация",
+            plate_number: "Номерной знак",
+            password: "Пароль",
+            login: "Войти",
+            register: "Зарегистрироваться",
+            home: "Домой",
+            schedule: "Расписание",
+            diagnostics: "Диагностика",
+            repair: "Ремонт",
+            parts: "Запчасти",
+            wash: "Мойка",
+            tire: "Шиномонтаж",
+            contacts: "Контакты",
+            dark_mode: "Темный режим",
+            light_mode: "Светлый режим",
+            logout: "Выйти",
+            car_info: "Информация об автомобиле",
+            client_name: "Имя клиента:",
+            phone: "Телефон:",
+            vin_number: "VIN номер:",
+            car_model: "Модель авто:",
+            year: "Год выпуска:",
+            mileage: "Пробег (км):",
+            work_list: "Перечень желаемых работ:",
+            paint_defects: "Дефекты лакокрасочного покрытия",
+            mark: "отметить",
+            clear: "Очистить",
+            save: "сохранить",
+            indicators: "Индикаторы",
+            defects_report: "Акт дефектов автомобиля",
+            front_brake_pads: "Передние колодки (%):",
+            rear_brake_pads: "Задние колодки (%):",
+            front_brake_discs: "Передние диски (мм):",
+            rear_brake_discs: "Задние диски (мм):",
+            brake_fluid: "Тормозная жидкость:",
+            coolant: "Охлаждающая жидкость:",
+            engine_oil: "Моторное масло:",
+            transmission_oil: "Масло в трансмиссии:",
+            part_name: "Название запчасти или узла",
+            wear: "Износ",
+            backlash: "Люфт",
+            recommended: "Рекомендуется замена",
+            critical: "Критическая замена",
+            additional_notes: "Дополнительные заметки:",
+            add_row: "Добавить строку",
+            remove_row: "Удалить строку",
+            work_performed: "Перечень выполненных работ",
+            part_price: "Цена запчасти",
+            work_price: "Цена работы",
+            parts: "Запчасти",
+            labor: "Работы",
+            total: "Общая сумма",
+            control_signatures: "Контрольные отметки и подписи",
+            check_parts: "Контрольная затяжка запчастей",
+            tighten_bolts: "Затяжка болтов",
+            manager_signature: "Подпись менеджера",
+            client_signature: "Подпись клиента: Я прочитал и принимаю",
+            operations: "Операции",
+            save: "Сохранить",
+            add_order: "Добавить НАРЯД-ЗАКАЗ",
+            create_link: "Создать ссылку",
+            screenshot: "Скриншот",
+            print: "Печать",
+            generated_link: "Сгенерированная ссылка:",
+            copy_link: "Копировать ссылку",
+            analytics: "Аналитика",
+            order: "Наряд-Заказ",
+            blueprint_caption: "Чертеж для наряд-заказа",
+            tech_passport_caption: "Фото техпаспорта для наряд-заказа",
+            full_form_data: "Полные данные формы",
+            unknown: "Неизвестно"
+          }
+        },
+        vi: {
+          translation: {
+            login_title: "Đăng nhập",
+            register_title: "Đăng ký",
+            plate_number: "Biển số xe",
+            password: "Mật khẩu",
+            login: "Đăng nhập",
+            register: "Đăng ký",
+            home: "Trang chủ",
+            schedule: "Lịch trình",
+            diagnostics: "Chẩn đoán",
+            repair: "Sửa chữa",
+            parts: "Phụ tùng",
+            wash: "Rửa xe",
+            tire: "Lốp xe",
+            contacts: "Liên hệ",
+            dark_mode: "Chế độ tối",
+            light_mode: "Chế độ sáng",
+            logout: "Đăng xuất",
+            car_info: "Thông tin xe",
+            client_name: "Tên khách hàng:",
+            phone: "Số điện thoại:",
+            vin_number: "Số VIN:",
+            car_model: "Mẫu xe:",
+            year: "Năm sản xuất:",
+            mileage: "Số km đã đi:",
+            work_list: "Danh sách công việc mong muốn:",
+            paint_defects: "Khiếm khuyết sơn",
+            mark: "đánh dấu",
+            clear: "Xóa",
+            save: "lưu",
+            indicators: "Chỉ số",
+            defects_report: "Báo cáo khiếm khuyết xe",
+            front_brake_pads: "Má phanh trước (%):",
+            rear_brake_pads: "Má phanh sau (%):",
+            front_brake_discs: "Đĩa phanh trước (mm):",
+            rear_brake_discs: "Đĩa phanh sau (mm):",
+            brake_fluid: "Dầu phanh:",
+            coolant: "Nước làm mát:",
+            engine_oil: "Dầu động cơ:",
+            transmission_oil: "Dầu hộp số:",
+            part_name: "Tên phụ tùng hoặc bộ phận",
+            wear: "Mòn",
+            backlash: "Độ rơ",
+            recommended: "Đề nghị thay thế",
+            critical: "Thay thế nghiêm trọng",
+            additional_notes: "Ghi chú bổ sung:",
+            add_row: "Thêm dòng",
+            remove_row: "Xóa dòng",
+            work_performed: "Danh sách công việc đã thực hiện",
+            part_price: "Giá phụ tùng",
+            work_price: "Giá công việc",
+            parts: "Phụ tùng",
+            labor: "Công việc",
+            total: "Tổng cộng",
+            control_signatures: "Dấu kiểm soát và chữ ký",
+            check_parts: "Kiểm tra siết chặt phụ tùng",
+            tighten_bolts: "Siết bu lông",
+            manager_signature: "Chữ ký quản lý",
+            client_signature: "Chữ ký khách hàng: Tôi đã đọc và chấp nhận",
+            operations: "Thao tác",
+            save: "Lưu",
+            add_order: "Thêm ĐƠN HÀNG",
+            create_link: "Tạo liên kết",
+            screenshot: "Ảnh chụp màn hình",
+            print: "In",
+            generated_link: "Liên kết đã tạo:",
+            copy_link: "Sao chép liên kết",
+            analytics: "Phân tích",
+            order: "Đơn hàng",
+            blueprint_caption: "Bản vẽ cho đơn hàng",
+            tech_passport_caption: "Ảnh giấy đăng kiểm cho đơn hàng",
+            full_form_data: "Dữ liệu biểu mẫu đầy đủ",
+            unknown: "Không xác định"
+          }
+        },
+        zh: {
+          translation: {
+            login_title: "登录",
+            register_title: "注册",
+            plate_number: "车牌号码",
+            password: "密码",
+            login: "登录",
+            register: "注册",
+            home: "主页",
+            schedule: "日程",
+            diagnostics: "诊断",
+            repair: "维修",
+            parts: "配件",
+            wash: "洗车",
+            tire: "轮胎服务",
+            contacts: "联系方式",
+            dark_mode: "暗模式",
+            light_mode: "亮模式",
+            logout: "退出",
+            car_info: "车辆信息",
+            client_name: "客户姓名：",
+            phone: "电话：",
+            vin_number: "VIN号码：",
+            car_model: "车型：",
+            year: "生产年份：",
+            mileage: "里程（公里）：",
+            work_list: "所需工作清单：",
+            paint_defects: "漆面缺陷",
+            mark: "标记",
+            clear: "清除",
+            save: "保存",
+            indicators: "指示灯",
+            defects_report: "车辆缺陷报告",
+            front_brake_pads: "前刹车片 (%)：",
+            rear_brake_pads: "后刹车片 (%)：",
+            front_brake_discs: "前刹车盘 (mm)：",
+            rear_brake_discs: "后刹车盘 (mm)：",
+            brake_fluid: "刹车液：",
+            coolant: "冷却液：",
+            engine_oil: "发动机油：",
+            transmission_oil: "变速箱油：",
+            part_name: "零件或组件名称",
+            wear: "磨损",
+            backlash: "间隙",
+            recommended: "建议更换",
+            critical: "关键更换",
+            additional_notes: "附加说明：",
+            add_row: "添加行",
+            remove_row: "删除行",
+            work_performed: "已完成工作清单",
+            part_price: "零件价格",
+            work_price: "工作价格",
+            parts: "零件",
+            labor: "工作",
+            total: "总计",
+            control_signatures: "控制标记和签名",
+            check_parts: "检查零件紧固",
+            tighten_bolts: "拧紧螺栓",
+            manager_signature: "经理签名",
+            client_signature: "客户签名：我已阅读并接受",
+            operations: "操作",
+            save: "保存",
+            add_order: "添加订单",
+            create_link: "创建链接",
+            screenshot: "截图",
+            print: "打印",
+            generated_link: "生成的链接：",
+            copy_link: "复制链接",
+            analytics: "分析",
+            order: "订单",
+            blueprint_caption: "订单蓝图",
+            tech_passport_caption: "订单技术护照照片",
+            full_form_data: "完整表格数据",
+            unknown: "未知"
+          }
+        }
       }
-      if (data.blueprintImage) {
-        const blueprintBlob = await fetch(data.blueprintImage).then(res => res.blob());
-        formData.append("document", blueprintBlob, "blueprint.png");
-      }
-      try {
-        const response = await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {
-          method: "POST",
-          body: formData
-        });
-        const result = await response.json();
-        alert(result.ok ? "Дані успішно надіслані адміністратору!" : "Помилка: " + result.description);
-      } catch (error) {
-        alert("Помилка при відправці: " + error.message);
-      }
-    }
-  }
-
-  async function createShareableLink(container) {
-    const data = collectFormData(container);
-    const blob = new Blob([JSON.stringify(data)], { type: "application/json" });
-    const url = URL.createObjectURL(blob);
-    const linkInput = document.getElementById("generatedLink");
-    const linkContainer = document.querySelector(".generated-link-container");
-    if (linkInput && linkContainer) {
-      linkInput.value = url;
-      linkContainer.style.display = "block";
-    }
-  }
-
-  async function takeScreenshot() {
-    const container = document.querySelector(".container-fluid");
-    html2canvas(container, { scale: 2 }).then(canvas => {
-      const imgData = canvas.toDataURL("image/png");
-      const link = document.createElement("a");
-      link.href = imgData;
-      link.download = "screenshot.png";
-      link.click();
+    }, function(err, t) {
+      updateContent();
     });
-  }
-
-  async function generatePDF() {
-    const { jsPDF } = window.jspdf;
-    const container = document.querySelector(".container-fluid");
-    html2canvas(container, { scale: 2 }).then(canvas => {
-      const imgData = canvas.toDataURL("image/png");
-      const pdf = new jsPDF("p", "mm", "a4");
-      const imgProps = pdf.getImageProperties(imgData);
-      const pdfWidth = pdf.internal.pageSize.getWidth();
-      const pdfHeight = (imgProps.height * pdfWidth) / imgProps.width;
-      pdf.addImage(imgData, "PNG", 0, 0, pdfWidth, pdfHeight);
-      pdf.save("naryad-zamovlennya.pdf");
-
-      const pdfBlob = pdf.output("blob");
-      const formData = new FormData();
-      formData.append("chat_id", ID_TELEGRAM_PDF);
-      formData.append("document", pdfBlob, "naryad-zamovlennya.pdf");
-      fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendDocument`, {
-        method: "POST",
-        body: formData
-      }).then(response => response.json()).then(result => {
-        console.log(result.ok ? "PDF надіслано в Telegram!" : "Помилка: " + result.description);
-      }).catch(error => console.error("Помилка при відправці PDF:", error));
-    });
-  }
-
-  function printPage() {
-    window.print();
-  }
-
-  document.addEventListener("DOMContentLoaded", function() {
-    const sidebar = document.getElementById("sidebar");
-    const menuButton = document.getElementById("menuButton");
-    const closeSidebar = document.getElementById("closeSidebar");
-    const themeToggle = document.getElementById("themeToggle");
-    const themeIcon = document.getElementById("themeIcon");
-    const sendAdminBtn = document.getElementById("sendAdminBtn");
-    const addOrderBtn = document.getElementById("addOrderBtn");
-    const createLinkBtn = document.getElementById("createLinkBtn");
-    const screenshotBtn = document.getElementById("screenshotBtn");
-    const printBtn = document.getElementById("printBtn");
-    const copyLinkBtn = document.getElementById("copyLinkBtn");
-
-    menuButton.addEventListener("click", () => {
-      sidebar.classList.toggle("active");
-      updateMenuText();
-    });
-    closeSidebar.addEventListener("click", () => {
-      sidebar.classList.remove("active");
-      updateMenuText();
-    });
-    window.addEventListener("scroll", updateMenuText);
-
-    themeToggle.addEventListener("click", () => {
-      document.body.classList.toggle("light-mode");
-      const isLightMode = document.body.classList.contains("light-mode");
-      themeIcon.src = isLightMode ? "img/light_mode_icon.png" : "img/dark_mode_icon.png";
-      themeToggle.textContent = isLightMode ? "Світлий режим" : "Темний режим";
-      updateThemeColor();
-    });
-
-    const blueprintContainer = document.querySelector('.blueprint-container');
-    if (blueprintContainer) {
-      initializeCanvas(blueprintContainer);
-    }
-
-    sendAdminBtn.addEventListener("click", () => collectAllDataAndSendToTelegram("save", document.querySelector(".container-fluid")));
-    addOrderBtn.addEventListener("click", () => {
-      const newForm = document.querySelector("form").cloneNode(true);
-      document.querySelector(".container-fluid").appendChild(newForm);
-      newForm.querySelectorAll('.glass-card').forEach(card => card.classList.add('no-entry-animation'));
-      reinitializeOrderEventsForContainer(newForm);
-    });
-    createLinkBtn.addEventListener("click", () => createShareableLink(document.querySelector(".container-fluid")));
-    screenshotBtn.addEventListener("click", takeScreenshot);
-    printBtn.addEventListener("click", printPage);
-
-    copyLinkBtn.addEventListener("click", () => {
-      const linkInput = document.getElementById("generatedLink");
-      linkInput.select();
-      document.execCommand("copy");
-      alert("Посилання скопійовано в буфер обміну!");
-    });
-
-    function reinitializeOrderEventsForContainer(container) {
-      const blueprintContainer = container.querySelector('.blueprint-container');
-      if (blueprintContainer) {
-        initializeCanvas(blueprintContainer);
-      }
-      container.querySelectorAll(".part-price, .work-price").forEach(input => {
-        input.addEventListener("input", () => recalculateTotal(container));
+  
+    function updateContent() {
+      document.querySelectorAll('[data-i18n]').forEach(element => {
+        const key = element.getAttribute('data-i18n');
+        element.textContent = i18next.t(key);
       });
     }
-
-    document.querySelectorAll(".part-price, .work-price").forEach(input => {
-      input.addEventListener("input", () => recalculateTotal(document.querySelector('.third-col')));
+  
+    document.getElementById('languageSelector').addEventListener('change', (e) => {
+      i18next.changeLanguage(e.target.value, () => {
+        updateContent();
+      });
     });
-  });
-</script>
+  
+    // Authentication
+    async function login(plate, password) {
+      try {
+        // Simulated API call for login
+        const users = JSON.parse(localStorage.getItem('users')) || [];
+        const user = users.find(u => u.plate === plate && u.password === password);
+        if (!user) throw new Error('Невірний номерний знак або пароль');
+        currentUser = user;
+        localStorage.setItem('currentUser', JSON.stringify(currentUser));
+        const loginModal = bootstrap.Modal.getInstance(document.getElementById('loginModal'));
+        loginModal.hide();
+        showDashboard();
+      } catch (error) {
+        alert('Помилка входу: ' + error.message);
+      }
+    }
+  
+    async function register(plate, password) {
+      try {
+        const users = JSON.parse(localStorage.getItem('users')) || [];
+        if (users.some(u => u.plate === plate)) {
+          throw new Error('Користувач з таким номерним знаком вже існує');
+        }
+        const newUser = { plate, password, is_admin: false };
+        users.push(newUser);
+        localStorage.setItem('users', JSON.stringify(users));
+        alert('Реєстрація успішна! Будь ласка, увійдіть.');
+        const registerModal = bootstrap.Modal.getInstance(document.getElementById('registerModal'));
+        registerModal.hide();
+        showLoginModal();
+      } catch (error) {
+        alert('Помилка реєстрації: ' + error.message);
+      }
+    }
+  
+    function showLoginModal() {
+      const loginModal = new bootstrap.Modal(document.getElementById('loginModal'));
+      loginModal.show();
+    }
+  
+    function showRegisterModal() {
+      const registerModal = new bootstrap.Modal(document.getElementById('registerModal'));
+      registerModal.show();
+    }
+  
+    function showDashboard() {
+      document.getElementById('dashboardContent').style.display = 'block';
+      if (currentUser.is_admin) {
+        document.getElementById('analyticsSection').style.display = 'block';
+        renderAnalytics();
+      }
+    }
+  
+    function logout() {
+      currentUser = null;
+      localStorage.removeItem('currentUser');
+      document.getElementById('dashboardContent').style.display = 'none';
+      document.getElementById('analyticsSection').style.display = 'none';
+      showLoginModal();
+    }
+  
+    // S3 Upload Function (Simulated)
+    async function uploadToS3(file, path) {
+      try {
+        // Simulate S3 upload with a placeholder URL
+        console.log(`Uploading ${file.name} to S3 at path: ${path}`);
+        return `https://s3.example.com/${path}/${file.name}`;
+      } catch (error) {
+        console.error('Помилка завантаження в S3:', error);
+        throw new Error('Не вдалося завантажити файл в S3');
+      }
+    }
+  
+    function handleTechPassportFileSelected(input) {
+      const infoBlock = document.getElementById("selectedTechFileName");
+      if (!input.files || !input.files.length) {
+        selectedTechPassportFile = null;
+        if (infoBlock) infoBlock.textContent = "";
+        return;
+      }
+      selectedTechPassportFile = input.files[0];
+      if (infoBlock) infoBlock.textContent = "Обрано: " + selectedTechPassportFile.name;
+    }
+  
+    function autoGrow(element) {
+      element.style.height = "auto";
+      element.style.height = element.scrollHeight + "px";
+    }
+  
+    function addDefectRow() {
+      const tbody = document.getElementById('defectsTableBody');
+      const rowCount = tbody.children.length + 1;
+      const newRow = document.createElement('tr');
+      newRow.innerHTML = `
+        <td>${rowCount}</td>
+        <td><textarea class="form-control" name="part${rowCount}" oninput="autoGrow(this)" rows="1" style="resize: none; overflow: hidden;"></textarea></td>
+        <td><input type="checkbox" class="checkbox-green square-checkbox" /></td>
+        <td><input type="checkbox" class="checkbox-black square-checkbox" /></td>
+        <td><input type="checkbox" class="checkbox-yellow square-checkbox" /></td>
+        <td><input type="checkbox" class="checkbox-red square-checkbox" /></td>
+      `;
+      tbody.appendChild(newRow);
+    }
+  
+    function removeDefectRow() {
+      const tbody = document.getElementById('defectsTableBody');
+      if (tbody.children.length > 1) {
+        tbody.removeChild(tbody.lastChild);
+      }
+    }
+  
+    function addWorkRow() {
+      const tbody = document.getElementById('workTableBody');
+      const newRow = document.createElement('tr');
+      newRow.innerHTML = `
+        <td><textarea class="form-control" rows="1" oninput="autoGrow(this)" style="resize: none; overflow: hidden;"></textarea></td>
+        <td><input type="number" class="form-control part-price" step="0.01" min="0" oninput="recalculateTotal(document.querySelector('.third-col'))" /></td>
+        <td><input type="number" class="form-control work-price" step="0.01" min="0" oninput="recalculateTotal(document.querySelector('.third-col'))" /></td>
+      `;
+      tbody.appendChild(newRow);
+    }
+  
+    function removeWorkRow() {
+      const tbody = document.getElementById('workTableBody');
+      if (tbody.children.length > 1) {
+        tbody.removeChild(tbody.lastChild);
+        recalculateTotal(document.querySelector('.third-col'));
+      }
+    }
+  
+    function recalculateTotal(container) {
+      const partPrices = container.querySelectorAll('.part-price');
+      const workPrices = container.querySelectorAll('.work-price');
+      let totalParts = 0;
+      let totalWork = 0;
+  
+      partPrices.forEach(input => {
+        const value = parseFloat(input.value) || 0;
+        totalParts += value;
+      });
+  
+      workPrices.forEach(input => {
+        const value = parseFloat(input.value) || 0;
+        totalWork += value;
+      });
+  
+      const total = totalParts + totalWork;
+      container.querySelector('.work-total').innerHTML = `
+        <span data-i18n="parts">Запчастини</span>: ${totalParts.toFixed(2)} UAH<br>
+        <span data-i18n="labor">Роботи</span>: ${totalWork.toFixed(2)} UAH<br>
+        <strong><span data-i18n="total">Загальна сума</span>: ${total.toFixed(2)} UAH</strong>
+      `;
+      updateContent();
+    }
+  
+    // Blueprint Drawing
+    function initBlueprintDrawing() {
+      const preview = document.querySelector('.blueprintPreview');
+      const canvas = document.querySelector('.blueprintCanvas');
+      const ctx = canvas.getContext('2d');
+      const editBtn = document.querySelector('.editBtn');
+      const clearBtn = document.querySelector('.clearBtn');
+      const okBtn = document.querySelector('.okBtn');
+  
+      canvas.width = preview.width;
+      canvas.height = preview.height;
+      ctx.lineWidth = 5;
+      ctx.lineCap = 'round';
+      ctx.strokeStyle = 'red';
+  
+      function startDrawing(e) {
+        isDrawing = true;
+        const rect = canvas.getBoundingClientRect();
+        lastX = (e.clientX || e.touches[0].clientX) - rect.left;
+        lastY = (e.clientY || e.touches[0].clientY) - rect.top;
+        e.preventDefault();
+      }
+  
+      function draw(e) {
+        if (!isDrawing) return;
+        const rect = canvas.getBoundingClientRect();
+        const x = (e.clientX || e.touches[0].clientX) - rect.left;
+        const y = (e.clientY || e.touches[0].clientY) - rect.top;
+  
+        ctx.beginPath();
+        ctx.moveTo(lastX, lastY);
+        ctx.lineTo(x, y);
+        ctx.stroke();
+  
+        lastX = x;
+        lastY = y;
+        e.preventDefault();
+      }
+  
+      function stopDrawing(e) {
+        isDrawing = false;
+        e.preventDefault();
+      }
+  
+      editBtn.addEventListener('click', () => {
+        preview.style.display = 'none';
+        canvas.style.display = 'block';
+        const img = new Image();
+        img.src = preview.src;
+        img.onload = () => {
+          ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+        };
+      });
+  
+      clearBtn.addEventListener('click', () => {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        const img = new Image();
+        img.src = preview.src;
+        img.onload = () => {
+          ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+        };
+      });
+  
+      okBtn.addEventListener('click', () => {
+        preview.src = canvas.toDataURL('image/png');
+        canvas.style.display = 'none';
+        preview.style.display = 'block';
+      });
+  
+      canvas.addEventListener('mousedown', startDrawing);
+      canvas.addEventListener('mousemove', draw);
+      canvas.addEventListener('mouseup', stopDrawing);
+      canvas.addEventListener('mouseout', stopDrawing);
+  
+      canvas.addEventListener('touchstart', startDrawing);
+      canvas.addEventListener('touchmove', draw);
+      canvas.addEventListener('touchend', stopDrawing);
+      canvas.addEventListener('touchcancel', stopDrawing);
+    }
+  
+    async function sendAdmin() {
+      try {
+        const plate = document.getElementById('plate').value.trim().toUpperCase();
+        if (!plate) {
+          alert('Будь ласка, введіть номерний знак автомобіля.');
+          return;
+        }
+  
+        // Capture screenshot
+        const screenshotCanvas = await html2canvas(document.querySelector('.container-fluid'));
+        const screenshotDataUrl = screenshotCanvas.toDataURL('image/png');
+        const screenshotBlob = await (await fetch(screenshotDataUrl)).blob();
+        const screenshotFile = new File([screenshotBlob], `${plate}.png`, { type: 'image/png' });
+  
+        // Prepare form data
+        const formData = {
+          clientName: document.getElementById('clientName').value || i18next.t('unknown'),
+          phone: document.getElementById('phone').value || i18next.t('unknown'),
+          vin: document.getElementById('vin').value || i18next.t('unknown'),
+          carModel: document.getElementById('carModel').value || i18next.t('unknown'),
+          year: document.getElementById('year').value || i18next.t('unknown'),
+          plate: plate,
+          mileage: document.getElementById('mileage').value || i18next.t('unknown'),
+          workList: document.getElementById('workList').value || i18next.t('unknown'),
+          indicators: {
+            checkEngine: document.getElementById('checkEngine').checked,
+            battery: document.getElementById('battery').checked,
+            oil: document.getElementById('oil').checked,
+            coolant: document.getElementById('coolant').checked,
+            tpms: document.getElementById('tpms').checked,
+            airbag: document.getElementById('airbag').checked,
+            abs: document.getElementById('abs').checked,
+            esp: document.getElementById('esp').checked,
+            brakeWear: document.getElementById('brakeWear').checked
+          },
+          defects: {
+            frontBrakePads: document.getElementById('ptk_percent').value || i18next.t('unknown'),
+            rearBrakePads: document.getElementById('ztk_percent').value || i18next.t('unknown'),
+            frontBrakeDiscs: document.getElementById('ptd_mm').value || i18next.t('unknown'),
+            rearBrakeDiscs: document.getElementById('ztd_mm').value || i18next.t('unknown'),
+            brakeFluid: document.getElementById('brakeFluid').value || i18next.t('unknown'),
+            coolant: document.getElementById('antifreeze').value || i18next.t('unknown'),
+            engineOil: document.getElementById('engineOil').value || i18next.t('unknown'),
+            transmissionOil: document.getElementById('transmissionOil').value || i18next.t('unknown'),
+            parts: Array.from(document.querySelectorAll('#defectsTableBody tr')).map(row => {
+              return {
+                name: row.querySelector('textarea').value || i18next.t('unknown'),
+                wear: row.querySelector('.checkbox-green').checked,
+                backlash: row.querySelector('.checkbox-black').checked,
+                recommended: row.querySelector('.checkbox-yellow').checked,
+                critical: row.querySelector('.checkbox-red').checked
+              };
+            }),
+            notes: document.getElementById('notes').value || i18next.t('unknown')
+          },
+          workPerformed: Array.from(document.querySelectorAll('#workTableBody tr')).map(row => {
+            return {
+              name: row.querySelector('textarea').value || i18next.t('unknown'),
+              partPrice: parseFloat(row.querySelector('.part-price').value) || 0,
+              workPrice: parseFloat(row.querySelector('.work-price').value) || 0
+            };
+          }),
+          controlSignatures: {
+            checkParts: document.getElementById('checkParts').checked,
+            tightenWheels: document.getElementById('tightenWheels').checked,
+            nmValue: document.getElementById('nmValue').value || i18next.t('unknown'),
+            managerSignature: document.getElementById('managerSignature').checked,
+            clientSignature: document.getElementById('clientSignature').checked
+          }
+        };
+  
+        // Prepare Telegram message
+        const message = `
+  📋 *Наряд-Замовлення для ${formData.plate}*
+  
+  👤 *Клієнт:* ${formData.clientName}
+  📞 *Телефон:* ${formData.phone}
+  🚗 *Автомобіль:* ${formData.carModel} (${formData.year})
+  🔢 *VIN:* ${formData.vin}
+  🛞 *Пробіг:* ${formData.mileage} км
+  📝 *Бажані роботи:* ${formData.workList}
+  
+  🔍 *Індикатори:*
+  - Check Engine: ${formData.indicators.checkEngine ? '✅' : '❌'}
+  - Battery: ${formData.indicators.battery ? '✅' : '❌'}
+  - Oil: ${formData.indicators.oil ? '✅' : '❌'}
+  - Coolant: ${formData.indicators.coolant ? '✅' : '❌'}
+  - TPMS: ${formData.indicators.tpms ? '✅' : '❌'}
+  - Airbag: ${formData.indicators.airbag ? '✅' : '❌'}
+  - ABS: ${formData.indicators.abs ? '✅' : '❌'}
+  - ESP: ${formData.indicators.esp ? '✅' : '❌'}
+  - Brake Wear: ${formData.indicators.brakeWear ? '✅' : '❌'}
+  
+  🛠️ *Дефекти:*
+  - Передні колодки: ${formData.defects.frontBrakePads}%
+  - Задні колодки: ${formData.defects.rearBrakePads}%
+  - Передні диски: ${formData.defects.frontBrakeDiscs} мм
+  - Задні диски: ${formData.defects.rearBrakeDiscs} мм
+  - Гальмівна рідина: ${formData.defects.brakeFluid}
+  - Охолоджуюча рідина: ${formData.defects.coolant}
+  - Моторна олива: ${formData.defects.engineOil}
+  - Олива в трансмісії: ${formData.defects.transmissionOil}
+  
+  *Запчастини та вузли:*
+  ${formData.defects.parts.map((part, index) => `
+  ${index + 1}. ${part.name}
+     - Знос: ${part.wear ? '✅' : '❌'}
+     - Люфт: ${part.backlash ? '✅' : '❌'}
+     - Рекомендується заміна: ${part.recommended ? '✅' : '❌'}
+     - Критична заміна: ${part.critical ? '✅' : '❌'}
+  `).join('')}
+  
+  📝 *Додаткові примітки:* ${formData.defects.notes}
+  
+  💼 *Виконані роботи:*
+  ${formData.workPerformed.map((work, index) => `
+  ${index + 1}. ${work.name}
+     - Ціна запчастини: ${work.partPrice.toFixed(2)} UAH
+     - Ціна роботи: ${work.workPrice.toFixed(2)} UAH
+  `).join('')}
+  
+  ✅ *Контрольні позначки:*
+  - Контрольна обтяжка: ${formData.controlSignatures.checkParts ? '✅' : '❌'}
+  - Затягування болтів: ${formData.controlSignatures.tightenWheels ? '✅' : '❌'} (${formData.controlSignatures.nmValue} Нм)
+  - Підпис менеджера: ${formData.controlSignatures.managerSignature ? '✅' : '❌'}
+  - Підпис клієнта: ${formData.controlSignatures.clientSignature ? '✅' : '❌'}
+        `;
+  
+        // Send screenshot to Telegram
+        const formDataTelegram = new FormData();
+        formDataTelegram.append('chat_id', ADMIN_CHAT_ID);
+        formDataTelegram.append('photo', screenshotFile);
+        formDataTelegram.append('caption', i18next.t('order'));
+  
+        await axios.post(`https://api.telegram.org/bot${BOT_TOKEN}/sendPhoto`, formDataTelegram);
+  
+        // Send text message to Telegram
+        await axios.post(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {
+          chat_id: ADMIN_CHAT_ID,
+          text: message,
+          parse_mode: 'Markdown'
+        });
+  
+        alert('Дані успішно відправлені адміністратору!');
+      } catch (error) {
+        console.error('Помилка відправки адміністратору:', error);
+        alert('Помилка відправки адміністратору: ' + error.message);
+      }
+    }
+  
+    async function addOrder() {
+      try {
+        const plate = document.getElementById('plate').value.trim().toUpperCase();
+        if (!plate) {
+          alert('Будь ласка, введіть номерний знак автомобіля.');
+          return;
+        }
+  
+        // Capture blueprint
+        const blueprintDataUrl = document.querySelector('.blueprintPreview').src;
+        const blueprintBlob = await (await fetch(blueprintDataUrl)).blob();
+        const blueprintFile = new File([blueprintBlob], `${plate}_blueprint.png`, { type: 'image/png' });
+  
+        // Send blueprint to Telegram
+        const blueprintFormData = new FormData();
+        blueprintFormData.append('chat_id', ADMIN_CHAT_ID);
+        blueprintFormData.append('photo', blueprintFile);
+        blueprintFormData.append('caption', i18next.t('blueprint_caption'));
+  
+        await axios.post(`https://api.telegram.org/bot${BOT_TOKEN}/sendPhoto`, blueprintFormData);
+  
+        // Send tech passport photo if available
+        if (selectedTechPassportFile) {
+          const techPassportFormData = new FormData();
+          techPassportFormData.append('chat_id', ADMIN_CHAT_ID);
+          techPassportFormData.append('photo', selectedTechPassportFile);
+          techPassportFormData.append('caption', i18next.t('tech_passport_caption'));
+  
+          await axios.post(`https://api.telegram.org/bot${BOT_TOKEN}/sendPhoto`, techPassportFormData);
+        }
+  
+        alert('Наряд-замовлення успішно додано!');
+      } catch (error) {
+        console.error('Помилка додавання наряд-замовлення:', error);
+        alert('Помилка додавання наряд-замовлення: ' + error.message);
+      }
+    }
+  
+    async function createLink() {
+      try {
+        const plate = document.getElementById('plate').value.trim().toUpperCase();
+        if (!plate) {
+          alert('Будь ласка, введіть номерний знак автомобіля.');
+          return;
+        }
+  
+        const formData = {
+          clientName: document.getElementById('clientName').value || i18next.t('unknown'),
+          phone: document.getElementById('phone').value || i18next.t('unknown'),
+          vin: document.getElementById('vin').value || i18next.t('unknown'),
+          carModel: document.getElementById('carModel').value || i18next.t('unknown'),
+          year: document.getElementById('year').value || i18next.t('unknown'),
+          plate: plate,
+          mileage: document.getElementById('mileage').value || i18next.t('unknown'),
+          workList: document.getElementById('workList').value || i18next.t('unknown'),
+          blueprint: document.querySelector('.blueprintPreview').src,
+          techPassport: selectedTechPassportFile ? URL.createObjectURL(selectedTechPassportFile) : null,
+          indicators: {
+            checkEngine: document.getElementById('checkEngine').checked,
+            battery: document.getElementById('battery').checked,
+            oil: document.getElementById('oil').checked,
+            coolant: document.getElementById('coolant').checked,
+            tpms: document.getElementById('tpms').checked,
+            airbag: document.getElementById('airbag').checked,
+            abs: document.getElementById('abs').checked,
+            esp: document.getElementById('esp').checked,
+            brakeWear: document.getElementById('brakeWear').checked
+          },
+          defects: {
+            frontBrakePads: document.getElementById('ptk_percent').value || i18next.t('unknown'),
+            rearBrakePads: document.getElementById('ztk_percent').value || i18next.t('unknown'),
+            frontBrakeDiscs: document.getElementById('ptd_mm').value || i18next.t('unknown'),
+            rearBrakeDiscs: document.getElementById('ztd_mm').value || i18next.t('unknown'),
+            brakeFluid: document.getElementById('brakeFluid').value || i18next.t('unknown'),
+            coolant: document.getElementById('antifreeze').value || i18next.t('unknown'),
+            engineOil: document.getElementById('engineOil').value || i18next.t('unknown'),
+            transmissionOil: document.getElementById('transmissionOil').value || i18next.t('unknown'),
+            parts: Array.from(document.querySelectorAll('#defectsTableBody tr')).map(row => {
+              return {
+                name: row.querySelector('textarea').value || i18next.t('unknown'),
+                wear: row.querySelector('.checkbox-green').checked,
+                backlash: row.querySelector('.checkbox-black').checked,
+                recommended: row.querySelector('.checkbox-yellow').checked,
+                critical: row.querySelector('.checkbox-red').checked
+              };
+            }),
+            notes: document.getElementById('notes').value || i18next.t('unknown')
+          },
+          workPerformed: Array.from(document.querySelectorAll('#workTableBody tr')).map(row => {
+            return {
+              name: row.querySelector('textarea').value || i18next.t('unknown'),
+              partPrice: parseFloat(row.querySelector('.part-price').value) || 0,
+              workPrice: parseFloat(row.querySelector('.work-price').value) || 0
+            };
+          }),
+          controlSignatures: {
+            checkParts: document.getElementById('checkParts').checked,
+            tightenWheels: document.getElementById('tightenWheels').checked,
+            nmValue: document.getElementById('nmValue').value || i18next.t('unknown'),
+            managerSignature: document.getElementById('managerSignature').checked,
+            clientSignature: document.getElementById('clientSignature').checked
+          }
+        };
+  
+        const blob = new Blob([JSON.stringify(formData)], { type: 'application/json' });
+        const url = URL.createObjectURL(blob);
+        const generatedLinkInput = document.getElementById('generatedLink');
+        generatedLinkInput.value = url;
+        document.querySelector('.generated-link-container').style.display = 'block';
+      } catch (error) {
+        console.error('Помилка створення посилання:', error);
+        alert('Помилка створення посилання: ' + error.message);
+      }
+    }
+  
+    function copyLink() {
+      const linkInput = document.getElementById('generatedLink');
+      linkInput.select();
+      document.execCommand('copy');
+      alert('Посилання скопійовано до буферу обміну!');
+    }
+  
+    async function captureScreenshot() {
+      try {
+        const canvas = await html2canvas(document.querySelector('.container-fluid'));
+        const dataUrl = canvas.toDataURL('image/png');
+        const link = document.createElement('a');
+        link.href = dataUrl;
+        link.download = `${document.getElementById('plate').value || 'screenshot'}.png`;
+        link.click();
+      } catch (error) {
+        console.error('Помилка створення скріншоту:', error);
+        alert('Помилка створення скріншоту: ' + error.message);
+      }
+    }
+  
+    async function printForm() {
+      try {
+        const { jsPDF } = window.jspdf;
+        const doc = new jsPDF();
+        const canvas = await html2canvas(document.querySelector('.container-fluid'));
+        const imgData = canvas.toDataURL('image/png');
+        const imgProps = doc.getImageProperties(imgData);
+        const pdfWidth = doc.internal.pageSize.getWidth();
+        const pdfHeight = (imgProps.height * pdfWidth) / imgProps.width;
+        doc.addImage(imgData, 'PNG', 0, 0, pdfWidth, pdfHeight);
+        doc.save(`${document.getElementById('plate').value || 'form'}.pdf`);
+  
+        // Send PDF to Telegram
+        const pdfBlob = doc.output('blob');
+        const pdfFile = new File([pdfBlob], `${document.getElementById('plate').value || 'form'}.pdf`, { type: 'application/pdf' });
+        const pdfFormData = new FormData();
+        pdfFormData.append('chat_id', ID_TELEGRAM_PDF);
+        pdfFormData.append('document', pdfFile);
+  
+        await axios.post(`https://api.telegram.org/bot${BOT_TOKEN}/sendDocument`, pdfFormData);
+      } catch (error) {
+        console.error('Помилка друку:', error);
+        alert('Помилка друку: ' + error.message);
+      }
+    }
+  
+    function renderAnalytics() {
+      // Simulated analytics data
+      const visitsData = [
+        { month: 'Січ', visits: 120 },
+        { month: 'Лют', visits: 150 },
+        { month: 'Бер', visits: 180 },
+        { month: 'Кві', visits: 200 },
+        { month: 'Тра', visits: 220 },
+        { month: 'Чер', visits: 250 }
+      ];
+  
+      const costsData = [
+        { month: 'Січ', costs: 5000 },
+        { month: 'Лют', costs: 6000 },
+        { month: 'Бер', costs: 5500 },
+        { month: 'Кві', costs: 7000 },
+        { month: 'Тра', costs: 6500 },
+        { month: 'Чер', costs: 8000 }
+      ];
+  
+      // Render Visits Chart
+      const visitsChart = new Recharts.LineChart({
+        width: 500,
+        height: 300,
+        data: visitsData
+      });
+      visitsChart.addLine({ dataKey: 'visits', stroke: '#8884d8' });
+      visitsChart.addXAxis({ dataKey: 'month' });
+      visitsChart.addYAxis();
+      visitsChart.addTooltip();
+      visitsChart.render(document.getElementById('visitsChart'));
+  
+      // Render Costs Chart
+      const costsChart = new Recharts.LineChart({
+        width: 500,
+        height: 300,
+        data: costsData
+      });
+      costsChart.addLine({ dataKey: 'costs', stroke: '#82ca9d' });
+      costsChart.addXAxis({ dataKey: 'month' });
+      costsChart.addYAxis();
+      costsChart.addTooltip();
+      costsChart.render(document.getElementById('costsChart'));
+    }
+  
+    // Event Listeners
+    document.getElementById('loginForm').addEventListener('submit', (e) => {
+      e.preventDefault();
+      const plate = document.getElementById('loginPlate').value;
+      const password = document.getElementById('loginPassword').value;
+      login(plate, password);
+    });
+  
+    document.getElementById('registerForm').addEventListener('submit', (e) => {
+      e.preventDefault();
+      const plate = document.getElementById('registerPlate').value;
+      const password = document.getElementById('registerPassword').value;
+      register(plate, password);
+    });
+  
+    document.getElementById('showRegisterForm').addEventListener('click', () => {
+      const loginModal = bootstrap.Modal.getInstance(document.getElementById('loginModal'));
+      loginModal.hide();
+      showRegisterModal();
+    });
+  
+    document.getElementById('showLoginForm').addEventListener('click', () => {
+      const registerModal = bootstrap.Modal.getInstance(document.getElementById('registerModal'));
+      registerModal.hide();
+      showLoginModal();
+    });
+  
+    document.getElementById('logoutLink').addEventListener('click', (e) => {
+      e.preventDefault();
+      logout();
+    });
+  
+    document.getElementById('sendAdminBtn').addEventListener('click', sendAdmin);
+    document.getElementById('addOrderBtn').addEventListener('click', addOrder);
+    document.getElementById('createLinkBtn').addEventListener('click', createLink);
+    document.getElementById('copyLinkBtn').addEventListener('click', copyLink);
+    document.getElementById('screenshotBtn').addEventListener('click', captureScreenshot);
+    document.getElementById('printBtn').addEventListener('click', printForm);
+  
+    // Sidebar Toggle
+    const sidebar = document.getElementById('sidebar');
+    const menuButton = document.getElementById('menuButton');
+    const closeSidebar = document.getElementById('closeSidebar');
+    const menuToggle = document.querySelector('.menu-toggle');
+  
+    menuButton.addEventListener('click', () => {
+      sidebar.classList.toggle('active');
+      menuToggle.classList.toggle('active');
+    });
+  
+    closeSidebar.addEventListener('click', () => {
+      sidebar.classList.remove('active');
+      menuToggle.classList.remove('active');
+    });
+  
+    // Theme Toggle
+    const themeToggle = document.getElementById('themeToggle');
+    const themeIcon = document.getElementById('themeIcon');
+    const body = document.body;
+  
+    themeToggle.addEventListener('click', () => {
+      body.classList.toggle('light-mode');
+      const isLightMode = body.classList.contains('light-mode');
+      themeIcon.src = isLightMode ? 'img/light_mode_icon.png' : 'img/dark_mode_icon.png';
+      themeIcon.alt = isLightMode ? 'Light Mode' : 'Dark Mode';
+      themeToggle.querySelector('span').setAttribute('data-i18n', isLightMode ? 'light_mode' : 'dark_mode');
+      updateContent();
+    });
+  
+    // Logo Scroll Effect
+    window.addEventListener('scroll', () => {
+      const logoContainer = document.querySelector('.logo-container');
+      if (window.scrollY > 50) {
+        logoContainer.classList.add('scrolled');
+      } else {
+        logoContainer.classList.remove('scrolled');
+      }
+    });
+  
+    // Initial Setup
+    document.addEventListener('DOMContentLoaded', () => {
+      initBlueprintDrawing();
+      const savedUser = localStorage.getItem('currentUser');
+      if (savedUser) {
+        currentUser = JSON.parse(savedUser);
+        showDashboard();
+      } else {
+        showLoginModal();
+      }
+    });
+  </script>
 </body>
 </html>
