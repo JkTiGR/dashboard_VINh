@@ -92,7 +92,6 @@
       50%  { background-position: 100% 50%; }
       100% { background-position: 0% 50%; }
     }
-    /* Стили бокового меню */
     .sidebar {
       position: fixed;
       top: 0;
@@ -327,28 +326,41 @@
     .checkbox-yellow:checked  { background-color: yellow  !important; border-color: #fff !important; }
     .checkbox-red:checked     { background-color: red     !important; border-color: #fff !important; }
     .glass-card {
+      position: relative;
       background: var(--glass-bg);
       border-radius: 20px;
       padding: 15px;
       backdrop-filter: blur(var(--glass-blur));
-      border: 1px solid var(--glass-border);
+      border: none;
       margin-bottom: 15px;
-      box-shadow: 0 8px 32px rgba(0,247,255,0.2);
+      box-shadow: 0 8px 32px rgba(0, 247, 255, 0.5);
+    }
+    .glass-card::before {
+      content: '';
+      position: absolute;
+      top: -2px;
+      left: -2px;
+      right: -2px;
+      bottom: -2px;
+      border-radius: 22px;
+      background: linear-gradient(45deg, rgba(0, 247, 255, 0.5), rgba(0, 0, 255, 0.5));
+      z-index: -1;
     }
     .light-mode .glass-card {
       background: var(--glass-bg);
-      border: 1px solid var(--glass-border);
-      box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+    }
+    .light-mode .glass-card::before {
+      background: linear-gradient(45deg, rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.1));
     }
     #indicators-container.glass-card,
     #control-signatures-container {
       background: var(--glass-bg);
       border-radius: 20px;
-      padding: 15px;
+      padding: 20px 10px;
       backdrop-filter: blur(var(--glass-blur));
-      border: 1px solid var(--glass-border);
-      margin: 20px 10px;
-      box-shadow: 0 8px 32px rgba(0,247,255,0.2);
+      border: none;
+      box-shadow: 0 8px 32px rgba(0, 247, 255, 0.5);
     }
     #control-signatures-container h4 {
       margin: 0;
@@ -739,8 +751,8 @@
   <div class="container-fluid" style="padding-top: 60px;" id="dashboardContent" style="display: none;">
     <form style="width: 100%;">
       <div class="row pc-content">
-        <!-- Перша колонка: Інфо про автомобіль та Чертеж -->
-        <div class="col-md-4 first-col">
+        <!-- Перша колонка: Інфо об автомобілі та Індикатори -->
+        <div class="col-md-2 first-col">
           <div id="vinh-container" class="glass-card">
             <h4 data-i18n="car_info">Інфо об автомобілі</h4>
             <div class="row">
@@ -797,6 +809,76 @@
             </div>
           </div>
           <div class="glass-card mt-2">
+            <h4 data-i18n="indicators">Індикатори</h4>
+            <div class="row">
+              <div class="col-3">
+                <div class="form-check">
+                  <input type="checkbox" id="checkEngine" class="form-check-input" />
+                  <label for="checkEngine" class="form-check-label">
+                    <img src="img/check_engine.png" alt="Check Engine" style="width:24px; height:24px;" />
+                  </label>
+                </div>
+                <div class="form-check">
+                  <input type="checkbox" id="battery" class="form-check-input" />
+                  <label for="battery" class="form-check-label">
+                    <img src="img/battery.png" alt="Battery" style="width:24px; height:24px;" />
+                  </label>
+                </div>
+              </div>
+              <div class="col-3">
+                <div class="form-check">
+                  <input type="checkbox" id="oil" class="form-check-input" />
+                  <label for="oil" class="form-check-label">
+                    <img src="img/oil.png" alt="Oil" style="width:24px; height:24px;" />
+                  </label>
+                </div>
+                <div class="form-check">
+                  <input type="checkbox" id="coolant" class="form-check-input" />
+                  <label for="coolant" class="form-check-label">
+                    <img src="img/coolant.png" alt="Coolant" style="width:24px; height:24px;" />
+                  </label>
+                </div>
+              </div>
+              <div class="col-3">
+                <div class="form-check">
+                  <input type="checkbox" id="tpms" class="form-check-input" />
+                  <label for="tpms" class="form-check-label">
+                    <img src="img/tpms.png" alt="TPMS" style="width:24px; height:24px;" />
+                  </label>
+                </div>
+                <div class="form-check">
+                  <input type="checkbox" id="airbag" class="form-check-input" />
+                  <label for="airbag" class="form-check-label">
+                    <img src="img/airbag.png" alt="Airbag" style="width:24px; height:24px;" />
+                  </label>
+                </div>
+              </div>
+              <div class="col-3">
+                <div class="form-check">
+                  <input type="checkbox" id="abs" class="form-check-input" />
+                  <label for="abs" class="form-check-label">
+                    <img src="img/abs.png" alt="ABS" style="width:24px; height:24px;" />
+                  </label>
+                </div>
+                <div class="form-check">
+                  <input type="checkbox" id="esp" class="form-check-input" />
+                  <label for="esp" class="form-check-label">
+                    <img src="img/esp.png" alt="ESP" style="width:24px; height:24px;" />
+                  </label>
+                </div>
+                <div class="form-check">
+                  <input type="checkbox" id="brakeWear" class="form-check-input" />
+                  <label for="brakeWear" class="form-check-label">
+                    <img src="img/brake_wear.png" alt="Brake Wear" style="width:24px; height:24px;" />
+                  </label>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- Друга колонка: Дефекти лакофарбового покриття та Акт дефектів автомобіля -->
+        <div class="col-md-6 second-col">
+          <div class="glass-card">
             <h4 data-i18n="paint_defects">Дефекти лакофарбового покриття</h4>
             <div class="blueprint-container">
               <img class="blueprintPreview" src="img/blueprintImg.png" alt="Дефекти лакофарбового покриття" style="display: block; max-width: 100%;" />
@@ -805,68 +887,6 @@
                 <button type="button" class="editBtn btn btn-primary btn-small" data-i18n="mark">відзначити</button>
                 <button type="button" class="clearBtn btn btn-danger btn-small" data-i18n="clear">Очистити</button>
                 <button type="button" class="okBtn btn btn-success btn-small" data-i18n="save">зберегти</button>
-              </div>
-            </div>
-          </div>
-        </div>
-        <!-- Друга колонка: Індикатори та Акт дефектів автомобіля -->
-        <div class="col-md-4 second-col">
-          <div class="glass-card">
-            <h4 data-i18n="indicators">Індикатори</h4>
-            <div class="indicators">
-              <div class="form-check">
-                <input type="checkbox" id="checkEngine" class="form-check-input" />
-                <label for="checkEngine" class="form-check-label">
-                  <img src="img/check_engine.png" alt="Check Engine" style="width:24px; height:24px;" />
-                </label>
-              </div>
-              <div class="form-check">
-                <input type="checkbox" id="battery" class="form-check-input" />
-                <label for="battery" class="form-check-label">
-                  <img src="img/battery.png" alt="Battery" style="width:24px; height:24px;" />
-                </label>
-              </div>
-              <div class="form-check">
-                <input type="checkbox" id="oil" class="form-check-input" />
-                <label for="oil" class="form-check-label">
-                  <img src="img/oil.png" alt="Oil" style="width:24px; height:24px;" />
-                </label>
-              </div>
-              <div class="form-check">
-                <input type="checkbox" id="coolant" class="form-check-input" />
-                <label for="coolant" class="form-check-label">
-                  <img src="img/coolant.png" alt="Coolant" style="width:24px; height:24px;" />
-                </label>
-              </div>
-              <div class="form-check">
-                <input type="checkbox" id="tpms" class="form-check-input" />
-                <label for="tpms" class="form-check-label">
-                  <img src="img/tpms.png" alt="TPMS" style="width:24px; height:24px;" />
-                </label>
-              </div>
-              <div class="form-check">
-                <input type="checkbox" id="airbag" class="form-check-input" />
-                <label for="airbag" class="form-check-label">
-                  <img src="img/airbag.png" alt="Airbag" style="width:24px; height:24px;" />
-                </label>
-              </div>
-              <div class="form-check">
-                <input type="checkbox" id="abs" class="form-check-input" />
-                <label for="abs" class="form-check-label">
-                  <img src="img/abs.png" alt="ABS" style="width:24px; height:24px;" />
-                </label>
-              </div>
-              <div class="form-check">
-                <input type="checkbox" id="esp" class="form-check-input" />
-                <label for="esp" class="form-check-label">
-                  <img src="img/esp.png" alt="ESP" style="width:24px; height:24px;" />
-                </label>
-              </div>
-              <div class="form-check">
-                <input type="checkbox" id="brakeWear" class="form-check-input" />
-                <label for="brakeWear" class="form-check-label">
-                  <img src="img/brake_wear.png" alt="Brake Wear" style="width:24px; height:24px;" />
-                </label>
               </div>
             </div>
           </div>
@@ -916,17 +936,17 @@
               <thead>
                 <tr>
                   <th style="width: 5%">#</th>
-                  <th style="width: 60%" data-i18n="part_name">Назва запчастини або вузла</th>
-                  <th style="width: 10%">
+                  <th style="width: 65%" data-i18n="part_name">Назва запчастини або вузла</th>
+                  <th style="width: 8%">
                     <span class="legend-square legend-green" data-checkbox-class="checkbox-green"></span>
                   </th>
-                  <th style="width: 10%">
+                  <th style="width: 8%">
                     <span class="legend-square legend-black" data-checkbox-class="checkbox-black"></span>
                   </th>
-                  <th style="width: 10%">
+                  <th style="width: 8%">
                     <span class="legend-square legend-yellow" data-checkbox-class="checkbox-yellow"></span>
                   </th>
-                  <th style="width: 10%">
+                  <th style="width: 8%">
                     <span class="legend-square legend-red" data-checkbox-class="checkbox-red"></span>
                   </th>
                 </tr>
@@ -1045,6 +1065,7 @@
       <div id="costsChart" style="height: 300px; margin-top: 20px;"></div>
     </div>
   </div>
+
   <script>
     const BOT_TOKEN = '8099553216:AAEE3Ctou3yY4ddwVbXiUfHgfT7PeZyUyhA';
     const ADMIN_CHAT_ID = '-1002239976197';
@@ -1052,12 +1073,6 @@
     const DISCUSSION_GROUP_CHAT_ID = '-1002239976197';
     const REPLY_TO_MESSAGE_ID = 'https://t.me/+VHtWYaAVbTg3ODUy';
     const ID_TELEGRAM_PDF = '-1002687911856';
-  
-    // S3 Configuration (Replace with your actual S3 credentials)
-    const S3_ENDPOINT = 'https://your-s3-endpoint';
-    const S3_ACCESS_KEY = 'your-access-key';
-    const S3_SECRET_KEY = 'your-secret-key';
-    const S3_BUCKET = 'your-bucket-name';
   
     let selectedTechPassportFile = null;
     let currentUser = null;
@@ -1391,10 +1406,8 @@
       });
     });
   
-    // Authentication
     async function login(plate, password) {
       try {
-        // Simulated API call for login
         const users = JSON.parse(localStorage.getItem('users')) || [];
         const user = users.find(u => u.plate === plate && u.password === password);
         if (!user) throw new Error('Невірний номерний знак або пароль');
@@ -1450,18 +1463,6 @@
       document.getElementById('dashboardContent').style.display = 'none';
       document.getElementById('analyticsSection').style.display = 'none';
       showLoginModal();
-    }
-  
-    // S3 Upload Function (Simulated)
-    async function uploadToS3(file, path) {
-      try {
-        // Simulate S3 upload with a placeholder URL
-        console.log(`Uploading ${file.name} to S3 at path: ${path}`);
-        return `https://s3.example.com/${path}/${file.name}`;
-      } catch (error) {
-        console.error('Помилка завантаження в S3:', error);
-        throw new Error('Не вдалося завантажити файл в S3');
-      }
     }
   
     function handleTechPassportFileSelected(input) {
@@ -1546,7 +1547,6 @@
       updateContent();
     }
   
-    // Blueprint Drawing
     function initBlueprintDrawing() {
       const preview = document.querySelector('.blueprintPreview');
       const canvas = document.querySelector('.blueprintCanvas');
@@ -1629,18 +1629,104 @@
     async function sendAdmin() {
       try {
         const plate = document.getElementById('plate').value.trim().toUpperCase();
+        const mileage = document.getElementById('mileage').value || '';
         if (!plate) {
           alert('Будь ласка, введіть номерний знак автомобіля.');
           return;
         }
   
-        // Capture screenshot
-        const screenshotCanvas = await html2canvas(document.querySelector('.container-fluid'));
-        const screenshotDataUrl = screenshotCanvas.toDataURL('image/png');
-        const screenshotBlob = await (await fetch(screenshotDataUrl)).blob();
-        const screenshotFile = new File([screenshotBlob], `${plate}.png`, { type: 'image/png' });
+        // Зберігаємо оригінальні стилі body
+        const body = document.body;
+        const originalWidth = body.style.width;
+        const originalHeight = body.style.height;
+        const originalOverflow = body.style.overflow;
   
-        // Prepare form data
+        // Встановлюємо фіксовану ширину для імітації десктопного вигляду (режим ПК)
+        body.style.width = '1920px'; // Змінено на 1920 пікселів
+        body.style.overflow = 'visible'; // Дозволяємо відобразити весь контент
+  
+        // Отримуємо розміри всієї сторінки (аналогічно до "Capture full size screenshot")
+        const html = document.documentElement;
+        const height = Math.max(
+          body.scrollHeight, body.offsetHeight,
+          html.clientHeight, html.scrollHeight, html.offsetHeight
+        );
+  
+        // Захоплення скріншота всієї сторінки в поточному режимі
+        const currentCanvas = await html2canvas(document.body, {
+          scale: 1, // Без масштабування, щоб зберегти якість
+          width: 1920, // Змінено на 1920 пікселів (16:9)
+          height: height, // Висота всієї сторінки
+          scrollX: 0, // Захоплюємо з початку сторінки
+          scrollY: -window.scrollY, // Компенсуємо прокрутку
+          windowWidth: 1920 // Імітуємо ширину вікна браузера
+        });
+        const currentDataUrl = currentCanvas.toDataURL('image/png'); // PNG без стиснення
+        const currentBlob = await (await fetch(currentDataUrl)).blob();
+        const isLightMode = document.body.classList.contains('light-mode');
+        const currentMode = isLightMode ? 'light' : 'dark';
+        const currentFile = new File([currentBlob], `${plate}Al${currentMode}.png`, { type: 'image/png' });
+  
+        // Створення iframe для альтернативного режиму
+        const iframe = document.createElement('iframe');
+        iframe.style.position = 'absolute';
+        iframe.style.left = '-9999px';
+        document.body.appendChild(iframe);
+        const iframeDoc = iframe.contentDocument;
+        iframeDoc.open();
+        iframeDoc.write(document.documentElement.outerHTML);
+        iframeDoc.close();
+  
+        await new Promise((resolve) => {
+          iframe.onload = resolve;
+        });
+  
+        const iframeBody = iframeDoc.body;
+        if (iframeBody) {
+          if (isLightMode) {
+            iframeBody.classList.remove('light-mode');
+          } else {
+            iframeBody.classList.add('light-mode');
+          }
+        } else {
+          console.error('Тело iframe не найдено');
+          document.body.removeChild(iframe);
+          return;
+        }
+  
+        // Встановлюємо фіксовану ширину для iframe
+        iframeBody.style.width = '1920px'; // Змінено на 1920 пікселів
+        iframeBody.style.overflow = 'visible';
+  
+        // Отримуємо розміри iframe
+        const iframeHtml = iframeDoc.documentElement;
+        const iframeHeight = Math.max(
+          iframeBody.scrollHeight, iframeBody.offsetHeight,
+          iframeHtml.clientHeight, iframeHtml.scrollHeight, iframeHtml.offsetHeight
+        );
+  
+        // Захоплення скріншота в альтернативному режимі
+        const alternateCanvas = await html2canvas(iframeBody, {
+          scale: 1, // Без масштабування, щоб зберегти якість
+          width: 1920, // Змінено на 1920 пікселів (16:9)
+          height: iframeHeight, // Висота всієї сторінки в iframe
+          scrollX: 0,
+          scrollY: -window.scrollY,
+          windowWidth: 1920 // Імітуємо ширину вікна браузера
+        });
+        const alternateDataUrl = alternateCanvas.toDataURL('image/png'); // PNG без стиснення
+        const alternateBlob = await (await fetch(alternateDataUrl)).blob();
+        const alternateMode = isLightMode ? 'dark' : 'light';
+        const alternateFile = new File([alternateBlob], `${plate}Al${alternateMode}.png`, { type: 'image/png' });
+  
+        // Відновлюємо оригінальні стилі body
+        body.style.width = originalWidth;
+        body.style.height = originalHeight;
+        body.style.overflow = originalOverflow;
+  
+        document.body.removeChild(iframe);
+  
+        // Збираємо дані форми для текстового повідомлення
         const formData = {
           clientName: document.getElementById('clientName').value || i18next.t('unknown'),
           phone: document.getElementById('phone').value || i18next.t('unknown'),
@@ -1648,7 +1734,7 @@
           carModel: document.getElementById('carModel').value || i18next.t('unknown'),
           year: document.getElementById('year').value || i18next.t('unknown'),
           plate: plate,
-          mileage: document.getElementById('mileage').value || i18next.t('unknown'),
+          mileage: mileage || i18next.t('unknown'),
           workList: document.getElementById('workList').value || i18next.t('unknown'),
           indicators: {
             checkEngine: document.getElementById('checkEngine').checked,
@@ -1697,77 +1783,39 @@
           }
         };
   
-        // Prepare Telegram message
-        const message = `
-  📋 *Наряд-Замовлення для ${formData.plate}*
+        // Формуємо текстове повідомлення (caption)
+        const caption = `
+  #${formData.plate} 📋 Наряд-Замовлення
   
-  👤 *Клієнт:* ${formData.clientName}
-  📞 *Телефон:* ${formData.phone}
-  🚗 *Автомобіль:* ${formData.carModel} (${formData.year})
-  🔢 *VIN:* ${formData.vin}
-  🛞 *Пробіг:* ${formData.mileage} км
-  📝 *Бажані роботи:* ${formData.workList}
-  
-  🔍 *Індикатори:*
-  - Check Engine: ${formData.indicators.checkEngine ? '✅' : '❌'}
-  - Battery: ${formData.indicators.battery ? '✅' : '❌'}
-  - Oil: ${formData.indicators.oil ? '✅' : '❌'}
-  - Coolant: ${formData.indicators.coolant ? '✅' : '❌'}
-  - TPMS: ${formData.indicators.tpms ? '✅' : '❌'}
-  - Airbag: ${formData.indicators.airbag ? '✅' : '❌'}
-  - ABS: ${formData.indicators.abs ? '✅' : '❌'}
-  - ESP: ${formData.indicators.esp ? '✅' : '❌'}
-  - Brake Wear: ${formData.indicators.brakeWear ? '✅' : '❌'}
-  
-  🛠️ *Дефекти:*
-  - Передні колодки: ${formData.defects.frontBrakePads}%
-  - Задні колодки: ${formData.defects.rearBrakePads}%
-  - Передні диски: ${formData.defects.frontBrakeDiscs} мм
-  - Задні диски: ${formData.defects.rearBrakeDiscs} мм
-  - Гальмівна рідина: ${formData.defects.brakeFluid}
-  - Охолоджуюча рідина: ${formData.defects.coolant}
-  - Моторна олива: ${formData.defects.engineOil}
-  - Олива в трансмісії: ${formData.defects.transmissionOil}
-  
-  *Запчастини та вузли:*
-  ${formData.defects.parts.map((part, index) => `
-  ${index + 1}. ${part.name}
-     - Знос: ${part.wear ? '✅' : '❌'}
-     - Люфт: ${part.backlash ? '✅' : '❌'}
-     - Рекомендується заміна: ${part.recommended ? '✅' : '❌'}
-     - Критична заміна: ${part.critical ? '✅' : '❌'}
-  `).join('')}
-  
-  📝 *Додаткові примітки:* ${formData.defects.notes}
-  
-  💼 *Виконані роботи:*
-  ${formData.workPerformed.map((work, index) => `
-  ${index + 1}. ${work.name}
-     - Ціна запчастини: ${work.partPrice.toFixed(2)} UAH
-     - Ціна роботи: ${work.workPrice.toFixed(2)} UAH
-  `).join('')}
-  
-  ✅ *Контрольні позначки:*
-  - Контрольна обтяжка: ${formData.controlSignatures.checkParts ? '✅' : '❌'}
-  - Затягування болтів: ${formData.controlSignatures.tightenWheels ? '✅' : '❌'} (${formData.controlSignatures.nmValue} Нм)
-  - Підпис менеджера: ${formData.controlSignatures.managerSignature ? '✅' : '❌'}
-  - Підпис клієнта: ${formData.controlSignatures.clientSignature ? '✅' : '❌'}
+  *Ім'я клієнта:* ${formData.clientName}
+  *Телефон:* ${formData.phone}
+  *VIN номер:* ${formData.vin}
+  *Модель авто:* ${formData.carModel}
+  *Рік випуску:* ${formData.year}
+  *Номерний знак:* ${formData.plate}
+  *Пробіг:* ${formData.mileage} км
+  *Перелік бажаних робіт:* ${formData.workList}
         `;
   
-        // Send screenshot to Telegram
-        const formDataTelegram = new FormData();
-        formDataTelegram.append('chat_id', ADMIN_CHAT_ID);
-        formDataTelegram.append('photo', screenshotFile);
-        formDataTelegram.append('caption', i18next.t('order'));
+        // Відправляємо два скріншоти через sendMediaGroup із caption
+        const mediaGroupFormData = new FormData();
+        mediaGroupFormData.append('chat_id', ADMIN_CHAT_ID);
+        mediaGroupFormData.append('media', JSON.stringify([
+          {
+            type: 'document', // Відправляємо як документ
+            media: 'attach://current-file',
+            caption: caption, // Додаємо caption до першого файлу
+            parse_mode: 'Markdown' // Включаємо Markdown для форматування
+          },
+          {
+            type: 'document',
+            media: 'attach://alternate-file'
+          }
+        ]));
+        mediaGroupFormData.append('current-file', currentFile);
+        mediaGroupFormData.append('alternate-file', alternateFile);
   
-        await axios.post(`https://api.telegram.org/bot${BOT_TOKEN}/sendPhoto`, formDataTelegram);
-  
-        // Send text message to Telegram
-        await axios.post(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {
-          chat_id: ADMIN_CHAT_ID,
-          text: message,
-          parse_mode: 'Markdown'
-        });
+        await axios.post(`https://api.telegram.org/bot${BOT_TOKEN}/sendMediaGroup`, mediaGroupFormData);
   
         alert('Дані успішно відправлені адміністратору!');
       } catch (error) {
@@ -1784,12 +1832,10 @@
           return;
         }
   
-        // Capture blueprint
         const blueprintDataUrl = document.querySelector('.blueprintPreview').src;
         const blueprintBlob = await (await fetch(blueprintDataUrl)).blob();
         const blueprintFile = new File([blueprintBlob], `${plate}_blueprint.png`, { type: 'image/png' });
   
-        // Send blueprint to Telegram
         const blueprintFormData = new FormData();
         blueprintFormData.append('chat_id', ADMIN_CHAT_ID);
         blueprintFormData.append('photo', blueprintFile);
@@ -1797,7 +1843,6 @@
   
         await axios.post(`https://api.telegram.org/bot${BOT_TOKEN}/sendPhoto`, blueprintFormData);
   
-        // Send tech passport photo if available
         if (selectedTechPassportFile) {
           const techPassportFormData = new FormData();
           techPassportFormData.append('chat_id', ADMIN_CHAT_ID);
@@ -1900,12 +1945,38 @@
   
     async function captureScreenshot() {
       try {
-        const canvas = await html2canvas(document.querySelector('.container-fluid'));
+        const body = document.body;
+        const originalWidth = body.style.width;
+        const originalHeight = body.style.height;
+        const originalOverflow = body.style.overflow;
+  
+        body.style.width = '1920px'; // Змінено на 1920 пікселів
+        body.style.overflow = 'visible';
+  
+        const height = Math.max(
+          body.scrollHeight, body.offsetHeight,
+          document.documentElement.clientHeight,
+          document.documentElement.scrollHeight,
+          document.documentElement.offsetHeight
+        );
+  
+        const canvas = await html2canvas(body, {
+          scale: 1,
+          width: 1920, // Змінено на 1920 пікселів
+          height: height,
+          scrollX: 0,
+          scrollY: -window.scrollY,
+          windowWidth: 1920
+        });
         const dataUrl = canvas.toDataURL('image/png');
         const link = document.createElement('a');
         link.href = dataUrl;
         link.download = `${document.getElementById('plate').value || 'screenshot'}.png`;
         link.click();
+  
+        body.style.width = originalWidth;
+        body.style.height = originalHeight;
+        body.style.overflow = originalOverflow;
       } catch (error) {
         console.error('Помилка створення скріншоту:', error);
         alert('Помилка створення скріншоту: ' + error.message);
@@ -1916,7 +1987,29 @@
       try {
         const { jsPDF } = window.jspdf;
         const doc = new jsPDF();
-        const canvas = await html2canvas(document.querySelector('.container-fluid'));
+        const body = document.body;
+        const originalWidth = body.style.width;
+        const originalHeight = body.style.height;
+        const originalOverflow = body.style.overflow;
+  
+        body.style.width = '1920px'; // Змінено на 1920 пікселів
+        body.style.overflow = 'visible';
+  
+        const height = Math.max(
+          body.scrollHeight, body.offsetHeight,
+          document.documentElement.clientHeight,
+          document.documentElement.scrollHeight,
+          document.documentElement.offsetHeight
+        );
+  
+        const canvas = await html2canvas(body, {
+          scale: 1,
+          width: 1920, // Змінено на 1920 пікселів
+          height: height,
+          scrollX: 0,
+          scrollY: -window.scrollY,
+          windowWidth: 1920
+        });
         const imgData = canvas.toDataURL('image/png');
         const imgProps = doc.getImageProperties(imgData);
         const pdfWidth = doc.internal.pageSize.getWidth();
@@ -1924,7 +2017,6 @@
         doc.addImage(imgData, 'PNG', 0, 0, pdfWidth, pdfHeight);
         doc.save(`${document.getElementById('plate').value || 'form'}.pdf`);
   
-        // Send PDF to Telegram
         const pdfBlob = doc.output('blob');
         const pdfFile = new File([pdfBlob], `${document.getElementById('plate').value || 'form'}.pdf`, { type: 'application/pdf' });
         const pdfFormData = new FormData();
@@ -1932,6 +2024,10 @@
         pdfFormData.append('document', pdfFile);
   
         await axios.post(`https://api.telegram.org/bot${BOT_TOKEN}/sendDocument`, pdfFormData);
+  
+        body.style.width = originalWidth;
+        body.style.height = originalHeight;
+        body.style.overflow = originalOverflow;
       } catch (error) {
         console.error('Помилка друку:', error);
         alert('Помилка друку: ' + error.message);
@@ -1939,7 +2035,6 @@
     }
   
     function renderAnalytics() {
-      // Simulated analytics data
       const visitsData = [
         { month: 'Січ', visits: 120 },
         { month: 'Лют', visits: 150 },
@@ -1958,7 +2053,6 @@
         { month: 'Чер', costs: 8000 }
       ];
   
-      // Render Visits Chart
       const visitsChart = new Recharts.LineChart({
         width: 500,
         height: 300,
@@ -1970,7 +2064,6 @@
       visitsChart.addTooltip();
       visitsChart.render(document.getElementById('visitsChart'));
   
-      // Render Costs Chart
       const costsChart = new Recharts.LineChart({
         width: 500,
         height: 300,
