@@ -25,72 +25,41 @@
     }
   </script>
   <style>
-    @font-face {
-      font-family: 'Passager';
-      src: url('passager.ttf') format('truetype');
-      font-weight: normal;
-      font-style: normal;
-    }
     :root {
-      --bg-dark: #0B0E14;
-      --neon-cyan: #c300ff63;
-      --neon-turquoise: #ff0000;
-      --neon-blue: #6257ff;
-      --neon-pink: #0011ff;
-      --white: #FFFFFF;
-      --glass-bg: rgba(148, 179, 243, 0.363);
-      --glass-blur: 10px;
-      --glass-border: rgba(255, 255, 255, 0.1);
-      --btn-gradient: linear-gradient(45deg, var(--neon-cyan), var(--neon-pink));
-      --prism-colors: linear-gradient(45deg, #a1c4fd, #c2e9fb, #fbc2eb, #a6c1ee);
-      --prism-opacity: 0.8;
-      --prism-blur: 8px;
-      --animation-duration: 10s;
-      --spin-duration: 12s;
+      --bg-dark: #1a1a1a;
+      --card-bg: rgba(30, 30, 30, 0.7);
+      --card-border: rgba(255, 255, 255, 0.1);
+      --text-primary: #ffffff;
+      --text-secondary: #a0aec0;
+      --accent-blue: #4f46e5;
+      --accent-blue-hover: #5b4cff;
+      --border-color: rgba(255, 255, 255, 0.15);
+      --shadow-glass: 0 8px 32px rgba(0, 0, 0, 0.2);
+      --backdrop-blur: blur(8px);
+      --transition: all 0.3s ease;
       --bs-body-color: #ffffff;
     }
     :root.light-mode {
-      --bg-dark: #E4E6EA;
-      --neon-cyan: #7A7D88;
-      --neon-turquoise: #9EA0A5;
-      --neon-blue: #6B6E79;
-      --neon-pink: #A4A4A4;
-      --white: #000000;
-      --glass-bg: rgba(255, 255, 255, 0.4);
-      --glass-border: rgba(0, 0, 0, 0.1);
-      --btn-gradient: linear-gradient(45deg, #b0b0b0, #d2d2d2);
-      --bs-body-color: #000000;
-    }
-    .light-mode {
-      margin: 0;
-      padding: 0;
-      min-height: 100vh;
-      background: linear-gradient(102deg, #e1e2e6, #f0f0f2, #c7c9d0, #eeeeee);
-      background-size: 200% 200%;
-      animation: gradientAnimation 15s ease infinite;
-      font-family: 'Share Tech Mono', monospace;
-      color: #000000;
-      overflow-x: hidden;
-      -webkit-user-select: none;
-      user-select: none;
+      --bg-dark: #f7fafc;
+      --card-bg: rgba(255, 255, 255, 0.9);
+      --card-border: rgba(0, 0, 0, 0.1);
+      --text-primary: #1a202c;
+      --text-secondary: #4a5568;
+      --accent-blue: #4f46e5;
+      --accent-blue-hover: #5b4cff;
+      --border-color: rgba(0, 0, 0, 0.1);
+      --shadow-glass: 0 8px 32px rgba(0, 0, 0, 0.1);
+      --backdrop-blur: blur(8px);
+      --bs-body-color: #1a202c;
     }
     html, body {
       margin: 0;
       padding: 0;
       min-height: 100vh;
-      background: linear-gradient(102deg, #1e28a4, #2a004c, #000b24, #4a0546);
-      background-size: 200% 200%;
-      animation: gradientAnimation 15s ease infinite;
-      font-family: 'Share Tech Mono', monospace;
-      color: var(--bs-body-color);
+      background: var(--bg-dark);
+      font-family: 'Inter', sans-serif;
+      color: var(--text-primary);
       overflow-x: hidden;
-      -webkit-user-select: none;
-      user-select: none;
-    }
-    @keyframes gradientAnimation {
-      0%   { background-position: 0% 50%; }
-      50%  { background-position: 100% 50%; }
-      100% { background-position: 0% 50%; }
     }
     .sidebar {
       position: fixed;
@@ -98,28 +67,16 @@
       right: -300px;
       width: 300px;
       height: 100vh;
-      background: var(--glass-bg);
-      border-radius: 0 0 0 10px;
-      backdrop-filter: blur(var(--glass-blur));
-      box-shadow: 0 8px 32px rgba(0, 247, 255, 0.3);
-      border: 1px solid var(--glass-border);
+      background: var(--card-bg);
+      backdrop-filter: var(--backdrop-blur);
+      border-left: 1px solid var(--card-border);
       padding: 20px;
-      transition: right 0.3s ease, opacity 0.3s ease;
+      transition: right var(--transition);
       z-index: 1100;
-      perspective: 1000px;
-    }
-    .light-mode .sidebar {
-      background: var(--glass-bg);
-      border: 1px solid var(--glass-border);
-      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+      box-shadow: var(--shadow-glass);
     }
     .sidebar.active {
       right: 0;
-      animation: fadeIn 0.3s;
-    }
-    @keyframes fadeIn {
-      from { opacity: 0; }
-      to   { opacity: 1; }
     }
     .sidebar ul {
       list-style: none;
@@ -131,168 +88,170 @@
     }
     .sidebar ul li a,
     .sidebar ul li button {
-      color: var(--white);
+      color: var(--text-primary);
       text-decoration: none;
-      font-size: 18px;
+      font-size: 16px;
+      font-weight: 500;
       background: none;
       border: none;
       cursor: pointer;
-      transition: color 0.3s;
+      transition: var(--transition);
     }
     .sidebar ul li a:hover,
     .sidebar ul li button:hover {
-      color: var(--neon-turquoise);
+      color: var(--accent-blue-hover);
+      transform: translateX(5px);
     }
-    .sidebar ul li.mode-toggle { margin-top: 10px; }
     .close-sidebar {
       position: absolute;
-      top: 10px;
-      left: 10px;
-      background: transparent;
+      top: 15px;
+      left: 15px;
+      background: none;
       border: none;
       font-size: 24px;
-      color: var(--white);
+      color: var(--text-secondary);
       cursor: pointer;
+      transition: var(--transition);
+    }
+    .close-sidebar:hover {
+      color: var(--accent-blue);
     }
     .sidebar-logo {
       display: block;
-      margin: 20px auto 0;
-      width: 40px;
-      height: 40px;
-      animation: spin var(--spin-duration) linear infinite, glow 6s ease-in-out infinite;
-      transition: opacity 0.3s ease;
-    }
-    .sidebar.active .sidebar-logo {
-      opacity: 1;
-    }
-    .sidebar:not(.active) .sidebar-logo {
-      opacity: 0;
-    }
-    @keyframes spin {
-      0% { transform: rotateY(0deg); }
-      100% { transform: rotateY(360deg); }
-    }
-    @keyframes glow {
-      0% {
-        filter: drop-shadow(10px 0 20px rgba(0, 247, 255, 0.5))
-                drop-shadow(-10px 0 10px rgba(0, 0, 0, 0.3));
-      }
-      25% {
-        filter: drop-shadow(0 10px 20px rgba(0, 247, 255, 0.5))
-                drop-shadow(0 -10px 10px rgba(0, 0, 0, 0.3));
-      }
-      50% {
-        filter: drop-shadow(-10px 0 20px rgba(0, 247, 255, 0.5))
-                drop-shadow(10px 0 10px rgba(0, 0, 0, 0.3));
-      }
-      75% {
-        filter: drop-shadow(0 -10px 20px rgba(0, 247, 255, 0.5))
-                drop-shadow(0 10px 10px rgba(0, 0, 0, 0.3));
-      }
-      100% {
-        filter: drop-shadow(10px 0 20px rgba(0, 247, 255, 0.5))
-                drop-shadow(-10px 0 10px rgba(0, 0, 0, 0.3));
-      }
+      margin: 30px auto;
+      width: 48px;
+      height: 48px;
+      filter: brightness(1.2);
     }
     .menu-toggle {
       position: fixed;
-      top: 10px;
-      right: 10px;
+      top: 15px;
+      right: 15px;
       z-index: 1200;
       display: flex;
       align-items: center;
-      transition: transform 0.3s ease;
-      perspective: 1000px;
+      background: var(--card-bg);
+      backdrop-filter: var(--backdrop-blur);
+      padding: 8px 12px;
+      border-radius: 12px;
+      box-shadow: var(--shadow-glass);
     }
     .menu-toggle button {
-      background: transparent;
+      background: none;
       border: none;
       cursor: pointer;
     }
     .menu-toggle img.logo {
-      width: 55px;
-      height: 55px;
+      width: 36px;
+      height: 36px;
       margin-right: 10px;
-      animation: spin var(--spin-duration) linear infinite, glow 6s ease-in-out infinite;
     }
     .vinh-menu-text {
-      font-family: 'Passager', sans-serif;
-      font-size: 24px;
-      color: var(--white);
-      text-shadow: 0 0 5px var(--neon-blue);
-      transition: font-size 0.3s ease;
-      display: flex;
-      flex-direction: column;
-      align-items: flex-end;
-    }
-    .light-mode .vinh-menu-text {
-      text-shadow: none;
-      color: var(--white);
+      font-size: 18px;
+      font-weight: 600;
+      color: var(--text-primary);
     }
     .vinh-menu-text .address {
-      font-size: 0.5em;
-      color: rgba(255, 255, 255, 0.9);
-      margin-top: 2px;
+      font-size: 12px;
+      color: var(--text-secondary);
     }
-    .light-mode .vinh-menu-text .address {
-      color: rgba(0, 0, 0, 0.9);
+    .form-control {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid var(--card-border);
+      border-radius: 8px;
+      color: var(--text-primary);
+      font-size: 14px;
+      padding: 10px;
+      transition: var(--transition);
     }
-    .menu-toggle.active .vinh-menu-text {
-      font-size: 35px;
-      line-height: 1;
+    .form-control:focus {
+      border-color: var(--accent-blue);
+      box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.3);
+      background: rgba(255, 255, 255, 0.1);
+      outline: none;
     }
-    .menu-toggle.active .vinh-menu-text .address {
-      display: none;
+    .btn-primary {
+      background: var(--accent-blue);
+      border: none;
+      color: #ffffff;
+      font-weight: 600;
+      padding: 10px 16px;
+      font-size: 14px;
+      border-radius: 8px;
+      transition: var(--transition);
     }
-    .logo-container {
-      position: fixed;
-      top: 0;
-      left: -400px;
-      display: flex;
-      align-items: center;
-      background: var(--glass-bg);
-      border-radius: 0 0 10px 0;
-      padding: 5px 10px;
-      backdrop-filter: blur(var(--glass-blur));
-      border: 1px solid var(--glass-border);
-      box-shadow: 0 1px 2px rgba(174, 0, 255, 0.3);
-      transition: left 0.3s ease;
-      z-index: 1200;
-      perspective: 1000px;
+    .btn-primary:hover {
+      background: var(--accent-blue-hover);
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-glass);
     }
-    .logo-container.scrolled { left: 0px; }
-    .logo-container img {
-      width: 40px;
-      height: 40px;
-      margin-right: 5px;
-      animation: spin var(--spin-duration) linear infinite, glow 6s ease-in-out infinite;
+    .btn-primary:active {
+      transform: translateY(0);
     }
-    .logo-container .vinh-menu-text { font-size: 20px; }
-    .btn-small {
-      font-size: 14px !important;
-      padding: 5px 10px !important;
+    .btn-danger {
+      background: #dc2626;
+      border: none;
+      color: #ffffff;
+      font-weight: 600;
+      padding: 10px 16px;
+      font-size: 14px;
+      border-radius: 8px;
+      transition: var(--transition);
+    }
+    .btn-danger:hover {
+      background: #b91c1c;
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-glass);
+    }
+    .glass-card {
+      background: var(--card-bg);
+      backdrop-filter: var(--backdrop-blur);
+      border-radius: 12px;
+      padding: 20px;
+      box-shadow: var(--shadow-glass);
+      border: 1px solid var(--card-border);
+      margin-bottom: 20px;
+    }
+    .glass-card h4 {
+      font-size: 18px;
+      font-weight: 600;
+      color: var(--text-primary);
+      margin-bottom: 15px;
+    }
+    .work-table, .details-table {
+      width: 100%;
+      border-collapse: collapse;
+      background: var(--card-bg);
+      backdrop-filter: var(--backdrop-blur);
+      box-shadow: var(--shadow-glass);
+      border-radius: 8px;
+      overflow: hidden;
+    }
+    .work-table th, .work-table td,
+    .details-table th, .details-table td {
+      padding: 12px;
+      text-align: left;
+      font-size: 14px;
+      border-bottom: 1px solid var(--card-border);
+    }
+    .work-table th, .details-table th {
+      background: rgba(255, 255, 255, 0.05);
+      font-weight: 600;
     }
     .square-checkbox {
       -webkit-appearance: none;
       appearance: none;
-      width: 18px;
-      height: 18px;
-      border: 1px solid var(--white);
-      border-radius: 3px;
-      margin-right: 5px;
-      vertical-align: middle;
+      width: 16px;
+      height: 16px;
+      border: 1px solid var(--card-border);
+      border-radius: 4px;
       cursor: pointer;
-      background: rgba(255, 255, 255, 0.1);
-      transition: all 0.2s ease;
+      transition: var(--transition);
       position: relative;
     }
-    .light-mode .square-checkbox {
-      border: 1px solid var(--white);
-      background: rgba(0, 0, 0, 0.1);
-    }
     .square-checkbox:checked {
-      transform: scale(1.1);
-      border-color: var(--white);
+      background: var(--accent-blue);
+      border-color: var(--accent-blue);
     }
     .square-checkbox:checked::after {
       content: "✔";
@@ -300,342 +259,132 @@
       top: 50%;
       left: 50%;
       transform: translate(-50%, -50%);
-      color: var(--white);
+      color: #ffffff;
       font-size: 12px;
-      font-weight: bold;
     }
     .legend-square {
       display: inline-block;
-      width: 16px;
-      height: 16px;
-      vertical-align: middle;
-      margin-right: 5px;
-      border: 1px solid var(--white);
-      cursor: pointer;
-    }
-    .light-mode .legend-square {
-      border: 1px solid var(--white);
-    }
-    .legend-green { background-color: green; }
-    .legend-black { background-color: black; }
-    .legend-yellow { background-color: yellow; }
-    .legend-red { background-color: red; }
-    .table-legend { font-size: 14px; }
-    .checkbox-green:checked   { background-color: green   !important; border-color: #fff !important; }
-    .checkbox-black:checked   { background-color: black   !important; border-color: #fff !important; }
-    .checkbox-yellow:checked  { background-color: yellow  !important; border-color: #fff !important; }
-    .checkbox-red:checked     { background-color: red     !important; border-color: #fff !important; }
-    .glass-card {
-      position: relative;
-      background: var(--glass-bg);
-      border-radius: 20px;
-      padding: 15px;
-      backdrop-filter: blur(var(--glass-blur));
-      border: none;
-      margin-bottom: 15px;
-      box-shadow: 0 8px 32px rgba(0, 247, 255, 0.5);
-    }
-    .glass-card::before {
-      content: '';
-      position: absolute;
-      top: -2px;
-      left: -2px;
-      right: -2px;
-      bottom: -2px;
-      border-radius: 22px;
-      background: linear-gradient(45deg, rgba(0, 247, 255, 0.5), rgba(0, 0, 255, 0.5));
-      z-index: -1;
-    }
-    .light-mode .glass-card {
-      background: var(--glass-bg);
-      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
-    }
-    .light-mode .glass-card::before {
-      background: linear-gradient(45deg, rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.1));
-    }
-    #indicators-container.glass-card,
-    #control-signatures-container {
-      background: var(--glass-bg);
-      border-radius: 20px;
-      padding: 20px 10px;
-      backdrop-filter: blur(var(--glass-blur));
-      border: none;
-      box-shadow: 0 8px 32px rgba(0, 247, 255, 0.5);
-    }
-    #control-signatures-container h4 {
-      margin: 0;
-      padding-bottom: 10px;
-      border-bottom: 1px solid var(--glass-border);
-      font-size: 18px;
-      text-align: center;
-    }
-    #control-signatures-container > div {
-      display: flex;
-      align-items: center;
-      margin-top: 10px;
-    }
-    #control-signatures-container > div:first-child {
-      margin-top: 0;
-    }
-    #control-signatures-container input[type="checkbox"] {
+      width: 14px;
+      height: 14px;
+      border: 1px solid var(--card-border);
+      border-radius: 4px;
       margin-right: 5px;
     }
-    #control-signatures-container label {
-      flex: 1;
-    }
-    #control-signatures-container .nm-input {
-      display: inline-block;
-      width: 80px;
-      margin-left: 5px;
-    }
-    .rainbow-text { animation: rainbowText 20s linear infinite; }
-    @keyframes rainbowText {
-      0%   { text-shadow: 0 0 5px #a1c4fd; }
-      25%  { text-shadow: 0 0 5px #c2e9fb; }
-      50%  { text-shadow: 0 0 5px #fbc2eb; }
-      75%  { text-shadow: 0 0 5px #a6c1ee; }
-      100% { text-shadow: 0 0 5px #a1c4fd; }
-    }
-    .light-mode .rainbow-text {
-      animation: none;
-      text-shadow: none;
-      color: #000000;
-    }
-    .form-control {
-      background: rgba(0,0,0,0.3);
-      backdrop-filter: blur(5px);
-      color: #fff;
-      border: 1px solid rgba(255,255,255,0.3);
-      border-radius: 10px;
-      font-size: 14px;
-      padding: 8px;
-      -webkit-user-select: auto;
-      user-select: auto;
-      width: 100%;
-    }
-    .form-control:focus {
-      background: rgba(0,0,0,0.3);
-      border-color: var(--neon-cyan);
-      box-shadow: 0 0 5px var(--neon-cyan);
-      animation: rainbowGlow 3s infinite;
-    }
-    .light-mode .form-control {
-      background: rgba(255,255,255,0.3);
-      color: #000;
-      border: 1px solid rgba(0,0,0,0.3);
-    }
-    .light-mode .form-control:focus {
-      border-color: var(--neon-cyan);
-      box-shadow: 0 0 5px var(--neon-cyan);
-    }
-    @keyframes rainbowGlow {
-      0%   { box-shadow: 0 0 2px #edffd8, 0 0 3px #ff0000, 0 0 4px #0011ff, 0 0 5px #005eff; }
-      50%  { box-shadow: 0 0 2px #ff0000, 0 0 3px #0011ff, 0 0 4px #005eff, 0 0 5px #edffd8; }
-      100% { box-shadow: 0 0 2px #edffd8, 0 0 3px #ff0000, 0 0 4px #0011ff, 0 0 5px #005eff; }
-    }
-    .btn-primary {
-      background: var(--btn-gradient);
-      border: none;
-      font-weight: bold;
-      color: #fff;
-      padding: 8px 16px;
-      font-size: 16px;
-      border-radius: 12px;
-      cursor: pointer;
-      transition: all 0.3s ease;
-      box-shadow: 0 0 12px rgba(0,247,255,0.3);
-      touch-action: manipulation;
-    }
-    .light-mode .btn-primary {
-      color: #fff;
-    }
-    .btn-primary:hover {
-      box-shadow: 0 4px 15px rgba(0,247,255,0.4);
-      transform: translateY(-2px);
-    }
-    .btn-primary:active {
-      transform: translateY(1px);
-      box-shadow: 0 2px 10px rgba(0,247,255,0.2);
-    }
-    .btn-danger {
-      background: linear-gradient(45deg, #ff3000, #cc0000);
-      border: none;
-      font-weight: bold;
-      color: #fff;
-      padding: 6px 12px;
-      font-size: 14px;
-      border-radius: 12px;
-      cursor: pointer;
-      transition: all 0.3s ease;
-      box-shadow: 0 0 10px rgba(255,0,0,0.4);
-      touch-action: manipulation;
-    }
-    .btn-danger:hover {
-      background: linear-gradient(45deg, #d60000, #7f0000);
-      box-shadow: 0 4px 15px rgba(255,0,0,0.6);
-      transform: translateY(-2px);
-    }
-    .btn-danger:active {
-      transform: translateY(1px);
-      box-shadow: 0 2px 10px rgba(255,0,0,0.2);
-    }
-    .btn-neon {
-      position: relative;
-      overflow: hidden;
-      outline: none;
-      transition: all 0.3s ease;
-    }
-    .btn-neon::before {
-      content: "";
-      position: absolute;
-      top: -2px;
-      left: -2px;
-      width: calc(100% + 4px);
-      height: calc(100% + 4px);
-      border-radius: 12px;
-      z-index: -1;
-      background: var(--prism-colors);
-      background-size: 400%;
-      filter: blur(var(--prism-blur));
-      opacity: var(--prism-opacity);
-      animation: prismGlow var(--animation-duration) infinite linear;
-    }
-    @keyframes prismGlow {
-      0%   { background-position: 0% 50%; }
-      50%  { background-position: 100% 50%; }
-      100% { background-position: 0% 50%; }
-    }
-    .btn-neon:hover {
-      box-shadow: 0 4px 15px rgba(0,247,255,0.4);
-      transform: translateY(-2px);
-    }
-    .btn-neon:active {
-      transform: translateY(1px);
-      box-shadow: 0 2px 10px rgba(0,247,255,0.2);
-    }
-    .theme-toggle-btn {
-      background: transparent;
-      border: none;
-      color: var(--white);
-      font-size: 18px;
-      font-family: 'Share Tech Mono', monospace;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      transition: color 0.3s;
-    }
-    .light-mode .theme-toggle-btn {
-      color: var(--white);
-    }
-    .theme-toggle-btn:hover {
-      color: var(--neon-turquoise);
-    }
-    .work-table, .details-table {
-      width: 100%;
-      border: none;
-      border-radius: 8px;
-      overflow: hidden;
-      box-shadow: 0 0 8px rgba(0,247,255,0.5);
-      background: rgba(0,0,0,0.2);
-      margin-bottom: 15px;
-      table-layout: fixed;
-    }
-    .light-mode .work-table, .light-mode .details-table {
-      box-shadow: 0 0 8px rgba(0,0,0,0.2);
-      background: rgba(255,255,255,0.2);
-    }
-    .work-table th, .work-table td,
-    .details-table th, .details-table td {
-      border: none;
-      padding: 5px;
-      text-align: center;
-      font-size: 14px;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      white-space: nowrap;
-    }
-    .work-table th, .details-table th {
-      background-color: rgba(50,50,50,0.7);
-    }
-    .light-mode .work-table th, .light-mode .details-table th {
-      background-color: rgba(200,200,200,0.7);
-    }
-    .generated-link-container {
-      margin: 10px;
-      text-align: center;
-      display: none;
-    }
-    .blueprint-container {
-      width: 100%;
-      margin: 20px 0;
-      padding: 0;
-    }
+    .legend-green { background-color: #22c55e; }
+    .legend-black { background-color: #1f2937; }
+    .legend-yellow { background-color: #facc15; }
+    .legend-red { background-color: #dc2626; }
+    .checkbox-green:checked { background-color: #22c55e; }
+    .checkbox-black:checked { background-color: #1f2937; }
+    .checkbox-yellow:checked { background-color: #facc15; }
+    .checkbox-red:checked { background-color: #dc2626; }
     .blueprint-container img, .blueprint-container canvas {
       width: 100%;
-      height: auto;
-    }
-    .blueprint-buttons {
-      display: flex;
-      justify-content: space-around;
-      margin-top: 10px;
+      border-radius: 8px;
+      border: 1px solid var(--card-border);
     }
     .blueprint-buttons button {
       padding: 8px 16px;
       font-size: 14px;
-      border: none;
       border-radius: 8px;
-      cursor: pointer;
-      color: white;
+      border: none;
+      color: #ffffff;
+      font-weight: 600;
+      transition: var(--transition);
     }
-    .editBtn { background-color: #4CAF50; }
-    .backBtn { background-color: #f44336; }
-    .clearBtn { background-color: #ff9800; }
-    .saveBtn { background-color: #2196F3; }
-    .okBtn { background-color: #9C27B0; }
-    .row.pc-content { display: flex; flex-wrap: wrap; }
-    .first-col { flex: 1; min-width: 300px; }
-    .second-col { flex: 1; min-width: 300px; margin: 0 10px; }
-    .third-col { flex: 1; min-width: 300px; }
-    .col-divider { padding: 0 10px; }
-    .operations-block { margin-top: 10px; }
-    #loginModal .modal-content {
-      background: var(--glass-bg);
-      backdrop-filter: blur(var(--glass-blur));
-      border: 1px solid var(--glass-border);
-      color: var(--white);
-    }
-    .light-mode #loginModal .modal-content {
-      background: var(--glass-bg);
-      color: var(--white);
-    }
+    .editBtn { background: #22c55e; }
+    .editBtn:hover { background: #16a34a; }
+    .clearBtn { background: #dc2626; }
+    .clearBtn:hover { background: #b91c1c; }
+    .okBtn { background: var(--accent-blue); }
+    .okBtn:hover { background: var(--accent-blue-hover); }
     .analytics-section {
-      margin-top: 20px;
+      background: var(--card-bg);
+      backdrop-filter: var(--backdrop-blur);
+      border-radius: 12px;
       padding: 20px;
-      background: var(--glass-bg);
-      border-radius: 20px;
-      backdrop-filter: blur(var(--glass-blur));
-      border: 1px solid var(--glass-border);
-      box-shadow: 0 8px 32px rgba(0,247,255,0.2);
-    }
-    .language-selector {
-      position: fixed;
-      top: 10px;
-      left: 10px;
-      z-index: 1200;
+      box-shadow: var(--shadow-glass);
+      border: 1px solid var(--card-border);
     }
     .language-selector select {
-      background: var(--glass-bg);
-      border: 1px solid var(--glass-border);
-      color: var(--white);
-      padding: 5px;
-      border-radius: 5px;
-      font-family: 'Share Tech Mono', monospace;
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      color: var(--text-primary);
+      padding: 8px;
+      border-radius: 8px;
+      font-size: 14px;
+      transition: var(--transition);
+    }
+    .language-selector select:focus {
+      border-color: var(--accent-blue);
+      box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.3);
+      outline: none;
+    }
+    .modal-content {
+      background: var(--card-bg);
+      backdrop-filter: var(--backdrop-blur);
+      border: 1px solid var(--card-border);
+      box-shadow: var(--shadow-glass);
+      border-radius: 12px;
+    }
+    .modal-header, .modal-footer {
+      border-color: var(--card-border);
+    }
+    .btn-close {
+      filter: invert(1) grayscale(100%) brightness(1.5);
+    }
+    .row.pc-content.book-mode .first-col,
+    .row.pc-content.book-mode .second-col,
+    .row.pc-content.book-mode .third-col {
+      width: 100%;
+      flex: 0 0 100%;
+      max-width: 100%;
+      margin-bottom: 20px;
+    }
+    .row.pc-content.album-mode .first-col {
+      flex: 0 0 auto;
+      width: 16.666667%;
+      max-width: 16.666667%;
+    }
+    .row.pc-content.album-mode .second-col {
+      flex: 0 0 auto;
+      width: 50%;
+      max-width: 50%;
+    }
+    .row.pc-content.album-mode .third-col {
+      flex: 0 0 auto;
+      width: 33.333333%;
+      max-width: 33.333333%;
+    }
+    @media (min-width: 992px) {
+      .container-fluid {
+        max-width: 1920px;
+        margin: 0 auto;
+        padding: 20px;
+      }
+      .first-col, .second-col, .third-col {
+        min-height: 100%;
+      }
+      .menu-toggle {
+        top: 20px;
+        right: 20px;
+      }
+    }
+    @media (max-width: 991.98px) {
+      .row.pc-content.album-mode .first-col,
+      .row.pc-content.album-mode .second-col,
+      .row.pc-content.album-mode .third-col {
+        width: 100%;
+        flex: 0 0 100%;
+        max-width: 100%;
+        margin-bottom: 20px;
+      }
     }
   </style>
 </head>
 <body>
   <!-- Language Selector -->
-  <div class="language-selector">
+  <div class="language-selector" style="position: fixed; top: 20px; left: 20px; z-index: 1200;">
     <select id="languageSelector">
       <option value="uk">UA</option>
       <option value="ru">RU</option>
@@ -700,10 +449,12 @@
     </div>
   </div>
 
-  <!-- Бокове меню -->
+  <!-- Sidebar -->
   <div id="sidebar" class="sidebar">
     <button class="close-sidebar" id="closeSidebar">×</button>
     <ul>
+      <li><button id="bookModeBtn" data-i18n="book_mode">Книжка</button></li>
+      <li><button id="albumModeBtn" data-i18n="album_mode">Альбом</button></li>
       <li><a href="#" data-i18n="home">Додому</a></li>
       <li>
         <a href="https://calendar.google.com/calendar/embed?src=jediservice.ua%40gmail.com&ctz=Europe%2FKiev" target="_blank" data-i18n="schedule">
@@ -727,7 +478,7 @@
     <img src="img/logo.png" alt="Логотип" class="sidebar-logo" />
   </div>
 
-  <!-- Кнопка відкриття бокового меню -->
+  <!-- Menu Toggle -->
   <div class="menu-toggle">
     <img src="img/logo.png" alt="Логотип" class="logo" />
     <button id="menuButton">
@@ -738,20 +489,11 @@
     </button>
   </div>
 
-  <!-- Логотип-силка зліва -->
-  <div class="logo-container">
-    <img src="img/logo.png" alt="Логотип" class="logo" />
-    <span class="vinh-menu-text">
-      VINh SERVICE
-      <div class="address">Дальницька 45</div>
-    </span>
-  </div>
-
-  <!-- Основний контент -->
-  <div class="container-fluid" style="padding-top: 60px;" id="dashboardContent" style="display: none;">
+  <!-- Main Content -->
+  <div class="container-fluid" style="padding-top: 80px;" id="dashboardContent" style="display: none;">
     <form style="width: 100%;">
-      <div class="row pc-content">
-        <!-- Перша колонка: Інфо об автомобілі, Індикатори, Дефекти лакофарбового покриття -->
+      <div class="row pc-content album-mode">
+        <!-- First Column: Car Info, Indicators, Paint Defects -->
         <div class="col-md-2 first-col">
           <div id="vinh-container" class="glass-card">
             <h4 data-i18n="car_info">Інфо об автомобілі</h4>
@@ -888,7 +630,7 @@
             </div>
           </div>
         </div>
-        <!-- Друга колонка: Акт дефектів автомобіля -->
+        <!-- Second Column: Vehicle Defects Report -->
         <div class="col-md-6 second-col">
           <div class="glass-card">
             <h4 data-i18n="defects_report">Акт дефектів автомобіля</h4>
@@ -980,7 +722,7 @@
             </div>
           </div>
         </div>
-        <!-- Третя колонка: Перелік виконаних робіт, Контрольні позначки та підписи, Операції -->
+        <!-- Third Column: Work Performed, Control Signatures, Operations -->
         <div class="col-md-4 third-col">
           <div class="glass-card">
             <h2 class="rainbow-text" data-i18n="work_performed">Перелік виконаних робіт</h2>
@@ -1066,17 +808,6 @@
     </div>
   </div>
 
-
-
-
-
-
-
-
-
-
-
-        
   <script>
     const BOT_TOKEN = '8099553216:AAEE3Ctou3yY4ddwVbXiUfHgfT7PeZyUyhA';
     const ADMIN_CHAT_ID = '-1002239976197';
@@ -1084,13 +815,13 @@
     const DISCUSSION_GROUP_CHAT_ID = '-1002239976197';
     const REPLY_TO_MESSAGE_ID = 'https://t.me/+VHtWYaAVbTg3ODUy';
     const ID_TELEGRAM_PDF = '-1002687911856';
-  
+
     let selectedTechPassportFile = null;
     let currentUser = null;
     let isDrawing = false;
     let lastX = 0;
     let lastY = 0;
-  
+
     // i18n Initialization
     i18next.init({
       lng: 'uk',
@@ -1168,7 +899,9 @@
             blueprint_caption: "Чертеж для наряд-замовлення",
             tech_passport_caption: "Фото техпаспорта для наряд-замовлення",
             full_form_data: "Повні дані форми",
-            unknown: "Невідомо"
+            unknown: "Невідомо",
+            book_mode: "Книжка",
+            album_mode: "Альбом"
           }
         },
         ru: {
@@ -1244,7 +977,9 @@
             blueprint_caption: "Чертеж для наряд-заказа",
             tech_passport_caption: "Фото техпаспорта для наряд-заказа",
             full_form_data: "Полные данные формы",
-            unknown: "Неизвестно"
+            unknown: "Неизвестно",
+            book_mode: "Книга",
+            album_mode: "Альбом"
           }
         },
         vi: {
@@ -1320,7 +1055,9 @@
             blueprint_caption: "Bản vẽ cho đơn hàng",
             tech_passport_caption: "Ảnh giấy đăng kiểm cho đơn hàng",
             full_form_data: "Dữ liệu biểu mẫu đầy đủ",
-            unknown: "Không xác định"
+            unknown: "Không xác định",
+            book_mode: "Sách",
+            album_mode: "Album"
           }
         },
         zh: {
@@ -1396,27 +1133,36 @@
             blueprint_caption: "订单蓝图",
             tech_passport_caption: "订单技术护照照片",
             full_form_data: "完整表格数据",
-            unknown: "未知"
+            unknown: "未知",
+            book_mode: "书",
+            album_mode: "相册"
           }
         }
       }
     }, function(err, t) {
       updateContent();
     });
-  
+
     function updateContent() {
       document.querySelectorAll('[data-i18n]').forEach(element => {
         const key = element.getAttribute('data-i18n');
         element.textContent = i18next.t(key);
       });
     }
-  
-    document.getElementById('languageSelector').addEventListener('change', (e) => {
-      i18next.changeLanguage(e.target.value, () => {
-        updateContent();
-      });
-    });
-  
+
+    function toggleLayout(mode) {
+      const content = document.querySelector('.pc-content');
+      if (mode === 'book') {
+        content.classList.remove('album-mode');
+        content.classList.add('book-mode');
+        localStorage.setItem('layoutMode', 'book');
+      } else {
+        content.classList.remove('book-mode');
+        content.classList.add('album-mode');
+        localStorage.setItem('layoutMode', 'album');
+      }
+    }
+
     async function login(plate, password) {
       try {
         const users = JSON.parse(localStorage.getItem('users')) || [];
@@ -1431,7 +1177,7 @@
         alert('Помилка входу: ' + error.message);
       }
     }
-  
+
     async function register(plate, password) {
       try {
         const users = JSON.parse(localStorage.getItem('users')) || [];
@@ -1449,17 +1195,17 @@
         alert('Помилка реєстрації: ' + error.message);
       }
     }
-  
+
     function showLoginModal() {
       const loginModal = new bootstrap.Modal(document.getElementById('loginModal'));
       loginModal.show();
     }
-  
+
     function showRegisterModal() {
       const registerModal = new bootstrap.Modal(document.getElementById('registerModal'));
       registerModal.show();
     }
-  
+
     function showDashboard() {
       document.getElementById('dashboardContent').style.display = 'block';
       if (currentUser.is_admin) {
@@ -1467,7 +1213,7 @@
         renderAnalytics();
       }
     }
-  
+
     function logout() {
       currentUser = null;
       localStorage.removeItem('currentUser');
@@ -1475,7 +1221,7 @@
       document.getElementById('analyticsSection').style.display = 'none';
       showLoginModal();
     }
-  
+
     function handleTechPassportFileSelected(input) {
       const infoBlock = document.getElementById("selectedTechFileName");
       if (!input.files || !input.files.length) {
@@ -1486,12 +1232,12 @@
       selectedTechPassportFile = input.files[0];
       if (infoBlock) infoBlock.textContent = "Обрано: " + selectedTechPassportFile.name;
     }
-  
+
     function autoGrow(element) {
       element.style.height = "auto";
       element.style.height = element.scrollHeight + "px";
     }
-  
+
     function addDefectRow() {
       const tbody = document.getElementById('defectsTableBody');
       const rowCount = tbody.children.length + 1;
@@ -1506,14 +1252,14 @@
       `;
       tbody.appendChild(newRow);
     }
-  
+
     function removeDefectRow() {
       const tbody = document.getElementById('defectsTableBody');
       if (tbody.children.length > 1) {
         tbody.removeChild(tbody.lastChild);
       }
     }
-  
+
     function addWorkRow() {
       const tbody = document.getElementById('workTableBody');
       const newRow = document.createElement('tr');
@@ -1524,7 +1270,7 @@
       `;
       tbody.appendChild(newRow);
     }
-  
+
     function removeWorkRow() {
       const tbody = document.getElementById('workTableBody');
       if (tbody.children.length > 1) {
@@ -1532,643 +1278,101 @@
         recalculateTotal(document.querySelector('.third-col'));
       }
     }
-  
+
     function recalculateTotal(container) {
       const partPrices = container.querySelectorAll('.part-price');
       const workPrices = container.querySelectorAll('.work-price');
-      let totalParts = 0;
-      let totalWork = 0;
-  
+      let partsTotal = 0;
+      let workTotal = 0;
+
       partPrices.forEach(input => {
-        const value = parseFloat(input.value) || 0;
-        totalParts += value;
+        partsTotal += parseFloat(input.value) || 0;
       });
-  
       workPrices.forEach(input => {
-        const value = parseFloat(input.value) || 0;
-        totalWork += value;
+        workTotal += parseFloat(input.value) || 0;
       });
-  
-      const total = totalParts + totalWork;
+
+      const total = partsTotal + workTotal;
       container.querySelector('.work-total').innerHTML = `
-        <span data-i18n="parts">Запчастини</span>: ${totalParts.toFixed(2)} UAH<br>
-        <span data-i18n="labor">Роботи</span>: ${totalWork.toFixed(2)} UAH<br>
+        <span data-i18n="parts">Запчастини</span>: ${partsTotal.toFixed(2)} UAH<br>
+        <span data-i18n="labor">Роботи</span>: ${workTotal.toFixed(2)} UAH<br>
         <strong><span data-i18n="total">Загальна сума</span>: ${total.toFixed(2)} UAH</strong>
       `;
       updateContent();
     }
-  
-    function initBlueprintDrawing() {
-      const preview = document.querySelector('.blueprintPreview');
-      const canvas = document.querySelector('.blueprintCanvas');
-      const ctx = canvas.getContext('2d');
-      const editBtn = document.querySelector('.editBtn');
-      const clearBtn = document.querySelector('.clearBtn');
-      const okBtn = document.querySelector('.okBtn');
-  
-      canvas.width = preview.width;
-      canvas.height = preview.height;
-      ctx.lineWidth = 5;
-      ctx.lineCap = 'round';
-      ctx.strokeStyle = 'red';
-  
-      function startDrawing(e) {
-        isDrawing = true;
-        const rect = canvas.getBoundingClientRect();
-        lastX = (e.clientX || e.touches[0].clientX) - rect.left;
-        lastY = (e.clientY || e.touches[0].clientY) - rect.top;
-        e.preventDefault();
-      }
-  
-      function draw(e) {
-        if (!isDrawing) return;
-        const rect = canvas.getBoundingClientRect();
-        const x = (e.clientX || e.touches[0].clientX) - rect.left;
-        const y = (e.clientY || e.touches[0].clientY) - rect.top;
-  
-        ctx.beginPath();
-        ctx.moveTo(lastX, lastY);
-        ctx.lineTo(x, y);
-        ctx.stroke();
-  
-        lastX = x;
-        lastY = y;
-        e.preventDefault();
-      }
-  
-      function stopDrawing(e) {
-        isDrawing = false;
-        e.preventDefault();
-      }
-  
-      editBtn.addEventListener('click', () => {
-        preview.style.display = 'none';
-        canvas.style.display = 'block';
-        const img = new Image();
-        img.src = preview.src;
-        img.onload = () => {
-          ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
-        };
-      });
-  
-      clearBtn.addEventListener('click', () => {
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
-        const img = new Image();
-        img.src = preview.src;
-        img.onload = () => {
-          ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
-        };
-      });
-  
-      okBtn.addEventListener('click', () => {
-        preview.src = canvas.toDataURL('image/png');
-        canvas.style.display = 'none';
-        preview.style.display = 'block';
-      });
-  
-      canvas.addEventListener('mousedown', startDrawing);
-      canvas.addEventListener('mousemove', draw);
-      canvas.addEventListener('mouseup', stopDrawing);
-      canvas.addEventListener('mouseout', stopDrawing);
-  
-      canvas.addEventListener('touchstart', startDrawing);
-      canvas.addEventListener('touchmove', draw);
-      canvas.addEventListener('touchend', stopDrawing);
-      canvas.addEventListener('touchcancel', stopDrawing);
-    }
-  
-    async function sendAdmin() {
-      try {
-        const plate = document.getElementById('plate').value.trim().toUpperCase();
-        const mileage = document.getElementById('mileage').value || '';
-        if (!plate) {
-          alert('Будь ласка, введіть номерний знак автомобіля.');
-          return;
-        }
-  
-        // Зберігаємо оригінальні стилі body
-        const body = document.body;
-        const originalWidth = body.style.width;
-        const originalHeight = body.style.height;
-        const originalOverflow = body.style.overflow;
-  
-        // Встановлюємо фіксовану ширину для імітації десктопного вигляду (режим ПК)
-        body.style.width = '1920px'; // Змінено на 1920 пікселів
-        body.style.overflow = 'visible'; // Дозволяємо відобразити весь контент
-  
-        // Отримуємо розміри всієї сторінки (аналогічно до "Capture full size screenshot")
-        const html = document.documentElement;
-        const height = Math.max(
-          body.scrollHeight, body.offsetHeight,
-          html.clientHeight, html.scrollHeight, html.offsetHeight
-        );
-  
-        // Захоплення скріншота всієї сторінки в поточному режимі
-        const currentCanvas = await html2canvas(document.body, {
-          scale: 1, // Без масштабування, щоб зберегти якість
-          width: 1920, // Змінено на 1920 пікселів (16:9)
-          height: height, // Висота всієї сторінки
-          scrollX: 0, // Захоплюємо з початку сторінки
-          scrollY: -window.scrollY, // Компенсуємо прокрутку
-          windowWidth: 1920 // Імітуємо ширину вікна браузера
-        });
-        const currentDataUrl = currentCanvas.toDataURL('image/png'); // PNG без стиснення
-        const currentBlob = await (await fetch(currentDataUrl)).blob();
-        const isLightMode = document.body.classList.contains('light-mode');
-        const currentMode = isLightMode ? 'light' : 'dark';
-        const currentFile = new File([currentBlob], `${plate}Al${currentMode}.png`, { type: 'image/png' });
-  
-        // Створення iframe для альтернативного режиму
-        const iframe = document.createElement('iframe');
-        iframe.style.position = 'absolute';
-        iframe.style.left = '-9999px';
-        document.body.appendChild(iframe);
-        const iframeDoc = iframe.contentDocument;
-        iframeDoc.open();
-        iframeDoc.write(document.documentElement.outerHTML);
-        iframeDoc.close();
-  
-        await new Promise((resolve) => {
-          iframe.onload = resolve;
-        });
-  
-        const iframeBody = iframeDoc.body;
-        if (iframeBody) {
-          if (isLightMode) {
-            iframeBody.classList.remove('light-mode');
-          } else {
-            iframeBody.classList.add('light-mode');
-          }
-        } else {
-          console.error('Тело iframe не найдено');
-          document.body.removeChild(iframe);
-          return;
-        }
-  
-        // Встановлюємо фіксовану ширину для iframe
-        iframeBody.style.width = '1920px'; // Змінено на 1920 пікселів
-        iframeBody.style.overflow = 'visible';
-  
-        // Отримуємо розміри iframe
-        const iframeHtml = iframeDoc.documentElement;
-        const iframeHeight = Math.max(
-          iframeBody.scrollHeight, iframeBody.offsetHeight,
-          iframeHtml.clientHeight, iframeHtml.scrollHeight, iframeHtml.offsetHeight
-        );
-  
-        // Захоплення скріншота в альтернативному режимі
-        const alternateCanvas = await html2canvas(iframeBody, {
-          scale: 1, // Без масштабування, щоб зберегти якість
-          width: 1920, // Змінено на 1920 пікселів (16:9)
-          height: iframeHeight, // Висота всієї сторінки в iframe
-          scrollX: 0,
-          scrollY: -window.scrollY,
-          windowWidth: 1920 // Імітуємо ширину вікна браузера
-        });
-        const alternateDataUrl = alternateCanvas.toDataURL('image/png'); // PNG без стиснення
-        const alternateBlob = await (await fetch(alternateDataUrl)).blob();
-        const alternateMode = isLightMode ? 'dark' : 'light';
-        const alternateFile = new File([alternateBlob], `${plate}Al${alternateMode}.png`, { type: 'image/png' });
-  
-        // Відновлюємо оригінальні стилі body
-        body.style.width = originalWidth;
-        body.style.height = originalHeight;
-        body.style.overflow = originalOverflow;
-  
-        document.body.removeChild(iframe);
-  
-        // Збираємо дані форми для текстового повідомлення
-        const formData = {
-          clientName: document.getElementById('clientName').value || i18next.t('unknown'),
-          phone: document.getElementById('phone').value || i18next.t('unknown'),
-          vin: document.getElementById('vin').value || i18next.t('unknown'),
-          carModel: document.getElementById('carModel').value || i18next.t('unknown'),
-          year: document.getElementById('year').value || i18next.t('unknown'),
-          plate: plate,
-          mileage: mileage || i18next.t('unknown'),
-          workList: document.getElementById('workList').value || i18next.t('unknown'),
-          indicators: {
-            checkEngine: document.getElementById('checkEngine').checked,
-            battery: document.getElementById('battery').checked,
-            oil: document.getElementById('oil').checked,
-            coolant: document.getElementById('coolant').checked,
-            tpms: document.getElementById('tpms').checked,
-            airbag: document.getElementById('airbag').checked,
-            abs: document.getElementById('abs').checked,
-            esp: document.getElementById('esp').checked,
-            brakeWear: document.getElementById('brakeWear').checked
-          },
-          defects: {
-            frontBrakePads: document.getElementById('ptk_percent').value || i18next.t('unknown'),
-            rearBrakePads: document.getElementById('ztk_percent').value || i18next.t('unknown'),
-            frontBrakeDiscs: document.getElementById('ptd_mm').value || i18next.t('unknown'),
-            rearBrakeDiscs: document.getElementById('ztd_mm').value || i18next.t('unknown'),
-            brakeFluid: document.getElementById('brakeFluid').value || i18next.t('unknown'),
-            coolant: document.getElementById('antifreeze').value || i18next.t('unknown'),
-            engineOil: document.getElementById('engineOil').value || i18next.t('unknown'),
-            transmissionOil: document.getElementById('transmissionOil').value || i18next.t('unknown'),
-            parts: Array.from(document.querySelectorAll('#defectsTableBody tr')).map(row => {
-              return {
-                name: row.querySelector('textarea').value || i18next.t('unknown'),
-                wear: row.querySelector('.checkbox-green').checked,
-                backlash: row.querySelector('.checkbox-black').checked,
-                recommended: row.querySelector('.checkbox-yellow').checked,
-                critical: row.querySelector('.checkbox-red').checked
-              };
-            }),
-            notes: document.getElementById('notes').value || i18next.t('unknown')
-          },
-          workPerformed: Array.from(document.querySelectorAll('#workTableBody tr')).map(row => {
-            return {
-              name: row.querySelector('textarea').value || i18next.t('unknown'),
-              partPrice: parseFloat(row.querySelector('.part-price').value) || 0,
-              workPrice: parseFloat(row.querySelector('.work-price').value) || 0
-            };
-          }),
-          controlSignatures: {
-            checkParts: document.getElementById('checkParts').checked,
-            tightenWheels: document.getElementById('tightenWheels').checked,
-            nmValue: document.getElementById('nmValue').value || i18next.t('unknown'),
-            managerSignature: document.getElementById('managerSignature').checked,
-            clientSignature: document.getElementById('clientSignature').checked
-          }
-        };
-  
-        // Формуємо текстове повідомлення (caption)
-        const caption = `
-  #${formData.plate} 📋 Наряд-Замовлення
-  
-  *Ім'я клієнта:* ${formData.clientName}
-  *Телефон:* ${formData.phone}
-  *VIN номер:* ${formData.vin}
-  *Модель авто:* ${formData.carModel}
-  *Рік випуску:* ${formData.year}
-  *Номерний знак:* ${formData.plate}
-  *Пробіг:* ${formData.mileage} км
-  *Перелік бажаних робіт:* ${formData.workList}
-        `;
-  
-        // Відправляємо два скріншоти через sendMediaGroup із caption
-        const mediaGroupFormData = new FormData();
-        mediaGroupFormData.append('chat_id', ADMIN_CHAT_ID);
-        mediaGroupFormData.append('media', JSON.stringify([
-          {
-            type: 'document', // Відправляємо як документ
-            media: 'attach://current-file',
-            caption: caption, // Додаємо caption до першого файлу
-            parse_mode: 'Markdown' // Включаємо Markdown для форматування
-          },
-          {
-            type: 'document',
-            media: 'attach://alternate-file'
-          }
-        ]));
-        mediaGroupFormData.append('current-file', currentFile);
-        mediaGroupFormData.append('alternate-file', alternateFile);
-  
-        await axios.post(`https://api.telegram.org/bot${BOT_TOKEN}/sendMediaGroup`, mediaGroupFormData);
-  
-        alert('Дані успішно відправлені адміністратору!');
-      } catch (error) {
-        console.error('Помилка відправки адміністратору:', error);
-        alert('Помилка відправки адміністратору: ' + error.message);
-      }
-    }
-  
-    async function addOrder() {
-      try {
-        const plate = document.getElementById('plate').value.trim().toUpperCase();
-        if (!plate) {
-          alert('Будь ласка, введіть номерний знак автомобіля.');
-          return;
-        }
-  
-        const blueprintDataUrl = document.querySelector('.blueprintPreview').src;
-        const blueprintBlob = await (await fetch(blueprintDataUrl)).blob();
-        const blueprintFile = new File([blueprintBlob], `${plate}_blueprint.png`, { type: 'image/png' });
-  
-        const blueprintFormData = new FormData();
-        blueprintFormData.append('chat_id', ADMIN_CHAT_ID);
-        blueprintFormData.append('photo', blueprintFile);
-        blueprintFormData.append('caption', i18next.t('blueprint_caption'));
-  
-        await axios.post(`https://api.telegram.org/bot${BOT_TOKEN}/sendPhoto`, blueprintFormData);
-  
-        if (selectedTechPassportFile) {
-          const techPassportFormData = new FormData();
-          techPassportFormData.append('chat_id', ADMIN_CHAT_ID);
-          techPassportFormData.append('photo', selectedTechPassportFile);
-          techPassportFormData.append('caption', i18next.t('tech_passport_caption'));
-  
-          await axios.post(`https://api.telegram.org/bot${BOT_TOKEN}/sendPhoto`, techPassportFormData);
-        }
-  
-        alert('Наряд-замовлення успішно додано!');
-      } catch (error) {
-        console.error('Помилка додавання наряд-замовлення:', error);
-        alert('Помилка додавання наряд-замовлення: ' + error.message);
-      }
-    }
-  
-    async function createLink() {
-      try {
-        const plate = document.getElementById('plate').value.trim().toUpperCase();
-        if (!plate) {
-          alert('Будь ласка, введіть номерний знак автомобіля.');
-          return;
-        }
-  
-        const formData = {
-          clientName: document.getElementById('clientName').value || i18next.t('unknown'),
-          phone: document.getElementById('phone').value || i18next.t('unknown'),
-          vin: document.getElementById('vin').value || i18next.t('unknown'),
-          carModel: document.getElementById('carModel').value || i18next.t('unknown'),
-          year: document.getElementById('year').value || i18next.t('unknown'),
-          plate: plate,
-          mileage: document.getElementById('mileage').value || i18next.t('unknown'),
-          workList: document.getElementById('workList').value || i18next.t('unknown'),
-          blueprint: document.querySelector('.blueprintPreview').src,
-          techPassport: selectedTechPassportFile ? URL.createObjectURL(selectedTechPassportFile) : null,
-          indicators: {
-            checkEngine: document.getElementById('checkEngine').checked,
-            battery: document.getElementById('battery').checked,
-            oil: document.getElementById('oil').checked,
-            coolant: document.getElementById('coolant').checked,
-            tpms: document.getElementById('tpms').checked,
-            airbag: document.getElementById('airbag').checked,
-            abs: document.getElementById('abs').checked,
-            esp: document.getElementById('esp').checked,
-            brakeWear: document.getElementById('brakeWear').checked
-          },
-          defects: {
-            frontBrakePads: document.getElementById('ptk_percent').value || i18next.t('unknown'),
-            rearBrakePads: document.getElementById('ztk_percent').value || i18next.t('unknown'),
-            frontBrakeDiscs: document.getElementById('ptd_mm').value || i18next.t('unknown'),
-            rearBrakeDiscs: document.getElementById('ztd_mm').value || i18next.t('unknown'),
-            brakeFluid: document.getElementById('brakeFluid').value || i18next.t('unknown'),
-            coolant: document.getElementById('antifreeze').value || i18next.t('unknown'),
-            engineOil: document.getElementById('engineOil').value || i18next.t('unknown'),
-            transmissionOil: document.getElementById('transmissionOil').value || i18next.t('unknown'),
-            parts: Array.from(document.querySelectorAll('#defectsTableBody tr')).map(row => {
-              return {
-                name: row.querySelector('textarea').value || i18next.t('unknown'),
-                wear: row.querySelector('.checkbox-green').checked,
-                backlash: row.querySelector('.checkbox-black').checked,
-                recommended: row.querySelector('.checkbox-yellow').checked,
-                critical: row.querySelector('.checkbox-red').checked
-              };
-            }),
-            notes: document.getElementById('notes').value || i18next.t('unknown')
-          },
-          workPerformed: Array.from(document.querySelectorAll('#workTableBody tr')).map(row => {
-            return {
-              name: row.querySelector('textarea').value || i18next.t('unknown'),
-              partPrice: parseFloat(row.querySelector('.part-price').value) || 0,
-              workPrice: parseFloat(row.querySelector('.work-price').value) || 0
-            };
-          }),
-          controlSignatures: {
-            checkParts: document.getElementById('checkParts').checked,
-            tightenWheels: document.getElementById('tightenWheels').checked,
-            nmValue: document.getElementById('nmValue').value || i18next.t('unknown'),
-            managerSignature: document.getElementById('managerSignature').checked,
-            clientSignature: document.getElementById('clientSignature').checked
-          }
-        };
-  
-        const blob = new Blob([JSON.stringify(formData)], { type: 'application/json' });
-        const url = URL.createObjectURL(blob);
-        const generatedLinkInput = document.getElementById('generatedLink');
-        generatedLinkInput.value = url;
-        document.querySelector('.generated-link-container').style.display = 'block';
-      } catch (error) {
-        console.error('Помилка створення посилання:', error);
-        alert('Помилка створення посилання: ' + error.message);
-      }
-    }
-  
-    function copyLink() {
-      const linkInput = document.getElementById('generatedLink');
-      linkInput.select();
-      document.execCommand('copy');
-      alert('Посилання скопійовано до буферу обміну!');
-    }
-  
-    async function captureScreenshot() {
-      try {
-        const body = document.body;
-        const originalWidth = body.style.width;
-        const originalHeight = body.style.height;
-        const originalOverflow = body.style.overflow;
-  
-        body.style.width = '1920px'; // Змінено на 1920 пікселів
-        body.style.overflow = 'visible';
-  
-        const height = Math.max(
-          body.scrollHeight, body.offsetHeight,
-          document.documentElement.clientHeight,
-          document.documentElement.scrollHeight,
-          document.documentElement.offsetHeight
-        );
-  
-        const canvas = await html2canvas(body, {
-          scale: 1,
-          width: 1920, // Змінено на 1920 пікселів
-          height: height,
-          scrollX: 0,
-          scrollY: -window.scrollY,
-          windowWidth: 1920
-        });
-        const dataUrl = canvas.toDataURL('image/png');
-        const link = document.createElement('a');
-        link.href = dataUrl;
-        link.download = `${document.getElementById('plate').value || 'screenshot'}.png`;
-        link.click();
-  
-        body.style.width = originalWidth;
-        body.style.height = originalHeight;
-        body.style.overflow = originalOverflow;
-      } catch (error) {
-        console.error('Помилка створення скріншоту:', error);
-        alert('Помилка створення скріншоту: ' + error.message);
-      }
-    }
-  
-    async function printForm() {
-      try {
-        const { jsPDF } = window.jspdf;
-        const doc = new jsPDF();
-        const body = document.body;
-        const originalWidth = body.style.width;
-        const originalHeight = body.style.height;
-        const originalOverflow = body.style.overflow;
-  
-        body.style.width = '1920px'; // Змінено на 1920 пікселів
-        body.style.overflow = 'visible';
-  
-        const height = Math.max(
-          body.scrollHeight, body.offsetHeight,
-          document.documentElement.clientHeight,
-          document.documentElement.scrollHeight,
-          document.documentElement.offsetHeight
-        );
-  
-        const canvas = await html2canvas(body, {
-          scale: 1,
-          width: 1920, // Змінено на 1920 пікселів
-          height: height,
-          scrollX: 0,
-          scrollY: -window.scrollY,
-          windowWidth: 1920
-        });
-        const imgData = canvas.toDataURL('image/png');
-        const imgProps = doc.getImageProperties(imgData);
-        const pdfWidth = doc.internal.pageSize.getWidth();
-        const pdfHeight = (imgProps.height * pdfWidth) / imgProps.width;
-        doc.addImage(imgData, 'PNG', 0, 0, pdfWidth, pdfHeight);
-        doc.save(`${document.getElementById('plate').value || 'form'}.pdf`);
-  
-        const pdfBlob = doc.output('blob');
-        const pdfFile = new File([pdfBlob], `${document.getElementById('plate').value || 'form'}.pdf`, { type: 'application/pdf' });
-        const pdfFormData = new FormData();
-        pdfFormData.append('chat_id', ID_TELEGRAM_PDF);
-        pdfFormData.append('document', pdfFile);
-  
-        await axios.post(`https://api.telegram.org/bot${BOT_TOKEN}/sendDocument`, pdfFormData);
-  
-        body.style.width = originalWidth;
-        body.style.height = originalHeight;
-        body.style.overflow = originalOverflow;
-      } catch (error) {
-        console.error('Помилка друку:', error);
-        alert('Помилка друку: ' + error.message);
-      }
-    }
-  
-    function renderAnalytics() {
-      const visitsData = [
-        { month: 'Січ', visits: 120 },
-        { month: 'Лют', visits: 150 },
-        { month: 'Бер', visits: 180 },
-        { month: 'Кві', visits: 200 },
-        { month: 'Тра', visits: 220 },
-        { month: 'Чер', visits: 250 }
-      ];
-  
-      const costsData = [
-        { month: 'Січ', costs: 5000 },
-        { month: 'Лют', costs: 6000 },
-        { month: 'Бер', costs: 5500 },
-        { month: 'Кві', costs: 7000 },
-        { month: 'Тра', costs: 6500 },
-        { month: 'Чер', costs: 8000 }
-      ];
-  
-      const visitsChart = new Recharts.LineChart({
-        width: 500,
-        height: 300,
-        data: visitsData
-      });
-      visitsChart.addLine({ dataKey: 'visits', stroke: '#8884d8' });
-      visitsChart.addXAxis({ dataKey: 'month' });
-      visitsChart.addYAxis();
-      visitsChart.addTooltip();
-      visitsChart.render(document.getElementById('visitsChart'));
-  
-      const costsChart = new Recharts.LineChart({
-        width: 500,
-        height: 300,
-        data: costsData
-      });
-      costsChart.addLine({ dataKey: 'costs', stroke: '#82ca9d' });
-      costsChart.addXAxis({ dataKey: 'month' });
-      costsChart.addYAxis();
-      costsChart.addTooltip();
-      costsChart.render(document.getElementById('costsChart'));
-    }
-  
+
     // Event Listeners
+    document.getElementById('menuButton').addEventListener('click', () => {
+      document.getElementById('sidebar').classList.add('active');
+    });
+
+    document.getElementById('closeSidebar').addEventListener('click', () => {
+      document.getElementById('sidebar').classList.remove('active');
+    });
+
+    document.getElementById('bookModeBtn').addEventListener('click', () => {
+      toggleLayout('book');
+    });
+
+    document.getElementById('albumModeBtn').addEventListener('click', () => {
+      toggleLayout('album');
+    });
+
+    document.getElementById('themeToggle').addEventListener('click', () => {
+      document.documentElement.classList.toggle('light-mode');
+      const themeIcon = document.getElementById('themeIcon');
+      const themeText = document.querySelector('#themeToggle span');
+      if (document.documentElement.classList.contains('light-mode')) {
+        themeIcon.src = 'img/light_mode_icon.png';
+        themeText.setAttribute('data-i18n', 'light_mode');
+      } else {
+        themeIcon.src = 'img/dark_mode_icon.png';
+        themeText.setAttribute('data-i18n', 'dark_mode');
+      }
+      updateContent();
+    });
+
     document.getElementById('loginForm').addEventListener('submit', (e) => {
       e.preventDefault();
       const plate = document.getElementById('loginPlate').value;
       const password = document.getElementById('loginPassword').value;
       login(plate, password);
     });
-  
+
     document.getElementById('registerForm').addEventListener('submit', (e) => {
       e.preventDefault();
       const plate = document.getElementById('registerPlate').value;
       const password = document.getElementById('registerPassword').value;
       register(plate, password);
     });
-  
+
     document.getElementById('showRegisterForm').addEventListener('click', () => {
       const loginModal = bootstrap.Modal.getInstance(document.getElementById('loginModal'));
       loginModal.hide();
       showRegisterModal();
     });
-  
+
     document.getElementById('showLoginForm').addEventListener('click', () => {
       const registerModal = bootstrap.Modal.getInstance(document.getElementById('registerModal'));
       registerModal.hide();
       showLoginModal();
     });
-  
+
     document.getElementById('logoutLink').addEventListener('click', (e) => {
       e.preventDefault();
       logout();
     });
-  
-    document.getElementById('sendAdminBtn').addEventListener('click', sendAdmin);
-    document.getElementById('addOrderBtn').addEventListener('click', addOrder);
-    document.getElementById('createLinkBtn').addEventListener('click', createLink);
-    document.getElementById('copyLinkBtn').addEventListener('click', copyLink);
-    document.getElementById('screenshotBtn').addEventListener('click', captureScreenshot);
-    document.getElementById('printBtn').addEventListener('click', printForm);
-  
-    // Sidebar Toggle
-    const sidebar = document.getElementById('sidebar');
-    const menuButton = document.getElementById('menuButton');
-    const closeSidebar = document.getElementById('closeSidebar');
-    const menuToggle = document.querySelector('.menu-toggle');
-  
-    menuButton.addEventListener('click', () => {
-      sidebar.classList.toggle('active');
-      menuToggle.classList.toggle('active');
+
+    document.getElementById('languageSelector').addEventListener('change', (e) => {
+      i18next.changeLanguage(e.target.value, () => {
+        updateContent();
+      });
     });
-  
-    closeSidebar.addEventListener('click', () => {
-      sidebar.classList.remove('active');
-      menuToggle.classList.remove('active');
-    });
-  
-    // Theme Toggle
-    const themeToggle = document.getElementById('themeToggle');
-    const themeIcon = document.getElementById('themeIcon');
-    const body = document.body;
-  
-    themeToggle.addEventListener('click', () => {
-      body.classList.toggle('light-mode');
-      const isLightMode = body.classList.contains('light-mode');
-      themeIcon.src = isLightMode ? 'img/light_mode_icon.png' : 'img/dark_mode_icon.png';
-      themeIcon.alt = isLightMode ? 'Light Mode' : 'Dark Mode';
-      themeToggle.querySelector('span').setAttribute('data-i18n', isLightMode ? 'light_mode' : 'dark_mode');
-      updateContent();
-    });
-  
-    // Logo Scroll Effect
-    window.addEventListener('scroll', () => {
-      const logoContainer = document.querySelector('.logo-container');
-      if (window.scrollY > 50) {
-        logoContainer.classList.add('scrolled');
-      } else {
-        logoContainer.classList.remove('scrolled');
-      }
-    });
-  
-    // Initial Setup
+
+    // Initialize layout mode
     document.addEventListener('DOMContentLoaded', () => {
-      initBlueprintDrawing();
+      const savedMode = localStorage.getItem('layoutMode') || 'album';
+      toggleLayout(savedMode);
       const savedUser = localStorage.getItem('currentUser');
       if (savedUser) {
         currentUser = JSON.parse(savedUser);
@@ -2177,6 +1381,11 @@
         showLoginModal();
       }
     });
+
+    // Placeholder for renderAnalytics (implement as needed)
+    function renderAnalytics() {
+      // Implement analytics rendering logic here
+    }
   </script>
 </body>
 </html>
