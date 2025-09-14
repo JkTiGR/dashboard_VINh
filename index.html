@@ -203,6 +203,9 @@
         width: 100%; flex: 0 0 100%; max-width: 100%; margin-bottom: 20px;
       }
     }
+
+    /* Скрыть ссылку регистрации для гостевого режима */
+    #showRegisterForm { display: none !important; }
   </style>
 </head>
 <body>
@@ -216,7 +219,7 @@
     </select>
   </div>
 
-  <!-- Login Modal -->
+  <!-- Login Modal (оставляем, но вход свободный) -->
   <div class="modal fade" id="loginModal" tabindex="-1" aria-labelledby="loginModalLabel" aria-hidden="true">
     <div class="modal-dialog"><div class="modal-content">
       <div class="modal-header">
@@ -227,11 +230,11 @@
         <form id="loginForm">
           <div class="mb-3">
             <label for="loginPlate" class="form-label" data-i18n="plate_number">Номерний знак</label>
-            <input type="text" class="form-control" id="loginPlate" required>
+            <input type="text" class="form-control" id="loginPlate">
           </div>
           <div class="mb-3">
             <label for="loginPassword" class="form-label" data-i18n="password">Пароль</label>
-            <input type="password" class="form-control" id="loginPassword" required>
+            <input type="password" class="form-control" id="loginPassword">
           </div>
           <button type="submit" class="btn btn-primary" data-i18n="login">Увійти</button>
         </form>
@@ -242,7 +245,7 @@
     </div></div>
   </div>
 
-  <!-- Register Modal -->
+  <!-- Register Modal (оставляем, но скрыта ссылка) -->
   <div class="modal fade" id="registerModal" tabindex="-1" aria-labelledby="registerModalLabel" aria-hidden="true">
     <div class="modal-dialog"><div class="modal-content">
       <div class="modal-header">
@@ -253,11 +256,11 @@
         <form id="registerForm">
           <div class="mb-3">
             <label for="registerPlate" class="form-label" data-i18n="plate_number">Номерний знак</label>
-            <input type="text" class="form-control" id="registerPlate" required>
+            <input type="text" class="form-control" id="registerPlate">
           </div>
           <div class="mb-3">
             <label for="registerPassword" class="form-label" data-i18n="password">Пароль</label>
-            <input type="password" class="form-control" id="registerPassword" required>
+            <input type="password" class="form-control" id="registerPassword">
           </div>
           <button type="submit" class="btn btn-primary" data-i18n="register">Зареєструватися</button>
         </form>
@@ -598,7 +601,7 @@
   </div>
 
   <script>
-    // === Твои токены/чаты (оставлено как в исходнике) ===
+    // === Твои токены/чаты ===
     const BOT_TOKEN = '8099553216:AAEE3Ctou3yY4ddwVbXiUfHgfT7PeZyUyhA';
     const ADMIN_CHAT_ID = '-1002239976197';
     const ADMIN_PARTS_CHAT_ID = '-1002393963726';
@@ -745,21 +748,21 @@
       }
     }
 
+    // === Вариант 2: вход без регистрации (гостевой) ===
     async function login(plate, password) {
-      try {
-        const users = JSON.parse(localStorage.getItem('users')) || [];
-        const user = users.find(u => u.plate === plate && u.password === password);
-        if (!user) throw new Error('Невірний номерний знак або пароль');
-        currentUser = user;
-        localStorage.setItem('currentUser', JSON.stringify(currentUser));
-        const loginModal = bootstrap.Modal.getInstance(document.getElementById('loginModal'));
+      const safePlate = (plate && plate.trim()) ? plate.trim() : "guest";
+      currentUser = { plate: safePlate, is_admin: false };
+      localStorage.setItem('currentUser', JSON.stringify(currentUser));
+
+      const loginModalEl = document.getElementById('loginModal');
+      if (loginModalEl) {
+        const loginModal = bootstrap.Modal.getInstance(loginModalEl) || new bootstrap.Modal(loginModalEl);
         loginModal.hide();
-        showDashboard();
-      } catch (error) {
-        alert('Помилка входу: ' + error.message);
       }
+      showDashboard();
     }
 
+    // Регистрация оставлена, но можно не использовать
     async function register(plate, password) {
       try {
         const users = JSON.parse(localStorage.getItem('users')) || [];
@@ -769,7 +772,7 @@
         localStorage.setItem('users', JSON.stringify(users));
         alert('Реєстрація успішна! Будь ласка, увійдіть.');
         const registerModal = bootstrap.Modal.getInstance(document.getElementById('registerModal'));
-        registerModal.hide();
+        registerModal?.hide();
         showLoginModal();
       } catch (error) {
         alert('Помилка реєстрації: ' + error.message);
@@ -789,15 +792,20 @@
       if (currentUser?.is_admin) {
         document.getElementById('analyticsSection').style.display = 'block';
         renderAnalytics();
+      } else {
+        document.getElementById('analyticsSection').style.display = 'none';
       }
     }
+
+    // Выход возвращает к гостю (без модалок)
     function logout() {
-      currentUser = null;
-      localStorage.removeItem('currentUser');
-      document.getElementById('dashboardContent').style.display = 'none';
+      currentUser = { plate: "guest", is_admin: false };
+      localStorage.setItem('currentUser', JSON.stringify(currentUser));
+      document.getElementById('dashboardContent').style.display = 'block';
       document.getElementById('analyticsSection').style.display = 'none';
-      showLoginModal();
+      try { alert('Ви увійшли як гість'); } catch(_) {}
     }
+
     function handleTechPassportFileSelected(input) {
       const infoBlock = document.getElementById("selectedTechFileName");
       if (!input.files || !input.files.length) {
@@ -1201,11 +1209,11 @@
     });
     document.getElementById('showRegisterForm').addEventListener('click', () => {
       const loginModal = bootstrap.Modal.getInstance(document.getElementById('loginModal'));
-      loginModal.hide(); showRegisterModal();
+      loginModal?.hide(); showRegisterModal();
     });
     document.getElementById('showLoginForm').addEventListener('click', () => {
       const registerModal = bootstrap.Modal.getInstance(document.getElementById('registerModal'));
-      registerModal.hide(); showLoginModal();
+      registerModal?.hide(); showLoginModal();
     });
     document.getElementById('logoutLink').addEventListener('click', (e) => { e.preventDefault(); logout(); });
 
@@ -1213,14 +1221,20 @@
       i18next.changeLanguage(e.target.value, () => { updateContent(); });
     });
 
-    // ===== DOM Ready =====
+    // ===== DOM Ready: автологин как guest =====
     document.addEventListener('DOMContentLoaded', () => {
       const savedMode = localStorage.getItem('layoutMode') || 'album';
       toggleLayout(savedMode);
 
       const savedUser = localStorage.getItem('currentUser');
-      if (savedUser) { currentUser = JSON.parse(savedUser); showDashboard(); } else { showLoginModal(); }
+      if (savedUser) {
+        currentUser = JSON.parse(savedUser);
+      } else {
+        currentUser = { plate: "guest", is_admin: false };
+        localStorage.setItem('currentUser', JSON.stringify(currentUser));
+      }
 
+      showDashboard();
       setupBlueprintEditor();
       setupAutosave();
       setupOperations();
